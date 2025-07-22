@@ -1,0 +1,22 @@
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[MaTK] = TK004
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC001","MaGhe":"G2003","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC001","MaGhe":"G2003","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
+[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[MaTK] = TK004
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC001","MaGhe":"G2004","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC001","MaGhe":"G2004","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
+[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1

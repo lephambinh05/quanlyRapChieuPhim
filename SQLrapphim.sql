@@ -5,6 +5,16 @@ create database RapChieuPhim
 go
 use RapChieuPhim
 
+
+
+
+-- Bảng KhachHang
+CREATE TABLE KhachHang (
+    maKhachHang VARCHAR(10) PRIMARY KEY,
+    hoTen NVARCHAR(100),
+    SDT VARCHAR(15),
+    diemTichLuy INT
+);
 -- Bảng NhanVien
 CREATE TABLE NhanVien (
     maNhanVien VARCHAR(10) PRIMARY KEY,
@@ -13,6 +23,21 @@ CREATE TABLE NhanVien (
     SDT VARCHAR(15),
     ngaySinh DATE
 );
+
+-- Bảng TaiKhoan
+CREATE TABLE TaiKhoan (
+    maTK VARCHAR(10) PRIMARY KEY,
+    Email VARCHAR(100) UNIQUE,
+    matKhau VARCHAR(255),
+    role NVARCHAR(50),
+    trangThai NVARCHAR(20),
+    maNhanVien VARCHAR(10),
+	maKhachHang VARCHAR(10),
+	FOREIGN KEY (makhachhang) REFERENCES khachhang(makhachhang),
+    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
+);
+
+
 -- Bảng PhongChieu
 CREATE TABLE PhongChieu (
     maPhong VARCHAR(10) PRIMARY KEY,
@@ -34,29 +59,6 @@ CREATE TABLE GheNgoi (
     maPhong VARCHAR(10),
     FOREIGN KEY (maPhong) REFERENCES PhongChieu(maPhong)
 );
-
--- Bảng KhachHang
-CREATE TABLE KhachHang (
-    maKhachHang VARCHAR(10) PRIMARY KEY,
-    hoTen NVARCHAR(100),
-    SDT VARCHAR(15),
-    diemTichLuy INT
-);
-
--- Bảng TaiKhoan
-CREATE TABLE TaiKhoan (
-    maTK VARCHAR(10) PRIMARY KEY,
-    Email VARCHAR(100) UNIQUE,
-    matKhau VARCHAR(255),
-    role NVARCHAR(50),
-    trangThai NVARCHAR(20),
-    maNhanVien VARCHAR(10) UNIQUE,
-	maKhachHang VARCHAR(10),
-	FOREIGN KEY (makhachhang) REFERENCES khachhang(makhachhang),
-    FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
-);
-
-
 -- Bảng Phim
 CREATE TABLE Phim (
     maPhim VARCHAR(10) PRIMARY KEY,
@@ -92,14 +94,14 @@ CREATE TABLE Ve (
     trangthai nvarchar(20), -- Ngày tạo/mua vé
     soGhe NVARCHAR(10), -- Có thể là tên ghế (A1, B2,...) hoặc mã ghế
     tenPhim NVARCHAR(255),
-	hanSuDung DATETIME,
+    hanSuDung DATETIME,
     gia DECIMAL(10, 2),
-	tenPhong NVARCHAR(50),
+    tenPhong NVARCHAR(50),
     maGhe VARCHAR(10),
     maLichChieu VARCHAR(10),
     maPhim VARCHAR(10), -- Duplicate từ LichChieu nhưng giữ lại theo ERD nếu có lý do riêng
     maPhong VARCHAR(10), -- Duplicate từ LichChieu nhưng giữ lại theo ERD nếu có lý do riêng
-    FOREIGN KEY (maGhe) REFERENCES GheNgoi(maGhe),
+FOREIGN KEY (maGhe) REFERENCES GheNgoi(maGhe),
     FOREIGN KEY (maLichChieu) REFERENCES LichChieu(maLichChieu),
     FOREIGN KEY (maPhim) REFERENCES Phim(maPhim),
     FOREIGN KEY (maPhong) REFERENCES PhongChieu(maPhong)
@@ -152,7 +154,6 @@ CREATE TABLE HD_voucher (
     FOREIGN KEY (maGiamGia) REFERENCES Voucher(maGiamGia)
 );
 
-
 USE RapChieuPhim
 GO
 
@@ -172,7 +173,8 @@ select * from khachhang
 INSERT INTO TaiKhoan (maTK, Email, matKhau, role, trangThai, maNhanVien, maKhachHang) VALUES
 ('TK001', 'an.nv@gmail.com', 'hashed_password1', N'Quản lý', N'Hoạt động', 'NV001', NULL),
 ('TK002', 'binh.tt@gmail.com', 'hashed_password2', N'Nhân viên', N'Hoạt động', 'NV002', NULL),
-('TK003', 'dung.pv@gmail.com', 'hashed_password3', N'Khách hàng', N'Hoạt động', NULL, 'KH001')
+('TK003', 'dung.pv@gmail.com', 'hashed_password3', N'Khách hàng', N'Hoạt động', NULL, 'KH001'),
+('TK004', 'hoa.nt@gmail.com', 'hashed_password4', N'Khách hàng', N'Hoạt động', NULL, 'KH002')
 -- Thêm dữ liệu cho bảng Phim
 INSERT INTO Phim (maPhim, tenPhim, theLoai, thoiLuong, doTuoiPhanAnh, moTa, viTriFilePhim, maNhanVien) VALUES
 ('PH001', N'Nhà tù Shawshank – The Shawshank Redemption', N'Chính kịch, Tội phạm', 142, 'R', N'Câu chuyện về hy vọng và sự tự do trong hoàn cảnh khắc nghiệt của nhà tù.', 'https://bazaarvietnam.vn/wp-content/uploads/2021/07/nhung-bo-phim-vuot-nguc-hay-nhat-moi-thoi-dai-Shawshank.jpeg', 'NV001'),
@@ -184,7 +186,6 @@ INSERT INTO Phim (maPhim, tenPhim, theLoai, thoiLuong, doTuoiPhanAnh, moTa, viTr
 ('PH007', N'Bản danh sách của Schindler – Schindler’s List', N'Lịch sử, Chiến tranh', 195, 'R', N'Câu chuyện có thật về Oskar Schindler cứu hàng ngàn người Do Thái trong Thế chiến II.', 'https://bazaarvietnam.vn/wp-content/uploads/2021/06/nhung-bo-phim-hay-nhat-ve-chien-tranh-the-gioi-thu-2-Schindlers-List-e1624177277140.jpeg', 'NV001'),
 ('PH008', N'Kẻ đánh cắp giấc mơ – Inception', N'Khoa học viễn tưởng, Hành động', 148, 'PG-13', N'Một tên trộm lành nghề xâm nhập giấc mơ để đánh cắp bí mật.', 'https://bazaarvietnam.vn/wp-content/uploads/2021/07/phim-doat-giai-oscar-hay-nhat-moi-thoi-dai-9-e1627741349691.jpeg', 'NV001'),
 ('PH009', N'Vua sư tử – The Lion King', N'Hoạt hình, Gia đình', 88, 'G', N'Hành trình của Simba để trở thành vua của Vùng đất Kiêu hãnh.', 'https://bazaarvietnam.vn/wp-content/uploads/2021/10/nhung-bo-phim-hoat-hinh-gan-lien-voi-tuoi-tho-7-scaled-e1633595461435.jpg', 'NV001');
-delete from PhongChieu
 
 -- Thêm dữ liệu mới cho bảng PhongChieu (6 phòng, mỗi phòng 50-80 ghế)
 INSERT INTO PhongChieu (maPhong, tenPhong, soChoNgoi, loaiPhong, trangThai, maNhanVien) VALUES
@@ -387,3 +388,20 @@ WHERE
     OR (p.maPhim = 'PH008' AND pc.maPhong = CASE WHEN n.n % 5 + 1 = 1 THEN 'PC003' WHEN n.n % 5 + 1 = 2 THEN 'PC004' WHEN n.n % 5 + 1 = 3 THEN 'PC006' WHEN n.n % 5 + 1 = 4 THEN 'PC001' ELSE 'PC002' END)
     OR (p.maPhim = 'PH009' AND pc.maPhong = CASE WHEN n.n % 5 + 1 = 1 THEN 'PC004' WHEN n.n % 5 + 1 = 2 THEN 'PC006' WHEN n.n % 5 + 1 = 3 THEN 'PC001' WHEN n.n % 5 + 1 = 4 THEN 'PC002' ELSE 'PC003' END)
 ORDER BY p.maPhim, n.n;
+
+CREATE TABLE TempGioHangItems (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    MaHoaDon VARCHAR(10) NOT NULL,
+    MaGhe VARCHAR(10) NOT NULL,
+    SoGhe NVARCHAR(30) NOT NULL,
+    Gia DECIMAL(10,2) NOT NULL,
+    MaLichChieu VARCHAR(10) NOT NULL,
+    MaPhim VARCHAR(10) NOT NULL,
+    TenPhim NVARCHAR(255) NOT NULL,
+    MaPhong VARCHAR(10) NOT NULL,
+    TenPhong NVARCHAR(50) NOT NULL,
+    ThoiGianChieu DATETIME NOT NULL
+);
+
+ALTER TABLE HoaDon
+ADD TrangThai NVARCHAR(50) NOT NULL DEFAULT N'Chờ chuyển khoản'

@@ -1,0 +1,22 @@
+@model CinemaManagement.ViewModels.HuongDanChuyenKhoanViewModel
+
+@{
+    ViewBag.Title = "Hướng dẫn chuyển khoản";
+}
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>Hướng dẫn chuyển khoản ngân hàng</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Mã hóa đơn:</strong> <span class="text-danger">@Model.MaHoaDon</span></p>
+            <p><strong>Số tiền cần chuyển:</strong> <span class="text-success">@Model.SoTien.ToString("N0") VNĐ</span></p>
+            <p><strong>Nội dung chuyển khoản:</strong> <span class="text-danger">@Model.MaHoaDon</span></p>
+            <hr />
+            <p>Vui lòng chuyển khoản đúng số tiền và ghi đúng nội dung mã hóa đơn để hệ thống tự động xác nhận thanh toán.</p>
+            <p>Sau khi chuyển khoản thành công, bạn sẽ được chuyển sang trang xác nhận.</p>
+            <a href="@Url.Action("Index", "KhachHang")" class="btn btn-secondary mt-3">Quay lại trang chủ</a>
+        </div>
+    </div>
+</div> 

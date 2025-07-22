@@ -4,6 +4,10 @@ using CinemaManagement.Data;
 using CinemaManagement.Models;
 using CinemaManagement.ViewModels;
 using CinemaManagement.Extensions;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.IO;
 
 namespace CinemaManagement.Controllers
 {
@@ -200,14 +204,25 @@ namespace CinemaManagement.Controllers
         // Thanh toán - GET method (chuyển hướng về trang chủ vì không dùng giỏ hàng)
         public IActionResult ThanhToan()
         {
-            if (!IsCustomerLoggedIn())
+            var gioHang = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
+            if (!gioHang.Any())
             {
-                return RedirectToAction("Login", "Auth");
+                TempData["ErrorMessage"] = "Vui lòng chọn ghế từ trang lịch chiếu để thanh toán";
+                return RedirectToAction("Index");
             }
-
-            // Chuyển hướng về trang chủ vì đã không sử dụng giỏ hàng
-            TempData["ErrorMessage"] = "Vui lòng chọn ghế từ trang lịch chiếu để thanh toán";
-            return RedirectToAction("Index");
+            // Nếu có dữ liệu, render view với model phù hợp (ví dụ: KhachHangThanhToanViewModel)
+            // Lấy các voucher khả dụng nếu cần
+            var vouchers = _context.Vouchers
+                .Where(v => v.ThoiGianBatDau <= DateTime.Now && v.ThoiGianKetThuc >= DateTime.Now)
+                .ToList();
+            var viewModel = new KhachHangThanhToanViewModel
+            {
+                GioHang = gioHang,
+                Vouchers = vouchers,
+                TongTien = gioHang.Sum(x => x.Gia),
+                IsDirectPayment = true
+            };
+            return View(viewModel);
         }
 
         // Thanh toán trực tiếp từ trang chọn ghế - POST method
@@ -287,32 +302,31 @@ namespace CinemaManagement.Controllers
 
         // Xử lý thanh toán
         [HttpPost]
-        public async Task<IActionResult> XuLyThanhToan(string? maVoucher)
+        public async Task<IActionResult> XuLyThanhToan(string? maVoucher, string paymentMethod)
         {
             Console.WriteLine("=== BẮT ĐẦU XỬ LÝ THANH TOÁN ===");
             Console.WriteLine($"Thời gian: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             Console.WriteLine($"Mã voucher nhận được: '{maVoucher}'");
+            Console.WriteLine($"Phương thức thanh toán: '{paymentMethod}'");
 
-            if (!IsCustomerLoggedIn())
+            // Log toàn bộ session keys và giá trị
+            var allSession = HttpContext.Session.Keys.ToList();
+            WriteErrorLog($"Session keys: {string.Join(", ", allSession)}");
+            foreach (var key in allSession)
             {
-                Console.WriteLine("CẢNH BÁO: Khách hàng chưa đăng nhập");
-                return RedirectToAction("Login", "Auth");
+                var val = HttpContext.Session.GetString(key);
+                WriteErrorLog($"Session[{key}] = {val}");
             }
 
-            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
-            Console.WriteLine($"Mã khách hàng: '{maKhachHang}'");
-
-            // Chỉ sử dụng giỏ hàng tạm thời từ thanh toán trực tiếp
+            WriteErrorLog("[DEBUG] Bắt đầu lấy TempGioHang từ session");
             var gioHang = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
-
-            Console.WriteLine($"Kiểm tra dữ liệu giỏ hàng:");
-            Console.WriteLine($"- TempGioHang items: {gioHang.Count}");
-            Console.WriteLine($"- Sử dụng giỏ hàng tạm thời với {gioHang.Count} items");
+            WriteErrorLog($"[DEBUG] Dữ liệu gioHang sau khi lấy từ session: {JsonSerializer.Serialize(gioHang)}");
+            WriteErrorLog($"[DEBUG] Số lượng item trong gioHang: {gioHang.Count}");
 
             if (!gioHang.Any())
             {
-                Console.WriteLine("LỖI: Giỏ hàng trống - chuyển hướng về trang chủ");
-                TempData["ErrorMessage"] = "Giỏ hàng trống";
+                WriteErrorLog("[ERROR] Giỏ hàng trống - chuyển hướng về trang chủ");
+                TempData["ErrorMessage"] = "Giỏ hàng trống. Vui lòng chọn ghế từ trang lịch chiếu để thanh toán.";
                 return RedirectToAction("Index");
             }
 
@@ -329,28 +343,11 @@ namespace CinemaManagement.Controllers
             
             try
             {
-                // Tạo mã hóa đơn unique
-                Console.WriteLine("Bước 1: Tạo mã hóa đơn");
-                var lastHoaDon = await _context.HoaDons
-                    .OrderByDescending(h => h.MaHoaDon)
-                    .FirstOrDefaultAsync();
-
-                var soThuTu = 1;
-                if (lastHoaDon != null && lastHoaDon.MaHoaDon.StartsWith("HD"))
-                {
-                    if (int.TryParse(lastHoaDon.MaHoaDon.Substring(2), out var soHienTai))
-                    {
-                        soThuTu = soHienTai + 1;
-                    }
-                }
-                var maHoaDon = $"HD{soThuTu:D3}";
-                Console.WriteLine($"Mã hóa đơn được tạo: {maHoaDon}");
-
+                // Khai báo và gán giá trị cho các biến trước khi dùng
                 var tongTien = gioHang.Sum(item => item.Gia);
-                Console.WriteLine($"Tổng tiền gốc: {tongTien:N0} VNĐ");
-
                 decimal tienGiamGia = 0;
                 decimal tongTienSauGiam = tongTien;
+                string maKhachHang = HttpContext.Session.GetString("MaKhachHang");
 
                 // Áp dụng voucher nếu có
                 Console.WriteLine("Bước 2: Xử lý voucher");
@@ -380,18 +377,34 @@ namespace CinemaManagement.Controllers
                 }
 
                 Console.WriteLine("Bước 3: Tạo hóa đơn");
+                // Sinh mã hóa đơn duy nhất bằng Guid, chỉ lấy 8 ký tự đầu và kiểm tra tồn tại
+                string maHoaDon;
+                while (true)
+                {
+                    maHoaDon = "HD" + Guid.NewGuid().ToString("N").Substring(0, 8);
+                    var exists = await _context.HoaDons.AsNoTracking().AnyAsync(h => h.MaHoaDon == maHoaDon);
+                    if (!exists) break;
+                }
+                // Khi tạo mới HoaDon, KHÔNG gán giá trị cho Id
                 var hoaDon = new HoaDon
                 {
-                    MaHoaDon = maHoaDon,
+                    // KHÔNG gán Id ở đây!
                     TongTien = tongTienSauGiam,
                     ThoiGianTao = DateTime.Now,
                     SoLuong = gioHang.Count,
                     MaKhachHang = maKhachHang ?? string.Empty,
-                    MaNhanVien = "GUEST" // Khách hàng tự thanh toán
+                    MaNhanVien = "GUEST",
+                    TrangThai = paymentMethod == "banking" ? "Chờ chuyển khoản" : "Đã thanh toán"
                 };
-
                 _context.HoaDons.Add(hoaDon);
-                Console.WriteLine($"Đã thêm hóa đơn vào context: {maHoaDon}, Số lượng: {gioHang.Count}, Tổng tiền: {tongTienSauGiam:N0}");
+                await _context.SaveChangesAsync(); // SQL Server sẽ tự động sinh Id
+
+                // Update lại MaHoaDon dựa trên Id vừa insert
+                hoaDon.MaHoaDon = $"HD{hoaDon.Id:D3}";
+                await _context.SaveChangesAsync(); // Lưu lại mã hóa đơn
+                Console.WriteLine($"Mã hóa đơn được tạo: {maHoaDon}");
+
+                Console.WriteLine($"Tổng tiền gốc: {tongTien:N0} VNĐ");
 
                 // Tạo vé và chi tiết hóa đơn
                 Console.WriteLine("Bước 4: Tạo vé và chi tiết hóa đơn");
@@ -476,7 +489,8 @@ namespace CinemaManagement.Controllers
                         MaCTHD = maCTHD,
                         DonGia = item.Gia,
                         MaVe = maVe,
-                        MaHoaDon = maHoaDon
+                        MaHoaDon = maHoaDon,
+                        HoaDonId = hoaDon.Id
                     };
 
                     _context.CTHDs.Add(cthd);
@@ -493,7 +507,8 @@ namespace CinemaManagement.Controllers
                         MaHoaDon = maHoaDon,
                         MaGiamGia = voucher.MaGiamGia,
                         SoLuongVoucher = 1,
-                        TongTien = tongTienSauGiam
+                        TongTien = tongTienSauGiam,
+                        HoaDonId = hoaDon.Id
                     };
 
                     _context.HDVouchers.Add(hdVoucher);
@@ -539,21 +554,48 @@ namespace CinemaManagement.Controllers
                 Console.WriteLine($"Số vé: {gioHang.Count}");
 
                 TempData["SuccessMessage"] = "Thanh toán thành công!";
+
+                if (paymentMethod == "banking")
+                {
+                    // 1. Lưu hóa đơn với trạng thái "Chờ chuyển khoản"
+                    // Thay thế toàn bộ logic tạo hóa đơn như sau:
+                    
+                    // ĐÃ ĐƯỢC ADD VÀ SAVE Ở NGOÀI, KHÔNG LÀM LẠI!
+
+                    // 2. Lưu thông tin ghế/vé vào bảng tạm TempGioHangItems
+                    foreach (var item in gioHang)
+                    {
+                        // Lấy MaPhim, MaPhong từ LichChieu nếu không có trong item
+                        var lichChieu = await _context.LichChieus.FirstOrDefaultAsync(lc => lc.MaLichChieu == item.MaLichChieu);
+                        var temp = new TempGioHangItem
+                        {
+                            MaHoaDon = maHoaDon,
+                            MaGhe = item.MaGhe,
+                            SoGhe = item.SoGhe,
+                            Gia = item.Gia,
+                            MaLichChieu = item.MaLichChieu,
+                            MaPhim = (item.GetType().GetProperty("MaPhim") != null ? (string)item.GetType().GetProperty("MaPhim").GetValue(item) : (lichChieu?.MaPhim ?? "")),
+                            TenPhim = item.TenPhim,
+                            MaPhong = (item.GetType().GetProperty("MaPhong") != null ? (string)item.GetType().GetProperty("MaPhong").GetValue(item) : (lichChieu?.MaPhong ?? "")),
+                            TenPhong = item.TenPhong,
+                            ThoiGianChieu = item.ThoiGianChieu
+                        };
+                        _context.TempGioHangItems.Add(temp);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    // 3. Hiển thị hướng dẫn chuyển khoản cho khách (có thể là view riêng)
+                    return View("HuongDanChuyenKhoan", new CinemaManagement.ViewModels.HuongDanChuyenKhoanViewModel { MaHoaDon = maHoaDon, SoTien = tongTienSauGiam });
+                }
                 return RedirectToAction("ThanhToanThanhCong", new { maHoaDon = maHoaDon });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"=== LỖI TRONG QUÁ TRÌNH THANH TOÁN ===");
-                Console.WriteLine($"Thời gian lỗi: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-                Console.WriteLine($"Loại lỗi: {ex.GetType().Name}");
-                Console.WriteLine($"Thông báo lỗi: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
-
+                WriteErrorLog($"LỖI TRONG QUÁ TRÌNH THANH TOÁN: {ex.Message} | StackTrace: {ex.StackTrace}");
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    WriteErrorLog($"Inner exception: {ex.InnerException.Message}");
                 }
-
                 try
                 {
                     await transaction.RollbackAsync();
@@ -565,7 +607,7 @@ namespace CinemaManagement.Controllers
                 }
 
                 TempData["ErrorMessage"] = "Có lỗi xảy ra khi thanh toán: " + ex.Message;
-                Console.WriteLine($"Chuyển hướng về trang thanh toán với thông báo lỗi");
+                WriteErrorLog($"Chuyển hướng về trang thanh toán với thông báo lỗi: {TempData["ErrorMessage"]}");
                 return RedirectToAction("ThanhToan");
             }
         }
@@ -814,6 +856,119 @@ namespace CinemaManagement.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+        // Model cho response API banking
+        public class BankingTransaction
+        {
+            public string Description { get; set; } = string.Empty;
+            public decimal Amount { get; set; }
+            public string Time { get; set; } = string.Empty;
+        }
+
+        // Endpoint cho cron job kiểm tra giao dịch banking
+        [HttpPost]
+        [Route("/api/cron/check-banking")]
+        public async Task<IActionResult> CronCheckBanking()
+        {
+            var pendingOrders = await _context.HoaDons
+                .Where(h => h.TrangThai == "Chờ chuyển khoản")
+                .ToListAsync();
+
+            if (!pendingOrders.Any())
+                return Ok(new { message = "No pending orders." });
+
+            var apiUrl = "https://api.sieuthicode.net/historyapiacbv2/978225ae27ff5741c543da2ae7d44123";
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(apiUrl);
+            if (!response.IsSuccessStatusCode)
+                return StatusCode(502, "Banking API error");
+
+            var json = await response.Content.ReadAsStringAsync();
+            var transactions = JsonSerializer.Deserialize<List<BankingTransaction>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<BankingTransaction>();
+
+            int updated = 0;
+            foreach (var order in pendingOrders)
+            {
+                var matched = transactions.FirstOrDefault(t => t.Description != null && t.Description.Contains(order.MaHoaDon, StringComparison.OrdinalIgnoreCase));
+                if (matched != null)
+                {
+                    // Nếu hóa đơn đã có vé và chi tiết hóa đơn thì bỏ qua
+                    var daCoCTHD = await _context.CTHDs.AnyAsync(c => c.MaHoaDon == order.MaHoaDon);
+                    if (!daCoCTHD)
+                    {
+                        // Lấy thông tin các ghế đã lưu cho hóa đơn này (giả sử có bảng tạm hoặc lưu thông tin ghế trong hóa đơn hoặc bảng liên quan)
+                        // Ở đây giả lập: lấy từ bảng tạm hoặc custom logic, ví dụ: order.MaKhachHang, order.ThoiGianTao, ...
+                        // Nếu không có, bỏ qua tạo vé/CTHD
+                        // --- BẮT ĐẦU GIẢ LẬP ---
+                        // Giả sử có bảng tạm hoặc có thể truy xuất lại các ghế đã đặt cho hóa đơn này
+                        // Nếu hệ thống bạn lưu thông tin ghế ở đâu đó, hãy thay thế đoạn này cho phù hợp
+                        var tempSeats = await _context.TempGioHangItems
+                            .Where(x => x.MaHoaDon == order.MaHoaDon)
+                            .ToListAsync();
+                        if (tempSeats.Count == 0) continue;
+                        // --- KẾT THÚC GIẢ LẬP ---
+                        // Tạo mã vé, mã CTHD tự động
+                        var lastVe = await _context.Ves.OrderByDescending(v => v.MaVe).FirstOrDefaultAsync();
+                        int soThuTuVe = 1;
+                        if (lastVe != null && lastVe.MaVe.StartsWith("VE"))
+                        {
+                            int.TryParse(lastVe.MaVe.Substring(2), out soThuTuVe);
+                            soThuTuVe++;
+                        }
+                        var lastCTHD = await _context.CTHDs.OrderByDescending(c => c.MaCTHD).FirstOrDefaultAsync();
+                        int soThuTuCTHD = 1;
+                        if (lastCTHD != null && lastCTHD.MaCTHD.StartsWith("CT"))
+                        {
+                            int.TryParse(lastCTHD.MaCTHD.Substring(2), out soThuTuCTHD);
+                            soThuTuCTHD++;
+                        }
+                        foreach (var seat in tempSeats)
+                        {
+                            var maVe = $"VE{soThuTuVe:D3}";
+                            soThuTuVe++;
+                            var ve = new Ve
+                            {
+                                MaVe = maVe,
+                                TrangThai = "Đã bán",
+                                SoGhe = seat.SoGhe,
+                                TenPhim = seat.TenPhim,
+                                HanSuDung = seat.ThoiGianChieu.AddHours(2),
+                                Gia = seat.Gia,
+                                TenPhong = seat.TenPhong,
+                                MaGhe = seat.MaGhe,
+                                MaLichChieu = seat.MaLichChieu,
+                                MaPhim = seat.MaPhim,
+                                MaPhong = seat.MaPhong
+                            };
+                            _context.Ves.Add(ve);
+                            var maCTHD = $"CT{soThuTuCTHD:D3}";
+                            soThuTuCTHD++;
+                            var cthd = new CTHD
+                            {
+                                MaCTHD = maCTHD,
+                                DonGia = seat.Gia,
+                                MaVe = maVe,
+                                MaHoaDon = order.MaHoaDon,
+                                HoaDonId = order.Id
+                            };
+                            _context.CTHDs.Add(cthd);
+                        }
+                    }
+                    // Cập nhật trạng thái hóa đơn
+                    order.TrangThai = "Đã thanh toán";
+                    updated++;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok(new { updated });
+        }
+
+        private void WriteErrorLog(string message)
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ERROR] [KhachHangController] {message}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
         }
     }
 }

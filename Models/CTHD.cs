@@ -15,14 +15,16 @@ namespace CinemaManagement.Models
         [StringLength(10)]
         public string MaVe { get; set; } = string.Empty;
 
+        // KHÔNG dùng MaHoaDon làm khóa ngoại nữa, chỉ để tra cứu
         [StringLength(10)]
         public string MaHoaDon { get; set; } = string.Empty;
 
-        // Navigation properties
+        public int HoaDonId { get; set; } // FK mới
+
+        [ForeignKey("HoaDonId")]
+        public virtual HoaDon HoaDon { get; set; } = null!;
+
         [ForeignKey("MaVe")]
         public virtual Ve Ve { get; set; } = null!;
-
-        [ForeignKey("MaHoaDon")]
-        public virtual HoaDon HoaDon { get; set; } = null!;
     }
 }

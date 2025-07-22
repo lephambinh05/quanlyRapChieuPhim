@@ -16,8 +16,10 @@ namespace CinemaManagement.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal TongTien { get; set; }
 
+        public int HoaDonId { get; set; } // FK mới
+
         // Navigation properties
-        [ForeignKey("MaHoaDon")]
+        [ForeignKey("HoaDonId")]
         public virtual HoaDon HoaDon { get; set; } = null!;
 
         [ForeignKey("MaGiamGia")]

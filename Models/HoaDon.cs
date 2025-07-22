@@ -6,6 +6,9 @@ namespace CinemaManagement.Models
     public class HoaDon
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [StringLength(10)]
         public string MaHoaDon { get; set; } = string.Empty;
 
@@ -21,6 +24,8 @@ namespace CinemaManagement.Models
 
         [StringLength(10)]
         public string MaNhanVien { get; set; } = string.Empty;
+
+        public string TrangThai { get; set; } = "Chờ chuyển khoản";
 
         // Navigation properties
         [ForeignKey("MaKhachHang")]

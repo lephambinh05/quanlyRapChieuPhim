@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lephambinh\\Downloads\\CNPM_TH_BA\\CinemaManagement.csproj": {}
+    "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lephambinh\\Downloads\\CNPM_TH_BA\\CinemaManagement.csproj": {
+    "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lephambinh\\Downloads\\CNPM_TH_BA\\CinemaManagement.csproj",
+        "projectUniqueName": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj",
         "projectName": "CinemaManagement",
-        "projectPath": "C:\\Users\\lephambinh\\Downloads\\CNPM_TH_BA\\CinemaManagement.csproj",
+        "projectPath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj",
         "packagesPath": "C:\\Users\\lephambinh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lephambinh\\Downloads\\CNPM_TH_BA\\obj\\",
+        "outputPath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

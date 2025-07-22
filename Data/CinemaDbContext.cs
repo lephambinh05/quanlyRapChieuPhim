@@ -21,6 +21,7 @@ namespace CinemaManagement.Data
         public DbSet<HoaDon> HoaDons { get; set; }
         public DbSet<CTHD> CTHDs { get; set; }
         public DbSet<HDVoucher> HDVouchers { get; set; }
+        public DbSet<CinemaManagement.Models.TempGioHangItem> TempGioHangItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
