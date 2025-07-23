@@ -878,3 +878,4 @@ C:\Users\lephambinh\Downloads\quanlyRapChieuPhim\obj\Debug\net9.0\refint\CinemaM
 C:\Users\lephambinh\Downloads\quanlyRapChieuPhim\obj\Debug\net9.0\CinemaManagement.pdb
 C:\Users\lephambinh\Downloads\quanlyRapChieuPhim\obj\Debug\net9.0\CinemaManagement.genruntimeconfig.cache
 C:\Users\lephambinh\Downloads\quanlyRapChieuPhim\obj\Debug\net9.0\ref\CinemaManagement.dll
+C:\Users\lephambinh\Downloads\quanlyRapChieuPhim\obj\Debug\net9.0\compressed\2mthxky53e-9yrc5q2utm.gz

@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css",
+      "PackagePath": "staticwebassets\\css\\thanh-toan-custom.css"
+    },
+    {
       "Id": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },

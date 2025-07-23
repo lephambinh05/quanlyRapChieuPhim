@@ -599,6 +599,304 @@
       ]
     },
     {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css",
+      "AssetFile": "css/thanh-toan-custom.css.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001103752759"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css"
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css",
+      "AssetFile": "css/thanh-toan-custom.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3072"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css"
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css.gz",
+      "AssetFile": "css/thanh-toan-custom.css.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4="
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css.gz"
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css",
+      "AssetFile": "css/thanh-toan-custom.css.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001103752759"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css",
+      "AssetFile": "css/thanh-toan-custom.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3072"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css.gz",
+      "AssetFile": "css/thanh-toan-custom.css.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4="
+        }
+      ]
+    },
+    {
       "Route": "favicon.61n19gt1b8.ico",
       "AssetFile": "favicon.ico.gz",
       "Selectors": [

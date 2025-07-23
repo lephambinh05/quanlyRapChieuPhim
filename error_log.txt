@@ -1,22 +1,615 @@
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[MaTK] = TK004
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[Role] = Khách hàng
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC001","MaGhe":"G2003","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC001","MaGhe":"G2003","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
-[2025-07-23 06:47:41] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[MaTK] = TK004
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[Role] = Khách hàng
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC001","MaGhe":"G2004","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC001","MaGhe":"G2004","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-23T09:00:00","Gia":120000}]
-[2025-07-23 06:49:18] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-23 23:25:40] [ERROR] [KhachHangController] [DEBUG] Số lượng item lấy từ TempGioHangItems: 1
+[2025-07-23 23:25:40] [ERROR] [KhachHangController] [DEBUG] TempGioHangItem 1: MaGhe=G6006, SoGhe=A6, Gia=140000.00, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, ThoiGianChieu=7/24/2025 6:00:00 PM, TenPhong=Phòng 6
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[MaTK] = TK004
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: []
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 0
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Session TempGioHang rỗng, thử lấy lại từ TempGioHangItems với MaHoaDon=HD046
+[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Đã lấy lại 1 item từ TempGioHangItems theo MaHoaDon=HD046
+[2025-07-23 23:34:56] [ERROR] [KhachHangController] [DEBUG] JSON banking API: {
+    "status": "success",
+    "message": "Th\u00e0nh c\u00f4ng",
+    "msg": "Th\u00e0nh c\u00f4ng",
+    "statuswhmcs": 1,
+    "transactions": [
+        {
+            "transactionID": 5417,
+            "amount": 140000,
+            "description": "HD014 FT25205808586233 GD 341336-072325 23:04:03",
+            "transactionDate": "24\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5416,
+            "amount": 1000000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-22:52:19 700195",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5415,
+            "amount": 239000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-21:08:34 592875",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5414,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:31:49 447621",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5413,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:27:17 440557",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5412,
+            "amount": 400000,
+            "description": "MBVCB.10294341019.5204BFTVG2LX4T2E.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 706833-072325 19:26:27",
+            "transactionDate": "24\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5411,
+            "amount": 550000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-16:17:00 109522",
+            "transactionDate": "23\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5410,
+            "amount": 1630000,
+            "description": "MBVCB.10291817994.5204BFTVG2LVP8S2.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 965109-072325 16:12:43",
+            "transactionDate": "23\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5409,
+            "amount": 12786,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-14:29:07 439204",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5408,
+            "amount": 30000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-09:56:01 047881",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5407,
+            "amount": 60000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-02:37:57 796128",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5406,
+            "amount": 100000,
+            "description": "MBVCB.10275029285.5202BFTVG2LEVBPY.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 828256-072125 21:25:53",
+            "transactionDate": "22\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5405,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-16:38:58 339485",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5404,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-15:27:48 228427",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5403,
+            "amount": 30000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-14:33:56 151480",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5402,
+            "amount": 84000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:27:03 511479",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5401,
+            "amount": 105000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:31 511404",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5400,
+            "amount": 54000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:09 511345",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5399,
+            "amount": 25000,
+            "description": "DH00000002 FT25200155949766 GD 898834-071925 03:18:13",
+            "transactionDate": "19\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5398,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:17:31 509939",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5397,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-00:05:36 458401",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5396,
+            "amount": 500000,
+            "description": "MBVCB.10241910255.5199BFTVG2LTCKEJ.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 661527-071825 20:00:54",
+            "transactionDate": "19\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5395,
+            "amount": 1,
+            "description": "##Lai nhap von#",
+            "transactionDate": "14\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5394,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-20:51:32 960924",
+            "transactionDate": "15\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5393,
+            "amount": 85000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-19:04:08 789651",
+            "transactionDate": "15\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5392,
+            "amount": 15000,
+            "description": "ODJJRVQTN2PKVNP MPOS-140725-15:55:15 447679",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5391,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-15:10:32 369823",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5390,
+            "amount": 95000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-14:47:09 331557",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5389,
+            "amount": 25000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-12:17:05 118359",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5388,
+            "amount": 293000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-130725-22:50:02 528970",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5387,
+            "amount": 65000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-130725-09:59:27 487416",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5386,
+            "amount": 222000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-120725-22:42:50 139714",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5385,
+            "amount": 166000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-120725-18:45:47 811852",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5384,
+            "amount": 200000,
+            "description": "MBVCB.10167657053.5193BFTVG22PYV8N.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 400493-071225 12:57:16",
+            "transactionDate": "14\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5383,
+            "amount": 48000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-17:51:54 157856",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5382,
+            "amount": 155000,
+            "description": "THANH TOAN CHO LOTTERIA XUANHONG TB - 110725 16:03:30 16658198",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5381,
+            "amount": 80000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:42:50 912347",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5380,
+            "amount": 180000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:39:01 905443",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5379,
+            "amount": 60000,
+            "description": "LE PHAM BINH CHUYEN KHOAN - 23DH114883 - 1 AO-110725-12:11:37 578647",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5378,
+            "amount": 25000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-09:11:10 274456",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        }
+    ]
+}
+[2025-07-23 23:35:39] [ERROR] [KhachHangController] [DEBUG] Số lượng item lấy từ TempGioHangItems: 1
+[2025-07-23 23:35:39] [ERROR] [KhachHangController] [DEBUG] TempGioHangItem 1: MaGhe=G6006, SoGhe=A6, Gia=140000.00, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, ThoiGianChieu=7/24/2025 6:00:00 PM, TenPhong=Phòng 6
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[MaTK] = TK004
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: []
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 0
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Session TempGioHang rỗng, thử lấy lại từ TempGioHangItems với MaHoaDon=HD047
+[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Đã lấy lại 1 item từ TempGioHangItems theo MaHoaDon=HD047
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[MaTK] = TK004
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC092","MaGhe":"G3001","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 3","PhongChieu":"Ph\u00F2ng 3","SoGhe":"A1","ThoiGianChieu":"2025-07-24T10:00:00","Gia":150000}]
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC092","MaGhe":"G3001","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 3","PhongChieu":"Ph\u00F2ng 3","SoGhe":"A1","ThoiGianChieu":"2025-07-24T10:00:00","Gia":150000}]
+[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-23 23:43:20] [ERROR] [KhachHangController] [DEBUG] JSON banking API: {
+    "status": "success",
+    "message": "Th\u00e0nh c\u00f4ng",
+    "msg": "Th\u00e0nh c\u00f4ng",
+    "statuswhmcs": 1,
+    "transactions": [
+        {
+            "transactionID": 5418,
+            "amount": 150000,
+            "description": "HD049 FT25205530314161 GD 414382-072325 23:41:02",
+            "transactionDate": "24\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5417,
+            "amount": 140000,
+            "description": "HD014 FT25205808586233 GD 341336-072325 23:04:03",
+            "transactionDate": "24\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5416,
+            "amount": 1000000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-22:52:19 700195",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5415,
+            "amount": 239000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-21:08:34 592875",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5414,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:31:49 447621",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5413,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:27:17 440557",
+            "transactionDate": "24\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5412,
+            "amount": 400000,
+            "description": "MBVCB.10294341019.5204BFTVG2LX4T2E.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 706833-072325 19:26:27",
+            "transactionDate": "24\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5411,
+            "amount": 550000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-230725-16:17:00 109522",
+            "transactionDate": "23\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5410,
+            "amount": 1630000,
+            "description": "MBVCB.10291817994.5204BFTVG2LVP8S2.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 965109-072325 16:12:43",
+            "transactionDate": "23\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5409,
+            "amount": 12786,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-14:29:07 439204",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5408,
+            "amount": 30000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-09:56:01 047881",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5407,
+            "amount": 60000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-220725-02:37:57 796128",
+            "transactionDate": "22\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5406,
+            "amount": 100000,
+            "description": "MBVCB.10275029285.5202BFTVG2LEVBPY.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 828256-072125 21:25:53",
+            "transactionDate": "22\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5405,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-16:38:58 339485",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5404,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-15:27:48 228427",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5403,
+            "amount": 30000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-14:33:56 151480",
+            "transactionDate": "21\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5402,
+            "amount": 84000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:27:03 511479",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5401,
+            "amount": 105000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:31 511404",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5400,
+            "amount": 54000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:09 511345",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5399,
+            "amount": 25000,
+            "description": "DH00000002 FT25200155949766 GD 898834-071925 03:18:13",
+            "transactionDate": "19\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5398,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:17:31 509939",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5397,
+            "amount": 50000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-190725-00:05:36 458401",
+            "transactionDate": "19\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5396,
+            "amount": 500000,
+            "description": "MBVCB.10241910255.5199BFTVG2LTCKEJ.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 661527-071825 20:00:54",
+            "transactionDate": "19\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5395,
+            "amount": 1,
+            "description": "##Lai nhap von#",
+            "transactionDate": "14\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5394,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-20:51:32 960924",
+            "transactionDate": "15\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5393,
+            "amount": 85000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-19:04:08 789651",
+            "transactionDate": "15\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5392,
+            "amount": 15000,
+            "description": "ODJJRVQTN2PKVNP MPOS-140725-15:55:15 447679",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5391,
+            "amount": 100000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-15:10:32 369823",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5390,
+            "amount": 95000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-14:47:09 331557",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5389,
+            "amount": 25000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-140725-12:17:05 118359",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5388,
+            "amount": 293000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-130725-22:50:02 528970",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5387,
+            "amount": 65000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-130725-09:59:27 487416",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5386,
+            "amount": 222000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-120725-22:42:50 139714",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5385,
+            "amount": 166000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-120725-18:45:47 811852",
+            "transactionDate": "14\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5384,
+            "amount": 200000,
+            "description": "MBVCB.10167657053.5193BFTVG22PYV8N.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 400493-071225 12:57:16",
+            "transactionDate": "14\/07\/2025",
+            "type": "IN"
+        },
+        {
+            "transactionID": 5383,
+            "amount": 48000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-17:51:54 157856",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5382,
+            "amount": 155000,
+            "description": "THANH TOAN CHO LOTTERIA XUANHONG TB - 110725 16:03:30 16658198",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5381,
+            "amount": 80000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:42:50 912347",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5380,
+            "amount": 180000,
+            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:39:01 905443",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        },
+        {
+            "transactionID": 5379,
+            "amount": 60000,
+            "description": "LE PHAM BINH CHUYEN KHOAN - 23DH114883 - 1 AO-110725-12:11:37 578647",
+            "transactionDate": "11\/07\/2025",
+            "type": "OUT"
+        }
+    ]
+}

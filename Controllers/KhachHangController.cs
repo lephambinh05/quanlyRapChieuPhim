@@ -201,28 +201,104 @@ namespace CinemaManagement.Controllers
             return View(viewModel);
         }
 
-        // Thanh toán - GET method (chuyển hướng về trang chủ vì không dùng giỏ hàng)
-        public IActionResult ThanhToan()
+        // Thanh toán - GET method (hỗ trợ truyền maHoaDon để thanh toán lại đơn cũ)
+        public async Task<IActionResult> ThanhToan(string? maHoaDon)
         {
-            var gioHang = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
-            if (!gioHang.Any())
+            if (!IsCustomerLoggedIn())
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (!string.IsNullOrEmpty(maHoaDon))
+            {
+                // Tìm hóa đơn chưa thanh toán
+                var hoaDon = await _context.HoaDons
+                    .Include(hd => hd.CTHDs)
+                        .ThenInclude(ct => ct.Ve)
+                    .FirstOrDefaultAsync(hd => hd.MaHoaDon == maHoaDon);
+                if (hoaDon == null || hoaDon.TrangThai == "Đã thanh toán")
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy hóa đơn hoặc hóa đơn đã thanh toán.";
+                    return RedirectToAction("LichSuDatVe");
+                }
+                // Chuyển đổi sang view model giỏ hàng
+                List<GioHangItem> gioHang;
+                if (hoaDon.CTHDs.Any(ct => ct.Ve != null && ct.Ve.LichChieu != null))
+                {
+                    gioHang = hoaDon.CTHDs
+                        .Where(ct => ct.Ve != null && ct.Ve.LichChieu != null)
+                        .Select(ct => new GioHangItem
+                        {
+                            MaLichChieu = ct.Ve.MaLichChieu,
+                            MaGhe = ct.Ve.MaGhe,
+                            SoGhe = ct.Ve.SoGhe,
+                            Gia = ct.Ve.Gia,
+                            TenPhim = ct.Ve.TenPhim,
+                            ThoiGianChieu = ct.Ve.LichChieu.ThoiGianBatDau,
+                            TenPhong = ct.Ve.TenPhong,
+                            PhongChieu = ct.Ve.TenPhong
+                        }).ToList();
+                }
+                else
+                {
+                    // Nếu chưa có vé, lấy thông tin từ bảng tạm
+                    gioHang = await _context.TempGioHangItems
+                        .Where(x => x.MaHoaDon == hoaDon.MaHoaDon)
+                        .Select(x => new GioHangItem
+                        {
+                            MaLichChieu = x.MaLichChieu,
+                            MaGhe = x.MaGhe,
+                            SoGhe = x.SoGhe,
+                            Gia = x.Gia,
+                            TenPhim = x.TenPhim,
+                            ThoiGianChieu = x.ThoiGianChieu,
+                            TenPhong = x.TenPhong,
+                            PhongChieu = x.TenPhong
+                        }).ToListAsync();
+                    // Bổ sung log debug vào file error_log.txt
+                    WriteErrorLog($"[DEBUG] Số lượng item lấy từ TempGioHangItems: {gioHang.Count}");
+                    for (int i = 0; i < gioHang.Count; i++)
+                    {
+                        var item = gioHang[i];
+                        WriteErrorLog($"[DEBUG] TempGioHangItem {i + 1}: MaGhe={item.MaGhe}, SoGhe={item.SoGhe}, Gia={item.Gia}, TenPhim={item.TenPhim}, ThoiGianChieu={item.ThoiGianChieu}, TenPhong={item.TenPhong}");
+                    }
+                    if (gioHang.Count == 0)
+                    {
+                        WriteErrorLog($"[DEBUG] Không có dữ liệu TempGioHangItems cho MaHoaDon={hoaDon.MaHoaDon}");
+                    }
+                }
+                var vouchers = await _context.Vouchers
+                    .Where(v => v.ThoiGianBatDau <= DateTime.Now && v.ThoiGianKetThuc >= DateTime.Now)
+                    .ToListAsync();
+                var viewModel = new KhachHangThanhToanViewModel
+                {
+                    GioHang = gioHang,
+                    Vouchers = vouchers,
+                    TongTien = hoaDon.TongTien,
+                    IsDirectPayment = false,
+                    MaHoaDon = hoaDon.MaHoaDon
+                };
+                return View(viewModel);
+            }
+
+            // Logic cũ: thanh toán từ giỏ hàng tạm
+            var gioHangSession = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
+            if (!gioHangSession.Any())
             {
                 TempData["ErrorMessage"] = "Vui lòng chọn ghế từ trang lịch chiếu để thanh toán";
                 return RedirectToAction("Index");
             }
-            // Nếu có dữ liệu, render view với model phù hợp (ví dụ: KhachHangThanhToanViewModel)
-            // Lấy các voucher khả dụng nếu cần
-            var vouchers = _context.Vouchers
+            var vouchers2 = _context.Vouchers
                 .Where(v => v.ThoiGianBatDau <= DateTime.Now && v.ThoiGianKetThuc >= DateTime.Now)
                 .ToList();
-            var viewModel = new KhachHangThanhToanViewModel
+            var viewModel2 = new KhachHangThanhToanViewModel
             {
-                GioHang = gioHang,
-                Vouchers = vouchers,
-                TongTien = gioHang.Sum(x => x.Gia),
+                GioHang = gioHangSession,
+                Vouchers = vouchers2,
+                TongTien = gioHangSession.Sum(x => x.Gia),
                 IsDirectPayment = true
             };
-            return View(viewModel);
+            return View(viewModel2);
         }
 
         // Thanh toán trực tiếp từ trang chọn ghế - POST method
@@ -302,7 +378,7 @@ namespace CinemaManagement.Controllers
 
         // Xử lý thanh toán
         [HttpPost]
-        public async Task<IActionResult> XuLyThanhToan(string? maVoucher, string paymentMethod)
+        public async Task<IActionResult> XuLyThanhToan(string? maVoucher, string paymentMethod, string? maHoaDonTemp)
         {
             Console.WriteLine("=== BẮT ĐẦU XỬ LÝ THANH TOÁN ===");
             Console.WriteLine($"Thời gian: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
@@ -320,8 +396,28 @@ namespace CinemaManagement.Controllers
 
             WriteErrorLog("[DEBUG] Bắt đầu lấy TempGioHang từ session");
             var gioHang = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
-            WriteErrorLog($"[DEBUG] Dữ liệu gioHang sau khi lấy từ session: {JsonSerializer.Serialize(gioHang)}");
+            WriteErrorLog($"[DEBUG] Dữ liệu gioHang sau khi lấy từ session: {System.Text.Json.JsonSerializer.Serialize(gioHang)}");
             WriteErrorLog($"[DEBUG] Số lượng item trong gioHang: {gioHang.Count}");
+
+            // Nếu session rỗng nhưng có maHoaDonTemp, lấy lại từ bảng tạm
+            if (!gioHang.Any() && !string.IsNullOrEmpty(maHoaDonTemp))
+            {
+                WriteErrorLog($"[DEBUG] Session TempGioHang rỗng, thử lấy lại từ TempGioHangItems với MaHoaDon={maHoaDonTemp}");
+                gioHang = await _context.TempGioHangItems
+                    .Where(x => x.MaHoaDon == maHoaDonTemp)
+                    .Select(x => new GioHangItem
+                    {
+                        MaLichChieu = x.MaLichChieu,
+                        MaGhe = x.MaGhe,
+                        SoGhe = x.SoGhe,
+                        Gia = x.Gia,
+                        TenPhim = x.TenPhim,
+                        ThoiGianChieu = x.ThoiGianChieu,
+                        TenPhong = x.TenPhong,
+                        PhongChieu = x.TenPhong
+                    }).ToListAsync();
+                WriteErrorLog($"[DEBUG] Đã lấy lại {gioHang.Count} item từ TempGioHangItems theo MaHoaDon={maHoaDonTemp}");
+            }
 
             if (!gioHang.Any())
             {
@@ -347,7 +443,7 @@ namespace CinemaManagement.Controllers
                 var tongTien = gioHang.Sum(item => item.Gia);
                 decimal tienGiamGia = 0;
                 decimal tongTienSauGiam = tongTien;
-                string maKhachHang = HttpContext.Session.GetString("MaKhachHang");
+                var khachHangEntity = HttpContext.Session.GetString("MaKhachHang");
 
                 // Áp dụng voucher nếu có
                 Console.WriteLine("Bước 2: Xử lý voucher");
@@ -392,7 +488,7 @@ namespace CinemaManagement.Controllers
                     TongTien = tongTienSauGiam,
                     ThoiGianTao = DateTime.Now,
                     SoLuong = gioHang.Count,
-                    MaKhachHang = maKhachHang ?? string.Empty,
+                    MaKhachHang = khachHangEntity ?? string.Empty,
                     MaNhanVien = "GUEST",
                     TrangThai = paymentMethod == "banking" ? "Chờ chuyển khoản" : "Đã thanh toán"
                 };
@@ -403,6 +499,18 @@ namespace CinemaManagement.Controllers
                 hoaDon.MaHoaDon = $"HD{hoaDon.Id:D3}";
                 await _context.SaveChangesAsync(); // Lưu lại mã hóa đơn
                 Console.WriteLine($"Mã hóa đơn được tạo: {maHoaDon}");
+
+                // Cập nhật lại MaHoaDon trong bảng tạm nếu có
+                var tempItems = _context.TempGioHangItems.Where(x => x.MaHoaDon == maHoaDon).ToList();
+                if (tempItems.Any())
+                {
+                    foreach (var item in tempItems)
+                    {
+                        item.MaHoaDon = hoaDon.MaHoaDon;
+                    }
+                    await _context.SaveChangesAsync();
+                    WriteErrorLog($"[DEBUG] Đã cập nhật MaHoaDon trong TempGioHangItems từ {maHoaDon} sang {hoaDon.MaHoaDon}");
+                }
 
                 Console.WriteLine($"Tổng tiền gốc: {tongTien:N0} VNĐ");
 
@@ -517,21 +625,22 @@ namespace CinemaManagement.Controllers
 
                 // Cập nhật điểm tích lũy cho khách hàng
                 Console.WriteLine("Bước 6: Cập nhật điểm tích lũy");
-                if (!string.IsNullOrEmpty(maKhachHang))
+                // Đổi tên biến bên trong nhánh if để tránh trùng tên
+                if (!string.IsNullOrEmpty(khachHangEntity))
                 {
-                    var khachHang = await _context.KhachHangs.FindAsync(maKhachHang);
-                    if (khachHang != null)
+                    var khachHangDb = await _context.KhachHangs.FindAsync(khachHangEntity);
+                    if (khachHangDb != null)
                     {
                         var diemTichLuyMoi = (int)(tongTienSauGiam / 10000); // 1 điểm = 10,000 VNĐ
-                        var diemCu = khachHang.DiemTichLuy;
-                        khachHang.DiemTichLuy += diemTichLuyMoi;
-                        _context.KhachHangs.Update(khachHang);
+                        var diemCu = khachHangDb.DiemTichLuy;
+                        khachHangDb.DiemTichLuy += diemTichLuyMoi;
+                        _context.KhachHangs.Update(khachHangDb);
 
-                        Console.WriteLine($"Cập nhật điểm tích lũy cho KH {maKhachHang}: {diemCu} → {khachHang.DiemTichLuy} (+{diemTichLuyMoi} điểm)");
+                        Console.WriteLine($"Cập nhật điểm tích lũy cho KH {khachHangEntity}: {diemCu} → {khachHangDb.DiemTichLuy} (+{diemTichLuyMoi} điểm)");
                     }
                     else
                     {
-                        Console.WriteLine($"CẢNH BÁO: Không tìm thấy khách hàng {maKhachHang}");
+                        Console.WriteLine($"CẢNH BÁO: Không tìm thấy khách hàng {khachHangEntity}");
                     }
                 }
 
@@ -558,18 +667,16 @@ namespace CinemaManagement.Controllers
                 if (paymentMethod == "banking")
                 {
                     // 1. Lưu hóa đơn với trạng thái "Chờ chuyển khoản"
-                    // Thay thế toàn bộ logic tạo hóa đơn như sau:
-                    
                     // ĐÃ ĐƯỢC ADD VÀ SAVE Ở NGOÀI, KHÔNG LÀM LẠI!
 
-                    // 2. Lưu thông tin ghế/vé vào bảng tạm TempGioHangItems
+                    // 2. Lưu thông tin ghế/vé vào bảng tạm TempGioHangItems (sau khi đã có hoaDon.MaHoaDon thực tế)
                     foreach (var item in gioHang)
                     {
                         // Lấy MaPhim, MaPhong từ LichChieu nếu không có trong item
                         var lichChieu = await _context.LichChieus.FirstOrDefaultAsync(lc => lc.MaLichChieu == item.MaLichChieu);
                         var temp = new TempGioHangItem
                         {
-                            MaHoaDon = maHoaDon,
+                            MaHoaDon = hoaDon.MaHoaDon, // luôn dùng mã hóa đơn thực tế
                             MaGhe = item.MaGhe,
                             SoGhe = item.SoGhe,
                             Gia = item.Gia,
@@ -585,7 +692,19 @@ namespace CinemaManagement.Controllers
                     await _context.SaveChangesAsync();
 
                     // 3. Hiển thị hướng dẫn chuyển khoản cho khách (có thể là view riêng)
-                    return View("HuongDanChuyenKhoan", new CinemaManagement.ViewModels.HuongDanChuyenKhoanViewModel { MaHoaDon = maHoaDon, SoTien = tongTienSauGiam });
+                    // Trước khi tạo mới hóa đơn chuyển khoản, kiểm tra đã có hóa đơn chờ chuyển khoản chưa
+                    if (paymentMethod == "banking")
+                    {
+                        var khachHangCheck = khachHangEntity;
+                        var tongTienGioHang = gioHang.Sum(x => x.Gia);
+                        var hoaDonCho = await _context.HoaDons.FirstOrDefaultAsync(hd => hd.MaKhachHang == khachHangCheck && hd.TrangThai == "Chờ chuyển khoản" && hd.TongTien == tongTienGioHang);
+                        if (hoaDonCho != null)
+                        {
+                            // Nếu đã có hóa đơn chờ chuyển khoản, redirect sang GET hướng dẫn chuyển khoản
+                            return RedirectToAction("HuongDanChuyenKhoan", new { maHoaDon = hoaDonCho.MaHoaDon });
+                        }
+                    }
+                    return RedirectToAction("HuongDanChuyenKhoan", new { maHoaDon = hoaDon.MaHoaDon });
                 }
                 return RedirectToAction("ThanhToanThanhCong", new { maHoaDon = maHoaDon });
             }
@@ -632,6 +751,13 @@ namespace CinemaManagement.Controllers
             if (hoaDon == null)
             {
                 return NotFound();
+            }
+
+            // Kiểm tra trạng thái thanh toán
+            if (hoaDon.TrangThai != "Đã thanh toán")
+            {
+                TempData["ErrorMessage"] = "Đơn hàng này chưa được thanh toán! Vui lòng thanh toán để hoàn tất.";
+                return RedirectToAction("ThanhToan", new { maHoaDon = hoaDon.MaHoaDon });
             }
 
             // Lấy chi tiết hóa đơn và vé
@@ -861,9 +987,38 @@ namespace CinemaManagement.Controllers
         // Model cho response API banking
         public class BankingTransaction
         {
-            public string Description { get; set; } = string.Empty;
+            [System.Text.Json.Serialization.JsonPropertyName("transactionID")]
+            [System.Text.Json.Serialization.JsonConverter(typeof(FlexibleStringConverter))]
+            public string TransactionID { get; set; } = string.Empty;
+
+            [System.Text.Json.Serialization.JsonPropertyName("amount")]
             public decimal Amount { get; set; }
-            public string Time { get; set; } = string.Empty;
+
+            [System.Text.Json.Serialization.JsonPropertyName("description")]
+            public string Description { get; set; } = string.Empty;
+
+            [System.Text.Json.Serialization.JsonPropertyName("transactionDate")]
+            public string TransactionDate { get; set; } = string.Empty;
+
+            [System.Text.Json.Serialization.JsonPropertyName("type")]
+            public string Type { get; set; } = string.Empty;
+        }
+
+        // Converter cho phép đọc số hoặc chuỗi thành string
+        public class FlexibleStringConverter : System.Text.Json.Serialization.JsonConverter<string>
+        {
+            public override string Read(ref System.Text.Json.Utf8JsonReader reader, Type typeToConvert, System.Text.Json.JsonSerializerOptions options)
+            {
+                if (reader.TokenType == System.Text.Json.JsonTokenType.String)
+                    return reader.GetString() ?? "";
+                if (reader.TokenType == System.Text.Json.JsonTokenType.Number)
+                    return reader.GetInt64().ToString();
+                return "";
+            }
+            public override void Write(System.Text.Json.Utf8JsonWriter writer, string value, System.Text.Json.JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value);
+            }
         }
 
         // Endpoint cho cron job kiểm tra giao dịch banking
@@ -885,7 +1040,19 @@ namespace CinemaManagement.Controllers
                 return StatusCode(502, "Banking API error");
 
             var json = await response.Content.ReadAsStringAsync();
-            var transactions = JsonSerializer.Deserialize<List<BankingTransaction>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<BankingTransaction>();
+            WriteErrorLog("[DEBUG] JSON banking API: " + json);
+            List<BankingTransaction> transactions = new List<BankingTransaction>();
+            using (var doc = System.Text.Json.JsonDocument.Parse(json))
+            {
+                if (doc.RootElement.TryGetProperty("transactions", out var txArr))
+                {
+                    transactions = System.Text.Json.JsonSerializer.Deserialize<List<BankingTransaction>>(txArr.GetRawText()) ?? new List<BankingTransaction>();
+                }
+                else
+                {
+                    transactions = new List<BankingTransaction>();
+                }
+            }
 
             int updated = 0;
             foreach (var order in pendingOrders)
@@ -962,6 +1129,89 @@ namespace CinemaManagement.Controllers
             }
             await _context.SaveChangesAsync();
             return Ok(new { updated });
+        }
+
+        // Bổ sung: Nếu người dùng truy cập GET vào XuLyThanhToan, redirect về Index
+        [HttpGet]
+        public IActionResult XuLyThanhToan()
+        {
+            return RedirectToAction("Index");
+        }
+
+        // Action GET hướng dẫn chuyển khoản, chỉ load lại hóa đơn cũ
+        [HttpGet]
+        public async Task<IActionResult> HuongDanChuyenKhoan(string maHoaDon)
+        {
+            var hoaDon = await _context.HoaDons.FirstOrDefaultAsync(hd => hd.MaHoaDon == maHoaDon);
+            if (hoaDon == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy hóa đơn.";
+                return RedirectToAction("Index");
+            }
+            var viewModel = new CinemaManagement.ViewModels.HuongDanChuyenKhoanViewModel
+            {
+                MaHoaDon = hoaDon.MaHoaDon,
+                SoTien = hoaDon.TongTien
+            };
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        [Route("/api/cron/check-banking")]
+        public async Task<IActionResult> GetBankingCronStatus()
+        {
+            var pendingOrders = await _context.HoaDons
+                .Where(h => h.TrangThai == "Chờ chuyển khoản")
+                .ToListAsync();
+
+            var apiUrl = "https://api.sieuthicode.net/historyapiacbv2/978225ae27ff5741c543da2ae7d44123";
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(apiUrl);
+            if (!response.IsSuccessStatusCode)
+                return StatusCode(502, "Banking API error");
+            var json = await response.Content.ReadAsStringAsync();
+            WriteErrorLog("[DEBUG] JSON banking API: " + json);
+            List<BankingTransaction> transactions = new List<BankingTransaction>();
+            using (var doc = System.Text.Json.JsonDocument.Parse(json))
+            {
+                if (doc.RootElement.TryGetProperty("transactions", out var txArr))
+                {
+                    transactions = System.Text.Json.JsonSerializer.Deserialize<List<BankingTransaction>>(txArr.GetRawText()) ?? new List<BankingTransaction>();
+                }
+                else
+                {
+                    transactions = new List<BankingTransaction>();
+                }
+            }
+
+            var matchedOrders = new List<object>();
+            int updated = 0;
+            foreach (var order in pendingOrders)
+            {
+                var matched = transactions.FirstOrDefault(t => t.Description != null && t.Description.Contains(order.MaHoaDon, StringComparison.OrdinalIgnoreCase));
+                if (matched != null)
+                {
+                    // Tự động cập nhật trạng thái hóa đơn
+                    order.TrangThai = "Đã thanh toán";
+                    updated++;
+                    matchedOrders.Add(new {
+                        order.MaHoaDon,
+                        order.TongTien,
+                        order.ThoiGianTao,
+                        order.MaKhachHang,
+                        MatchedTransaction = matched
+                    });
+                }
+            }
+            if (updated > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+            return Ok(new {
+                count = matchedOrders.Count,
+                updated,
+                matchedOrders
+            });
         }
 
         private void WriteErrorLog(string message)

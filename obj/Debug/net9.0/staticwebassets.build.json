@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pgEG9XUSuQaryyX194qzvWztsv6AzsaFrypw9HUgQt0=",
+  "Hash": "SXuvfXtamq9mD7WvKupaINln9RFcdcNSbHS566mZtX4=",
   "Source": "CinemaManagement",
   "BasePath": "_content/CinemaManagement",
   "Mode": "Default",
@@ -120,6 +120,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Identity": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2mthxky53e-9yrc5q2utm.gz",
+      "SourceId": "CinemaManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/CinemaManagement",
+      "RelativePath": "css/thanh-toan-custom#[.{fingerprint=9yrc5q2utm}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "6ddqtsu943",
+      "Integrity": "KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css"
     },
     {
       "Identity": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2ogna8obdb-kbynt5jhd9.gz",
@@ -1380,6 +1401,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css",
+      "SourceId": "CinemaManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\",
+      "BasePath": "_content/CinemaManagement",
+      "RelativePath": "css/thanh-toan-custom#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "9yrc5q2utm",
+      "Integrity": "gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\thanh-toan-custom.css"
     },
     {
       "Identity": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\favicon.ico",
@@ -3534,6 +3576,304 @@
         {
           "Name": "integrity",
           "Value": "sha256-bZ4H2XRSYGzC5L6S7AHXP8wbUeM3C6DGSg9614yEFWM="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2mthxky53e-9yrc5q2utm.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001103752759"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3072"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.9yrc5q2utm.css.gz",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2mthxky53e-9yrc5q2utm.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "9yrc5q2utm"
+        },
+        {
+          "Name": "label",
+          "Value": "css/thanh-toan-custom.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2mthxky53e-9yrc5q2utm.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001103752759"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\wwwroot\\css\\thanh-toan-custom.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3072"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gYXciZXO+cZDC5udDsc9222q3mk6BtupmYVmD4AAFTU="
+        }
+      ]
+    },
+    {
+      "Route": "css/thanh-toan-custom.css.gz",
+      "AssetFile": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\obj\\Debug\\net9.0\\compressed\\2mthxky53e-9yrc5q2utm.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "905"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Jul 2025 15:46:33 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-KhOYIIRg9iVXHtE/P1kZsN5FvtW5iUHzM6q2QBW8pm4="
         }
       ]
     },

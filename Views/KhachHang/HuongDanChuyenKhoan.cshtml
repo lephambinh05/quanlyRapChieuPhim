@@ -1,22 +1,89 @@
 @model CinemaManagement.ViewModels.HuongDanChuyenKhoanViewModel
-
 @{
     ViewBag.Title = "Hướng dẫn chuyển khoản";
+    var bankName = "ACB";
+    var accountNumber = "35639567";
+    var accountHolder = "LÊ PHẠM BÌNH";
 }
-
-<div class="container mt-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4>Hướng dẫn chuyển khoản ngân hàng</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>Mã hóa đơn:</strong> <span class="text-danger">@Model.MaHoaDon</span></p>
-            <p><strong>Số tiền cần chuyển:</strong> <span class="text-success">@Model.SoTien.ToString("N0") VNĐ</span></p>
-            <p><strong>Nội dung chuyển khoản:</strong> <span class="text-danger">@Model.MaHoaDon</span></p>
-            <hr />
-            <p>Vui lòng chuyển khoản đúng số tiền và ghi đúng nội dung mã hóa đơn để hệ thống tự động xác nhận thanh toán.</p>
-            <p>Sau khi chuyển khoản thành công, bạn sẽ được chuyển sang trang xác nhận.</p>
-            <a href="@Url.Action("Index", "KhachHang")" class="btn btn-secondary mt-3">Quay lại trang chủ</a>
+<link rel="stylesheet" href="/css/thanh-toan-custom.css">
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-10">
+            <div class="card modern-card">
+                <div class="modern-card-header">
+                    <i class="fas fa-university me-2"></i>Hướng dẫn chuyển khoản ngân hàng
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <img src="https://img.vietqr.io/image/acb-35639567-compact2.png?amount=@Model.SoTien&addInfo=@Model.MaHoaDon&accountName=L%C3%8A%20PH%E1%BA%A0M%20B%C3%8CNH" alt="QR chuyển khoản ACB" class="modern-qr" />
+                        <div class="text-muted mt-2" style="font-size:0.98em;">Quét mã QR bằng app ngân hàng, nội dung chuyển khoản sẽ được điền tự động.</div>
+                    </div>
+                    <div class="modern-info-row row">
+                        <div class="col-4 modern-info-label"><i class="fas fa-building-columns me-1"></i>Ngân hàng:</div>
+                        <div class="col-6 modern-info-value" id="bankName">@bankName</div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-primary modern-copy-btn" onclick="copyToClipboard('bankName')"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modern-info-row row">
+                        <div class="col-4 modern-info-label"><i class="fas fa-hashtag me-1"></i>Số tài khoản:</div>
+                        <div class="col-6 modern-info-value" id="accountNumber">@accountNumber</div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-primary modern-copy-btn" onclick="copyToClipboard('accountNumber')"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modern-info-row row">
+                        <div class="col-4 modern-info-label"><i class="fas fa-user me-1"></i>Chủ tài khoản:</div>
+                        <div class="col-6 modern-info-value" id="accountHolder">@accountHolder</div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-primary modern-copy-btn" onclick="copyToClipboard('accountHolder')"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modern-info-row row">
+                        <div class="col-4 modern-info-label"><i class="fas fa-money-bill-wave me-1"></i>Số tiền:</div>
+                        <div class="col-6 modern-info-value" id="soTien">@Model.SoTien.ToString("N0") VNĐ</div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-primary modern-copy-btn" onclick="copyToClipboard('soTien')"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modern-info-row row">
+                        <div class="col-4 modern-info-label"><i class="fas fa-pen-nib me-1"></i>Nội dung CK:</div>
+                        <div class="col-6 modern-info-value" id="noiDung">@Model.MaHoaDon</div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-outline-primary modern-copy-btn" onclick="copyToClipboard('noiDung')"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modern-warning mt-4 mb-3">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        <div>
+                            <b>Lưu ý:</b> Vui lòng chuyển khoản đúng <b>số tiền</b> và <b>nội dung mã hóa đơn</b> để hệ thống tự động xác nhận thanh toán.<br />
+                            Sau khi chuyển khoản thành công, bạn sẽ được chuyển sang trang xác nhận.
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("Index", "KhachHang")" class="modern-btn-main w-100"><i class="fas fa-arrow-left me-1"></i>Quay lại trang chủ</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div> 
+</div>
+@section Scripts {
+<script>
+    function copyToClipboard(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+            if (window.bootstrap) {
+                var toast = document.createElement('div');
+                toast.className = 'toast show position-fixed top-0 end-0 m-3';
+                toast.style.zIndex = 9999;
+                toast.innerHTML = `<div class='toast-header bg-success text-white'><strong class='me-auto'>Đã copy</strong><button type='button' class='btn-close btn-close-white' data-bs-dismiss='toast'></button></div><div class='toast-body'>Đã copy: <b>${text}</b></div>`;
+                document.body.appendChild(toast);
+                setTimeout(function() { toast.remove(); }, 2000);
+            } else {
+                alert('Đã copy: ' + text);
+            }
+        });
+    }
+</script>
+} 

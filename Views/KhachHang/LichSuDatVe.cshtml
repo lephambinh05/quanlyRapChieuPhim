@@ -53,6 +53,18 @@
                                             </span>
                                             <br>
                                             <small class="text-dark">@hoaDon.SoLuong vé</small>
+                                            <br />
+                                            <span class="badge @(hoaDon.TrangThai == "Đã thanh toán" ? "bg-success" : "bg-danger") mt-2">
+                                                @(hoaDon.TrangThai == "Đã thanh toán" ? "Đã thanh toán" : "Chưa thanh toán")
+                                            </span>
+                                            @if (hoaDon.TrangThai != "Đã thanh toán")
+                                            {
+                                                <div class="mt-2">
+                                                    <a href="@Url.Action("ThanhToan", "KhachHang", new { maHoaDon = hoaDon.MaHoaDon })" class="btn btn-warning btn-sm">
+                                                        <i class="fas fa-credit-card me-1"></i>Thanh toán ngay
+                                                    </a>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
