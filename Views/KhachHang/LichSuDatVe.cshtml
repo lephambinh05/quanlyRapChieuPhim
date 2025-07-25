@@ -54,10 +54,26 @@
                                             <br>
                                             <small class="text-dark">@hoaDon.SoLuong vé</small>
                                             <br />
-                                            <span class="badge @(hoaDon.TrangThai == "Đã thanh toán" ? "bg-success" : "bg-danger") mt-2">
-                                                @(hoaDon.TrangThai == "Đã thanh toán" ? "Đã thanh toán" : "Chưa thanh toán")
+                                            @{
+                                                var trangThaiClass = hoaDon.TrangThai switch
+                                                {
+                                                    "Đã thanh toán" => "bg-success",
+                                                    "Đã hủy" => "bg-danger",
+                                                    "Chờ chuyển khoản" => "bg-warning",
+                                                    _ => "bg-secondary"
+                                                };
+                                                var trangThaiText = hoaDon.TrangThai switch
+                                                {
+                                                    "Đã thanh toán" => "Đã thanh toán",
+                                                    "Đã hủy" => "Đã hủy",
+                                                    "Chờ chuyển khoản" => "Chờ chuyển khoản",
+                                                    _ => "Không xác định"
+                                                };
+                                            }
+                                            <span class="badge @trangThaiClass mt-2" id="trangThai-@hoaDon.MaHoaDon">
+                                                @trangThaiText
                                             </span>
-                                            @if (hoaDon.TrangThai != "Đã thanh toán")
+                                            @if (hoaDon.TrangThai == "Chờ chuyển khoản")
                                             {
                                                 <div class="mt-2">
                                                     <a href="@Url.Action("ThanhToan", "KhachHang", new { maHoaDon = hoaDon.MaHoaDon })" class="btn btn-warning btn-sm">
@@ -181,7 +197,86 @@
         $(document).ready(function() {
             // Tooltip
             $('[data-bs-toggle="tooltip"]').tooltip();
+            
+            // Auto refresh trạng thái hóa đơn mỗi 30 giây
+            setInterval(function() {
+                refreshOrderStatus();
+            }, 30000);
+            
+            // Kiểm tra và cập nhật trạng thái hết hạn ngay khi load trang
+            checkExpiredOrders();
         });
+        
+        function refreshOrderStatus() {
+            $.ajax({
+                url: '@Url.Action("GetOrderStatuses", "KhachHang")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        updateOrderStatuses(response.orders);
+                    }
+                },
+                error: function() {
+                    console.log('Không thể cập nhật trạng thái hóa đơn');
+                }
+            });
+        }
+        
+        function checkExpiredOrders() {
+            var now = new Date();
+            $('.card-header').each(function() {
+                var hoaDonElement = $(this);
+                var trangThaiElement = hoaDonElement.find('[id^="trangThai-"]');
+                var trangThai = trangThaiElement.text().trim();
+                
+                if (trangThai === 'Chờ chuyển khoản') {
+                    // Kiểm tra thời gian tạo hóa đơn (nếu có)
+                    var thoiGianTaoText = hoaDonElement.find('small:contains("fas fa-clock")').text();
+                    if (thoiGianTaoText) {
+                        // Cập nhật trạng thái nếu đã quá 2 phút
+                        updateExpiredStatus(hoaDonElement, trangThaiElement);
+                    }
+                }
+            });
+        }
+        
+        function updateExpiredStatus(hoaDonElement, trangThaiElement) {
+            // Thay đổi trạng thái thành "Đã hủy"
+            trangThaiElement.removeClass('bg-warning').addClass('bg-danger');
+            trangThaiElement.text('Đã hủy');
+            
+            // Ẩn nút "Thanh toán ngay"
+            hoaDonElement.find('.btn-warning').hide();
+            
+            // Thêm thông báo
+            if (!hoaDonElement.find('.alert-warning').length) {
+                hoaDonElement.append('<div class="alert alert-warning alert-sm mt-2 mb-0"><i class="fas fa-exclamation-triangle me-1"></i>Đơn hàng đã hết hạn thanh toán</div>');
+            }
+        }
+        
+        function updateOrderStatuses(orders) {
+            orders.forEach(function(order) {
+                var trangThaiElement = $('#trangThai-' + order.maHoaDon);
+                if (trangThaiElement.length) {
+                    var currentStatus = trangThaiElement.text().trim();
+                    if (currentStatus !== order.trangThai) {
+                        trangThaiElement.text(order.trangThai);
+                        trangThaiElement.removeClass().addClass('badge ' + order.trangThaiClass + ' mt-2');
+                        
+                        // Ẩn nút thanh toán nếu trạng thái thay đổi thành "Đã hủy"
+                        if (order.trangThai === 'Đã hủy') {
+                            trangThaiElement.closest('.card-header').find('.btn-warning').hide();
+                            
+                            // Thêm thông báo hết hạn
+                            var cardHeader = trangThaiElement.closest('.card-header');
+                            if (!cardHeader.find('.alert-warning').length) {
+                                cardHeader.append('<div class="alert alert-warning alert-sm mt-2 mb-0"><i class="fas fa-exclamation-triangle me-1"></i>Đơn hàng đã hết hạn thanh toán</div>');
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
     <style>
         .card-header[onclick] {
@@ -196,4 +291,4 @@
             color: #0056b3 !important;
         }
     </style>
-}
+} 

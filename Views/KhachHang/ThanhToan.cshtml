@@ -4,13 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="/css/thanh-toan-custom.css">
-<div class="container py-4">
+
+<div class="container py-4 fade-in">
     <div class="row g-4">
         <!-- Thông tin đơn hàng -->
-        <div class="col-lg-7">
-            <div class="card modern-card">
+        <div class="col-lg-7 slide-in-left">
+            <div class="card modern-card hover-lift">
                 <div class="modern-card-header d-flex align-items-center">
-                    <i class="fas fa-ticket-alt fa-lg me-2"></i>
+                    <i class="fas fa-ticket-alt fa-lg me-2 icon-bounce"></i>
                     <span class="modern-section-title mb-0">Thông tin đơn hàng</span>
                 </div>
                 <div class="card-body p-4">
@@ -18,19 +19,23 @@
                         <table class="table modern-table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Phim</th>
-                                    <th>Phòng</th>
-                                    <th>Ghế</th>
-                                    <th>Thời gian</th>
-                                    <th>Giá</th>
+                                    <th><i class="fas fa-film me-1"></i>Phim</th>
+                                    <th><i class="fas fa-door-open me-1"></i>Phòng</th>
+                                    <th><i class="fas fa-chair me-1"></i>Ghế</th>
+                                    <th><i class="fas fa-clock me-1"></i>Thời gian</th>
+                                    <th><i class="fas fa-money-bill-wave me-1"></i>Giá</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model.GioHang == null || !Model.GioHang.Any())
                                 {
                                     <tr>
-                                        <td colspan="5" class="text-center text-danger fw-bold">
-                                            Đơn hàng này chưa có thông tin ghế. Vui lòng đặt lại vé hoặc liên hệ hỗ trợ.
+                                        <td colspan="5" class="text-center">
+                                            <div class="alert modern-alert modern-alert-danger">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                <strong>Đơn hàng này chưa có thông tin ghế.</strong><br>
+                                                Vui lòng đặt lại vé hoặc liên hệ hỗ trợ.
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -39,7 +44,7 @@
                                     foreach (var item in Model.GioHang)
                                     {
                                         <tr>
-                                            <td><strong>@item.TenPhim</strong></td>
+                                            <td><strong class="text-gradient">@item.TenPhim</strong></td>
                                             <td>@item.TenPhong</td>
                                             <td><span class="modern-badge">@item.SoGhe</span></td>
                                             <td>@item.ThoiGianChieu.ToString("dd/MM/yyyy HH:mm")</td>
@@ -53,224 +58,287 @@
                 </div>
             </div>
         </div>
+
         <!-- Thanh toán -->
-        <div class="col-lg-5">
-            <div class="card modern-card">
-                <div class="modern-card-header d-flex align-items-center bg-success" style="background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%) !important;">
-                    <i class="fas fa-credit-card fa-lg me-2"></i>
+        <div class="col-lg-5 slide-in-right">
+            <div class="card modern-card hover-lift">
+                <div class="modern-card-header d-flex align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">
+                    <i class="fas fa-credit-card fa-lg me-2 icon-bounce"></i>
                     <span class="modern-section-title mb-0" style="color:#fff;">Thanh toán</span>
                 </div>
                 <div class="card-body p-4">
                     @if (Model.IsExpired)
                     {
-                        <div class="alert alert-danger text-center mt-4">
-                            <h4>Đơn hàng đã hết hạn!</h4>
-                            <p>Đơn hàng đã bị hủy do quá thời gian giữ ghế. Vui lòng chọn lại ghế để tiếp tục đặt vé.</p>
-                            <a href="/KhachHang/ChonGhe?maLichChieu=@Model.GioHang.FirstOrDefault()?.MaLichChieu" class="btn btn-primary mt-3">Chọn lại ghế</a>
-                        </div>
-                    }
-                    else if (Model.ThoiGianConLai <= 0)
-                    {
-                        <div class="alert alert-danger text-center mt-4">
-                            <h4>Đã hết thời gian giữ ghế!</h4>
-                            <p>Đơn hàng đã bị hủy. Vui lòng chọn lại ghế để tiếp tục đặt vé.</p>
-                            <a href="/KhachHang/ChonGhe?maLichChieu=@Model.GioHang.FirstOrDefault()?.MaLichChieu" class="btn btn-primary mt-3">Chọn lại ghế</a>
+                        <div class="alert modern-alert modern-alert-danger text-center">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-3 error-shake"></i>
+                            <h4 class="mb-3">Đơn hàng đã hết hạn!</h4>
+                            <p class="mb-3">Đơn hàng đã bị hủy do quá thời gian giữ ghế. Vui lòng chọn lại ghế để tiếp tục đặt vé.</p>
+                            <a href="/KhachHang/ChonGhe?maLichChieu=@Model.GioHang.FirstOrDefault()?.MaLichChieu" class="btn modern-btn-main">
+                                <i class="fas fa-redo me-2"></i>Chọn lại ghế
+                            </a>
                         </div>
                     }
                     else
                     {
-                        <div class="text-center mt-3">
-                            <span class="badge bg-warning text-dark fs-5">Thời gian còn lại: <span id="countdown">@Model.ThoiGianConLai</span> giây</span>
+                        <form method="post" action="@Url.Action("XuLyThanhToan")" id="paymentForm">
+                            @if (!string.IsNullOrEmpty(Model.MaHoaDon))
+                            {
+                                <input type="hidden" name="maHoaDonTemp" value="@Model.MaHoaDon" />
+                            }
+                            <input type="hidden" name="paymentMethod" value="banking" />
+                            <input type="hidden" name="seatIds" id="seatIdsInput" value="" />
+
+                            <!-- Voucher Section -->
+                            @if (Model.Vouchers.Any())
+                            {
+                                <div class="form-group">
+                                    <label for="voucher" class="form-label">
+                                        <i class="fas fa-gift"></i>Chọn voucher giảm giá
+                                    </label>
+                                    <select class="form-select" name="maVoucher" id="voucher">
+                                        <option value="">Không sử dụng voucher</option>
+                                        @foreach (var voucher in Model.Vouchers)
+                                        {
+                                            <option value="@voucher.MaGiamGia" data-discount="@voucher.PhanTramGiam">
+                                                @voucher.TenGiamGia - Giảm @voucher.PhanTramGiam%
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+
+                            <!-- Payment Summary -->
+                            <div class="payment-summary">
+                                <h6 class="fw-bold mb-3 text-gradient">
+                                    <i class="fas fa-calculator me-2"></i>Tổng thanh toán
+                                </h6>
+                                <div class="payment-row">
+                                    <span><i class="fas fa-receipt me-2"></i>Tạm tính:</span>
+                                    <span id="subtotal" class="fw-bold">@Model.TongTien.ToString("N0") VNĐ</span>
+                                </div>
+                                <div class="payment-row" id="discount-row" style="display: none;">
+                                    <span><i class="fas fa-tags me-2"></i>Giảm giá:</span>
+                                    <span class="discount-amount" id="discount-amount">0 VNĐ</span>
+                                </div>
+                                <div class="payment-row">
+                                    <span><i class="fas fa-money-bill-wave me-2"></i>Tổng cộng:</span>
+                                    <span class="fw-bold text-success" id="total-amount">@Model.TongTien.ToString("N0") VNĐ</span>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method Selection -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-credit-card"></i>Phương thức thanh toán
+                                </label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="banking" value="banking" checked>
+                                    <label class="form-check-label" for="banking">
+                                        <i class="fas fa-university me-2 text-primary"></i>Chuyển khoản ngân hàng
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="cash" value="cash" disabled>
+                                    <label class="form-check-label" for="cash">
+                                        <i class="fas fa-money-bill-wave me-2 text-success"></i>Tiền mặt (Tạm thời không khả dụng)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Payment Button -->
+                            <button type="submit" class="modern-btn-main w-100 btn-lg mt-4" id="btnPay">
+                                <i class="fas fa-lock me-2"></i>
+                                <span id="btnText">Thanh toán ngay</span>
+                                <span id="btnLoading" style="display: none;">
+                                    <span class="loading-spinner me-2"></span>Đang xử lý...
+                                </span>
+                            </button>
+
+                            <!-- Security Info -->
+                            <div class="text-center mt-4">
+                                <div class="security-badge">
+                                    <i class="fas fa-shield-alt me-2"></i>Bảo mật thanh toán
+                                </div>
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="fas fa-lock me-1"></i>Thông tin thanh toán được mã hóa SSL
+                                </small>
+                            </div>
+                        </form>
+
+                        <!-- Back Button -->
+                        <div class="mt-4">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100 hover-lift">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại trang chủ
+                            </a>
                         </div>
-                        <script>
-                            var timeLeft = @Model.ThoiGianConLai;
-                            var countdownInterval = setInterval(function() {
-                                timeLeft--;
-                                document.getElementById('countdown').innerText = timeLeft;
-                                if (timeLeft <= 0) {
-                                    clearInterval(countdownInterval);
-                                    // location.reload();
-                                    // Không reload, chỉ disable nút và báo hết hạn
-                                    document.getElementById('btnPay').disabled = true;
-                                    document.getElementById('countdown-timer').innerText = 'Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.';
-                                    document.getElementById('countdown-timer').classList.add('text-danger');
-                                }
-                            }, 1000);
-                        </script>
                     }
-                    <form method="post" action="@Url.Action("XuLyThanhToan")" id="paymentForm">
-                        @if (!string.IsNullOrEmpty(Model.MaHoaDon))
-                        {
-                            <input type="hidden" name="maHoaDonTemp" value="@Model.MaHoaDon" />
-                        }
-                        <input type="hidden" name="paymentMethod" value="banking" />
-                        <input type="hidden" name="seatIds" id="seatIdsInput" value="" />
-                        <!-- Voucher -->
-                        @if (Model.Vouchers.Any())
-                        {
-                            <div class="mb-3">
-                                <label for="voucher" class="form-label fw-bold"><i class="fas fa-gift me-1"></i>Chọn voucher giảm giá:</label>
-                                <select class="form-select" name="maVoucher" id="voucher">
-                                    <option value="">Không sử dụng voucher</option>
-                                    @foreach (var voucher in Model.Vouchers)
-                                    {
-                                        <option value="@voucher.MaGiamGia" data-discount="@voucher.PhanTramGiam">
-                                            @voucher.TenGiamGia - Giảm @voucher.PhanTramGiam%
-                                        </option>
-                                    }
-                                </select>
-                            </div>
-                        }
-                        <!-- Tổng tiền -->
-                        <div class="border-top pt-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Tạm tính:</span>
-                                <span id="subtotal">@Model.TongTien.ToString("N0") VNĐ</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2" id="discount-row" style="display: none;">
-                                <span>Giảm giá:</span>
-                                <span class="text-danger" id="discount-amount">0 VNĐ</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-3 border-top pt-2">
-                                <strong>Tổng cộng:</strong>
-                                <strong class="text-success" id="total-amount">@Model.TongTien.ToString("N0") VNĐ</strong>
-                            </div>
-                        </div>
-                        <button type="submit" class="modern-btn-main w-100 btn-lg mt-2" id="btnPay">
-                            <i class="fas fa-lock me-1"></i>Thanh toán ngay
-                        </button>
-                        <div class="text-center mt-3">
-                            <span id="countdown-timer" class="fw-bold text-danger" style="font-size:1.2rem;"></span>
-                        </div>
-                    </form>
-                    <div class="mt-3">
-                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-arrow-left me-1"></i>Quay lại trang chủ
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="card modern-card mt-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
-                    <h6 class="fw-bold">Bảo mật thanh toán</h6>
-                    <small class="text-muted">
-                        Thông tin thanh toán của bạn được mã hóa và bảo mật tuyệt đối
-                    </small>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div class="toast show modern-toast" role="alert">
-            <div class="toast-header bg-danger text-white">
-                <strong class="me-auto"><i class="fas fa-exclamation-triangle me-2"></i>Lỗi</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                @TempData["ErrorMessage"]
-            </div>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div id="successToast" class="toast modern-toast" role="alert" style="display: none;">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">
+                <i class="fas fa-check-circle me-2"></i>Thành công
+            </strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <span id="successMessage"></span>
         </div>
     </div>
+
+    <div id="errorToast" class="toast modern-toast" role="alert" style="display: none;">
+        <div class="toast-header bg-danger text-white">
+            <strong class="me-auto">
+                <i class="fas fa-exclamation-triangle me-2"></i>Lỗi
+            </strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <span id="errorMessage"></span>
+        </div>
+    </div>
+
+    <div id="warningToast" class="toast modern-toast" role="alert" style="display: none;">
+        <div class="toast-header bg-warning text-dark">
+            <strong class="me-auto">
+                <i class="fas fa-exclamation-circle me-2"></i>Cảnh báo
+            </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body">
+            <span id="warningMessage"></span>
+        </div>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        $(document).ready(function() {
+            showToast('error', '@TempData["ErrorMessage"]');
+        });
+    </script>
 }
+
 @section Scripts {
     <script>
         let originalTotal = @(Model.TongTien.ToString("F0", System.Globalization.CultureInfo.InvariantCulture));
         let currentDiscount = 0;
+
+        // Toast Functions
+        function showToast(type, message) {
+            const toastId = type + 'Toast';
+            const messageId = type + 'Message';
+            
+            $('#' + messageId).text(message);
+            $('#' + toastId).toast('show');
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                $('#' + toastId).toast('hide');
+            }, 5000);
+        }
+
+        // Format money function
         function formatMoney(amount) {
             if (isNaN(amount)) return '0';
             return amount.toLocaleString('vi-VN');
         }
+
+        // Update payment summary
         function updatePaymentSummary() {
             try {
                 var finalTotal = originalTotal - currentDiscount;
                 $('#subtotal').text(formatMoney(originalTotal) + ' VNĐ');
                 $('#discount-amount').text('-' + formatMoney(currentDiscount) + ' VNĐ');
                 $('#total-amount').text(formatMoney(finalTotal) + ' VNĐ');
+                
                 if (currentDiscount > 0) {
                     $('#discount-row').show().removeClass('d-none');
+                    showToast('success', 'Đã áp dụng voucher giảm giá!');
                 } else {
                     $('#discount-row').hide().addClass('d-none');
                 }
             } catch (error) {
                 console.error('Error updating payment summary:', error);
+                showToast('error', 'Có lỗi khi cập nhật tổng tiền');
             }
         }
-        // Đếm ngược 2 phút
-        let countdown = @Model.ThoiGianConLai;
-        let timerInterval;
-        function startCountdown() {
-            updateTimerDisplay();
-            if (countdown <= 0) {
-                $('#btnPay').prop('disabled', true);
-                $('#countdown-timer').text('Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.').addClass('text-danger');
-                // setTimeout(function(){
-                //     window.location.href = '@Url.Action("Index")';
-                // }, 2500);
-                return;
+
+        // Voucher change handler
+        $('#voucher').on('change', function() {
+            const selectedOption = $(this).find('option:selected');
+            const discountPercent = parseFloat(selectedOption.data('discount')) || 0;
+            
+            if (discountPercent > 0 && selectedOption.val()) {
+                currentDiscount = Math.round(originalTotal * discountPercent / 100);
+                updatePaymentSummary();
+            } else {
+                currentDiscount = 0;
+                updatePaymentSummary();
             }
-            timerInterval = setInterval(function() {
-                countdown--;
-                updateTimerDisplay();
-                if (countdown <= 0) {
-                    clearInterval(timerInterval);
-                    $('#btnPay').prop('disabled', true);
-                    $('#countdown-timer').text('Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.').addClass('text-danger');
-                    // setTimeout(function(){
-                    //     window.location.href = '@Url.Action("Index")';
-                    // }, 2500);
-                }
-            }, 1000);
-        }
-        function updateTimerDisplay() {
-            if (countdown > 0) {
-                let min = Math.floor(countdown / 60);
-                let sec = countdown % 60;
-                let timeStr = (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
-                $('#countdown-timer').html('<i class="fas fa-hourglass-half me-1"></i>Thời gian giữ ghế: <span class="text-danger">' + timeStr + '</span>');
-                $('#btnPay').prop('disabled', false);
+        });
+
+        // Payment method change handler
+        $('input[name="paymentMethod"]').on('change', function() {
+            const method = $(this).val();
+            if (method === 'banking') {
+                showToast('info', 'Bạn sẽ được chuyển đến trang chuyển khoản');
             }
-        }
+        });
+
+        // Form submission with loading state
+        $('#paymentForm').on('submit', function(e) {
+            // Show loading state
+            $('#btnText').hide();
+            $('#btnLoading').show();
+            $('#btnPay').prop('disabled', true);
+            
+            // Prepare seat IDs
+            var seatIds = [];
+            @foreach (var item in Model.GioHang)
+            {
+                <text>seatIds.push('@item.MaGhe');</text>
+            }
+            $('#seatIdsInput').val(seatIds.join(','));
+            
+            // Show processing toast
+            showToast('warning', 'Đang xử lý thanh toán...');
+            
+            // Allow form to submit
+            return true;
+        });
+
+        // Initialize
         $(document).ready(function() {
-            $('#voucher').on('change', function() {
-                const selectedOption = $(this).find('option:selected');
-                const discountPercent = parseFloat(selectedOption.data('discount')) || 0;
-                if (discountPercent > 0 && selectedOption.val()) {
-                    currentDiscount = Math.round(originalTotal * discountPercent / 100);
-                    updatePaymentSummary();
-                } else {
-                    currentDiscount = 0;
-                    updatePaymentSummary();
-                }
-            });
+            // Trigger voucher change on load
             setTimeout(function() {
                 $('#voucher').trigger('change');
                 updatePaymentSummary();
             }, 100);
-            // Khởi động đồng hồ đếm ngược
-            startCountdown();
-            // Trước khi submit form, truyền danh sách id ghế lên input hidden
-            $('#paymentForm').on('submit', function() {
-                var seatIds = [];
-                @foreach (var item in Model.GioHang)
-                {
-                    <text>seatIds.push('@item.MaGhe');</text>
-                }
-                $('#seatIdsInput').val(seatIds.join(','));
-            });
-        });
-        // Nếu Model.GioHang rỗng, lấy dữ liệu từ sessionStorage và gửi lên backend để tạo giỏ hàng tạm
-        $(document).ready(function() {
+
+            // Add hover effects
+            $('.modern-card').hover(
+                function() { $(this).addClass('hover-lift'); },
+                function() { $(this).removeClass('hover-lift'); }
+            );
+
+            // Handle empty cart
             var gioHangRong = @((Model.GioHang == null || !Model.GioHang.Any()) ? "true" : "false");
             if (gioHangRong === "true") {
                 var selectedSeats = JSON.parse(sessionStorage.getItem('selectedSeats') || '[]');
                 var totalAmount = sessionStorage.getItem('totalAmount');
                 var lichChieuId = sessionStorage.getItem('lichChieuId');
+                
                 if (selectedSeats.length > 0 && lichChieuId) {
-                    // Gửi AJAX POST lên backend để tạo giỏ hàng tạm
+                    showToast('warning', 'Đang tạo giỏ hàng tạm...');
+                    
                     $.ajax({
                         url: '/KhachHang/ThanhToan',
                         method: 'POST',
@@ -286,14 +354,27 @@
                             tongTien: totalAmount
                         }),
                         success: function() {
-                            window.location.reload();
+                            showToast('success', 'Đã tạo giỏ hàng thành công!');
+                            setTimeout(() => window.location.reload(), 1000);
                         },
                         error: function() {
-                            alert('Có lỗi khi tạo giỏ hàng tạm. Vui lòng thử lại!');
+                            showToast('error', 'Có lỗi khi tạo giỏ hàng tạm. Vui lòng thử lại!');
                         }
                     });
                 }
             }
         });
+
+        // Success animation for elements
+        function animateSuccess(element) {
+            element.addClass('success-checkmark');
+            setTimeout(() => element.removeClass('success-checkmark'), 500);
+        }
+
+        // Error animation for elements
+        function animateError(element) {
+            element.addClass('error-shake');
+            setTimeout(() => element.removeClass('error-shake'), 500);
+        }
     </script>
 }

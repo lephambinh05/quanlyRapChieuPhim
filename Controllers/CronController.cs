@@ -37,6 +37,7 @@ namespace CinemaManagement.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
+                    List<BankingTransaction> transactions = new List<BankingTransaction>();
                     if (string.IsNullOrWhiteSpace(json) || (!json.TrimStart().StartsWith("{") && !json.TrimStart().StartsWith("[")))
                     {
                         log.Add(new { step = "banking", error = "Empty or invalid JSON response from banking API" });

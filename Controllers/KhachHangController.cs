@@ -867,6 +867,7 @@ namespace CinemaManagement.Controllers
 
             var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
             
+            // Lấy danh sách hóa đơn
             var lichSu = await _context.HoaDons
                 .Include(hd => hd.CTHDs)
                     .ThenInclude(ct => ct.Ve)
@@ -876,7 +877,93 @@ namespace CinemaManagement.Controllers
                 .OrderByDescending(hd => hd.ThoiGianTao)
                 .ToListAsync();
 
+            // Cập nhật trạng thái hết hạn cho các đơn hàng
+            var now = DateTime.Now;
+            var updatedCount = 0;
+            foreach (var hoaDon in lichSu)
+            {
+                // Kiểm tra đơn hàng "Chờ chuyển khoản" đã quá 2 phút
+                if (hoaDon.TrangThai == "Chờ chuyển khoản" && 
+                    EF.Functions.DateDiffMinute(hoaDon.ThoiGianTao, now) >= 2)
+                {
+                    hoaDon.TrangThai = "Đã hủy";
+                    updatedCount++;
+                }
+            }
+
+            // Lưu thay đổi nếu có
+            if (updatedCount > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
             return View(lichSu);
+        }
+
+        // API để lấy trạng thái hóa đơn cho polling
+        [HttpGet]
+        public async Task<IActionResult> GetOrderStatuses()
+        {
+            if (!IsCustomerLoggedIn())
+            {
+                return Json(new { success = false, message = "Chưa đăng nhập" });
+            }
+
+            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
+            
+            // Cập nhật trạng thái hết hạn trước khi trả về
+            var now = DateTime.Now;
+            var hoaDons = await _context.HoaDons
+                .Where(hd => hd.MaKhachHang == maKhachHang)
+                .ToListAsync();
+
+            var updatedOrders = new List<OrderStatusDto>();
+            foreach (var hoaDon in hoaDons)
+            {
+                // Kiểm tra đơn hàng "Chờ chuyển khoản" đã quá 2 phút
+                if (hoaDon.TrangThai == "Chờ chuyển khoản" && 
+                    EF.Functions.DateDiffMinute(hoaDon.ThoiGianTao, now) >= 2)
+                {
+                    hoaDon.TrangThai = "Đã hủy";
+                    updatedOrders.Add(new OrderStatusDto
+                    { 
+                        MaHoaDon = hoaDon.MaHoaDon, 
+                        TrangThai = "Đã hủy",
+                        TrangThaiClass = "bg-danger"
+                    });
+                }
+                else
+                {
+                    var trangThaiClass = hoaDon.TrangThai switch
+                    {
+                        "Đã thanh toán" => "bg-success",
+                        "Đã hủy" => "bg-danger",
+                        "Chờ chuyển khoản" => "bg-warning",
+                        _ => "bg-secondary"
+                    };
+                    updatedOrders.Add(new OrderStatusDto
+                    { 
+                        MaHoaDon = hoaDon.MaHoaDon, 
+                        TrangThai = hoaDon.TrangThai,
+                        TrangThaiClass = trangThaiClass
+                    });
+                }
+            }
+
+            // Lưu thay đổi nếu có
+            if (updatedOrders.Any(o => o.TrangThai == "Đã hủy"))
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { success = true, orders = updatedOrders });
+        }
+
+        public class OrderStatusDto
+        {
+            public string MaHoaDon { get; set; } = string.Empty;
+            public string TrangThai { get; set; } = string.Empty;
+            public string TrangThaiClass { get; set; } = string.Empty;
         }
 
         // Quản lý tài khoản
