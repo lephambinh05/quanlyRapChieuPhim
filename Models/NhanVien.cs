@@ -7,16 +7,16 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
         [StringLength(100)]
-        public string TenNhanVien { get; set; } = string.Empty;
+        public string? TenNhanVien { get; set; }
 
         [StringLength(50)]
-        public string ChucVu { get; set; } = string.Empty;
+        public string? ChucVu { get; set; }
 
         [StringLength(15)]
-        public string SDT { get; set; } = string.Empty;
+        public string? SDT { get; set; }
 
         public DateTime NgaySinh { get; set; }
 

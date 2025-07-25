@@ -4,5 +4,6 @@ namespace CinemaManagement.ViewModels
     {
         public string MaHoaDon { get; set; } = string.Empty;
         public decimal SoTien { get; set; }
+        public int ThoiGianConLai { get; set; }
     }
 } 

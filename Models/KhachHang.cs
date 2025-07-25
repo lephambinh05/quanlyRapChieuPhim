@@ -7,13 +7,13 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaKhachHang { get; set; } = string.Empty;
+        public string? MaKhachHang { get; set; }
 
         [StringLength(100)]
-        public string HoTen { get; set; } = string.Empty;
+        public string? HoTen { get; set; }
 
         [StringLength(15)]
-        public string SDT { get; set; } = string.Empty;
+        public string? SDT { get; set; }
 
         public int DiemTichLuy { get; set; }
 

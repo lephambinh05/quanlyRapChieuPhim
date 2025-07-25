@@ -7,16 +7,16 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaVe { get; set; } = string.Empty;
+        public string? MaVe { get; set; }
 
         [StringLength(20)]
-        public string TrangThai { get; set; } = string.Empty;
+        public string? TrangThai { get; set; }
 
         [StringLength(10)]
-        public string SoGhe { get; set; } = string.Empty;
+        public string? SoGhe { get; set; }
 
         [StringLength(255)]
-        public string TenPhim { get; set; } = string.Empty;
+        public string? TenPhim { get; set; }
 
         public DateTime HanSuDung { get; set; }
 
@@ -24,19 +24,19 @@ namespace CinemaManagement.Models
         public decimal Gia { get; set; }
 
         [StringLength(50)]
-        public string TenPhong { get; set; } = string.Empty;
+        public string? TenPhong { get; set; }
 
         [StringLength(10)]
-        public string MaGhe { get; set; } = string.Empty;
+        public string? MaGhe { get; set; }
 
         [StringLength(10)]
-        public string MaLichChieu { get; set; } = string.Empty;
+        public string? MaLichChieu { get; set; }
 
         [StringLength(10)]
-        public string MaPhim { get; set; } = string.Empty;
+        public string? MaPhim { get; set; }
 
         [StringLength(10)]
-        public string MaPhong { get; set; } = string.Empty;
+        public string? MaPhong { get; set; }
 
         // Navigation properties
         [ForeignKey("MaGhe")]

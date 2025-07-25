@@ -7,27 +7,27 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaPhim { get; set; } = string.Empty;
+        public string? MaPhim { get; set; }
 
         [StringLength(255)]
-        public string TenPhim { get; set; } = string.Empty;
+        public string? TenPhim { get; set; }
 
         [StringLength(100)]
-        public string TheLoai { get; set; } = string.Empty;
+        public string? TheLoai { get; set; }
 
         public int ThoiLuong { get; set; } // đơn vị phút
 
         [StringLength(10)]
-        public string DoTuoiPhanAnh { get; set; } = string.Empty;
+        public string? DoTuoiPhanAnh { get; set; }
 
         [Column(TypeName = "nvarchar(max)")]
-        public string MoTa { get; set; } = string.Empty;
+        public string? MoTa { get; set; }
 
         [StringLength(255)]
-        public string ViTriFilePhim { get; set; } = string.Empty;
+        public string? ViTriFilePhim { get; set; }
 
         [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
         // Navigation properties
         [ForeignKey("MaNhanVien")]

@@ -352,3 +352,51 @@ Nếu bạn gặp lỗi, hãy tạo issue mới với thông tin:
 ---
 
 ⭐ **Nếu dự án này hữu ích, hãy cho chúng tôi một star trên GitHub!** ⭐
+
+---
+
+## ⚠️ LƯU Ý VỀ ENTITY FRAMEWORK & NULLABLE
+
+- **Tất cả các property kiểu `string` trong các model phải để nullable (`string?`)**, trừ property dùng làm khóa chính (`[Key]`).
+- Nếu property string không nullable mà dữ liệu trong database có NULL, Entity Framework sẽ ném lỗi `SqlNullValueException` khi truy vấn.
+- Các property số (`int`, `decimal`, `DateTime`, ...) nếu cột trong DB có thể NULL thì cũng nên để nullable (`int?`, `decimal?`, `DateTime?`).
+- Khi sửa model, hãy build lại project để cập nhật Entity Framework.
+- Nếu dùng Code First, sau khi sửa model cần tạo migration mới và update database nếu muốn đồng bộ schema.
+- Nếu dùng Database First, cần cập nhật lại các entity từ DB nếu có thay đổi.
+- Khi gặp lỗi `SqlNullValueException`, hãy kiểm tra lại các property string trong model và đảm bảo chúng là nullable.
+
+---
+
+## ⏰ HƯỚNG DẪN TÍCH HỢP CRON JOB & API TỰ ĐỘNG HÓA
+
+### 1. Cron kiểm tra thanh toán chuyển khoản
+- **Endpoint:** `GET /api/cron/check-banking`
+- **Chức năng:** Tự động kiểm tra các hóa đơn trạng thái "Chờ chuyển khoản" với lịch sử giao dịch ngân hàng (qua API bên thứ 3). Nếu phát hiện giao dịch hợp lệ (đúng mã hóa đơn, đúng số tiền), hệ thống sẽ tự động cập nhật trạng thái hóa đơn sang "Đã thanh toán".
+- **Cách sử dụng:**
+  - Gọi định kỳ bằng cron job server hoặc dịch vụ scheduler (ví dụ: mỗi 1-2 phút).
+  - Ví dụ lệnh curl:
+    ```bash
+    curl -X GET http://<your-domain>/api/cron/check-banking
+    ```
+- **Kết quả trả về:**
+  - Số lượng hóa đơn được cập nhật, danh sách hóa đơn khớp giao dịch.
+- **Lưu ý:**
+  - Đảm bảo endpoint này chỉ được gọi từ server tin cậy (có thể giới hạn IP hoặc auth nếu cần).
+  - API banking bên thứ 3 có thể rate limit, nên cần xử lý retry và log lỗi.
+
+### 2. Cron hủy đơn hàng quá hạn chưa thanh toán
+- **Endpoint:** `GET /api/cron/cancel-expired-orders`
+- **Chức năng:** Tự động hủy các hóa đơn "Chờ chuyển khoản" quá thời gian cho phép (mặc định 2 phút), giải phóng ghế, xóa bản ghi tạm giữ ghế, cập nhật trạng thái vé chưa bán về "Chưa đặt".
+- **Cách sử dụng:**
+  - Gọi định kỳ bằng cron job server hoặc dịch vụ scheduler (ví dụ: mỗi 1-2 phút).
+  - Ví dụ lệnh curl:
+    ```bash
+    curl -X GET http://<your-domain>/api/cron/cancel-expired-orders
+    ```
+- **Kết quả trả về:**
+  - Số lượng hóa đơn bị hủy.
+- **Lưu ý:**
+  - Nên chạy cron này song song với cron kiểm tra thanh toán để đảm bảo hệ thống luôn "sạch" các đơn hàng quá hạn.
+  - Có thể điều chỉnh thời gian timeout trong code nếu muốn thay đổi logic hủy đơn.
+
+---

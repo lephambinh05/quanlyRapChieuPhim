@@ -347,7 +347,7 @@ namespace CinemaManagement.Controllers
                         var ve = new Ve
                         {
                             MaVe = maVe,
-                            TrangThai = "Đã bán",
+                            TrangThai = "Chưa bán",
                             SoGhe = ghe.SoGhe,
                             TenPhim = lichChieu!.Phim.TenPhim,
                             HanSuDung = lichChieu.ThoiGianBatDau,

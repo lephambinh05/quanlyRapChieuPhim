@@ -7,22 +7,22 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaGhe { get; set; } = string.Empty;
+        public string? MaGhe { get; set; }
 
         [StringLength(30)]
-        public string SoGhe { get; set; } = string.Empty;
+        public string? SoGhe { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal GiaGhe { get; set; }
 
         [StringLength(50)]
-        public string LoaiGhe { get; set; } = string.Empty;
+        public string? LoaiGhe { get; set; }
 
         [StringLength(20)]
-        public string TrangThai { get; set; } = string.Empty;
+        public string? TrangThai { get; set; }
 
         [StringLength(10)]
-        public string MaPhong { get; set; } = string.Empty;
+        public string? MaPhong { get; set; }
 
         // Navigation properties
         [ForeignKey("MaPhong")]

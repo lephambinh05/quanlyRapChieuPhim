@@ -9,32 +9,16 @@ namespace CinemaManagement.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [StringLength(10)]
-        public string MaHoaDon { get; set; } = string.Empty;
-        [Required]
-        [StringLength(10)]
-        public string MaGhe { get; set; } = string.Empty;
-        [Required]
-        [StringLength(30)]
-        public string SoGhe { get; set; } = string.Empty;
+        public string? MaHoaDon { get; set; }
+        public string? MaGhe { get; set; }
+        public string? SoGhe { get; set; }
         [Required]
         public decimal Gia { get; set; }
-        [Required]
-        [StringLength(10)]
-        public string MaLichChieu { get; set; } = string.Empty;
-        [Required]
-        [StringLength(10)]
-        public string MaPhim { get; set; } = string.Empty;
-        [Required]
-        [StringLength(255)]
-        public string TenPhim { get; set; } = string.Empty;
-        [Required]
-        [StringLength(10)]
-        public string MaPhong { get; set; } = string.Empty;
-        [Required]
-        [StringLength(50)]
-        public string TenPhong { get; set; } = string.Empty;
+        public string? MaLichChieu { get; set; }
+        public string? MaPhim { get; set; }
+        public string? TenPhim { get; set; }
+        public string? MaPhong { get; set; }
+        public string? TenPhong { get; set; }
         [Required]
         public DateTime ThoiGianChieu { get; set; }
     }

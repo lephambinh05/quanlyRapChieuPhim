@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SHOMOkVnQ+4=",
+  "dgSpecHash": "qtau6WXRkL8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj",
+  "projectFilePath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-1\\CinemaManagement.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lephambinh\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\lephambinh\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

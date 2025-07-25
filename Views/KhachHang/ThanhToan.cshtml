@@ -61,12 +61,50 @@
                     <span class="modern-section-title mb-0" style="color:#fff;">Thanh toán</span>
                 </div>
                 <div class="card-body p-4">
-                    <form method="post" action="@Url.Action("XuLyThanhToan")">
+                    @if (Model.IsExpired)
+                    {
+                        <div class="alert alert-danger text-center mt-4">
+                            <h4>Đơn hàng đã hết hạn!</h4>
+                            <p>Đơn hàng đã bị hủy do quá thời gian giữ ghế. Vui lòng chọn lại ghế để tiếp tục đặt vé.</p>
+                            <a href="/KhachHang/ChonGhe?maLichChieu=@Model.GioHang.FirstOrDefault()?.MaLichChieu" class="btn btn-primary mt-3">Chọn lại ghế</a>
+                        </div>
+                    }
+                    else if (Model.ThoiGianConLai <= 0)
+                    {
+                        <div class="alert alert-danger text-center mt-4">
+                            <h4>Đã hết thời gian giữ ghế!</h4>
+                            <p>Đơn hàng đã bị hủy. Vui lòng chọn lại ghế để tiếp tục đặt vé.</p>
+                            <a href="/KhachHang/ChonGhe?maLichChieu=@Model.GioHang.FirstOrDefault()?.MaLichChieu" class="btn btn-primary mt-3">Chọn lại ghế</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center mt-3">
+                            <span class="badge bg-warning text-dark fs-5">Thời gian còn lại: <span id="countdown">@Model.ThoiGianConLai</span> giây</span>
+                        </div>
+                        <script>
+                            var timeLeft = @Model.ThoiGianConLai;
+                            var countdownInterval = setInterval(function() {
+                                timeLeft--;
+                                document.getElementById('countdown').innerText = timeLeft;
+                                if (timeLeft <= 0) {
+                                    clearInterval(countdownInterval);
+                                    // location.reload();
+                                    // Không reload, chỉ disable nút và báo hết hạn
+                                    document.getElementById('btnPay').disabled = true;
+                                    document.getElementById('countdown-timer').innerText = 'Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.';
+                                    document.getElementById('countdown-timer').classList.add('text-danger');
+                                }
+                            }, 1000);
+                        </script>
+                    }
+                    <form method="post" action="@Url.Action("XuLyThanhToan")" id="paymentForm">
                         @if (!string.IsNullOrEmpty(Model.MaHoaDon))
                         {
                             <input type="hidden" name="maHoaDonTemp" value="@Model.MaHoaDon" />
                         }
                         <input type="hidden" name="paymentMethod" value="banking" />
+                        <input type="hidden" name="seatIds" id="seatIdsInput" value="" />
                         <!-- Voucher -->
                         @if (Model.Vouchers.Any())
                         {
@@ -98,9 +136,12 @@
                                 <strong class="text-success" id="total-amount">@Model.TongTien.ToString("N0") VNĐ</strong>
                             </div>
                         </div>
-                        <button type="submit" class="modern-btn-main w-100 btn-lg mt-2">
+                        <button type="submit" class="modern-btn-main w-100 btn-lg mt-2" id="btnPay">
                             <i class="fas fa-lock me-1"></i>Thanh toán ngay
                         </button>
+                        <div class="text-center mt-3">
+                            <span id="countdown-timer" class="fw-bold text-danger" style="font-size:1.2rem;"></span>
+                        </div>
                     </form>
                     <div class="mt-3">
                         <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">
@@ -158,6 +199,41 @@
                 console.error('Error updating payment summary:', error);
             }
         }
+        // Đếm ngược 2 phút
+        let countdown = @Model.ThoiGianConLai;
+        let timerInterval;
+        function startCountdown() {
+            updateTimerDisplay();
+            if (countdown <= 0) {
+                $('#btnPay').prop('disabled', true);
+                $('#countdown-timer').text('Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.').addClass('text-danger');
+                // setTimeout(function(){
+                //     window.location.href = '@Url.Action("Index")';
+                // }, 2500);
+                return;
+            }
+            timerInterval = setInterval(function() {
+                countdown--;
+                updateTimerDisplay();
+                if (countdown <= 0) {
+                    clearInterval(timerInterval);
+                    $('#btnPay').prop('disabled', true);
+                    $('#countdown-timer').text('Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.').addClass('text-danger');
+                    // setTimeout(function(){
+                    //     window.location.href = '@Url.Action("Index")';
+                    // }, 2500);
+                }
+            }, 1000);
+        }
+        function updateTimerDisplay() {
+            if (countdown > 0) {
+                let min = Math.floor(countdown / 60);
+                let sec = countdown % 60;
+                let timeStr = (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
+                $('#countdown-timer').html('<i class="fas fa-hourglass-half me-1"></i>Thời gian giữ ghế: <span class="text-danger">' + timeStr + '</span>');
+                $('#btnPay').prop('disabled', false);
+            }
+        }
         $(document).ready(function() {
             $('#voucher').on('change', function() {
                 const selectedOption = $(this).find('option:selected');
@@ -174,6 +250,50 @@
                 $('#voucher').trigger('change');
                 updatePaymentSummary();
             }, 100);
+            // Khởi động đồng hồ đếm ngược
+            startCountdown();
+            // Trước khi submit form, truyền danh sách id ghế lên input hidden
+            $('#paymentForm').on('submit', function() {
+                var seatIds = [];
+                @foreach (var item in Model.GioHang)
+                {
+                    <text>seatIds.push('@item.MaGhe');</text>
+                }
+                $('#seatIdsInput').val(seatIds.join(','));
+            });
+        });
+        // Nếu Model.GioHang rỗng, lấy dữ liệu từ sessionStorage và gửi lên backend để tạo giỏ hàng tạm
+        $(document).ready(function() {
+            var gioHangRong = @((Model.GioHang == null || !Model.GioHang.Any()) ? "true" : "false");
+            if (gioHangRong === "true") {
+                var selectedSeats = JSON.parse(sessionStorage.getItem('selectedSeats') || '[]');
+                var totalAmount = sessionStorage.getItem('totalAmount');
+                var lichChieuId = sessionStorage.getItem('lichChieuId');
+                if (selectedSeats.length > 0 && lichChieuId) {
+                    // Gửi AJAX POST lên backend để tạo giỏ hàng tạm
+                    $.ajax({
+                        url: '/KhachHang/ThanhToan',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            maLichChieu: lichChieuId,
+                            selectedSeats: selectedSeats.map(seat => ({
+                                MaGhe: seat.id,
+                                SoGhe: seat.number,
+                                GiaGhe: seat.price,
+                                LoaiGhe: seat.type
+                            })),
+                            tongTien: totalAmount
+                        }),
+                        success: function() {
+                            window.location.reload();
+                        },
+                        error: function() {
+                            alert('Có lỗi khi tạo giỏ hàng tạm. Vui lòng thử lại!');
+                        }
+                    });
+                }
+            }
         });
     </script>
 }

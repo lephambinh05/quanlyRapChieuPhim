@@ -77,47 +77,47 @@
                                                 var ve = cthd.Ve;
                                                 <div class="col-md-6 col-lg-4 mb-3">
                                                     <div class="border rounded p-3 h-100">
-                                                        <h6 class="text-primary">@ve.TenPhim</h6>
+                                                        <h6 class="text-primary">@(ve?.TenPhim ?? "N/A")</h6>
                                                         <div class="mb-2">
                                                             <small class="text-muted">
                                                                 <i class="fas fa-map-marker-alt me-1"></i>
-                                                                @ve.TenPhong
+                                                                @(ve?.TenPhong ?? "N/A")
                                                             </small>
                                                             <br>
                                                             <small class="text-muted">
                                                                 <i class="fas fa-chair me-1"></i>
-                                                                Ghế: <span class="badge bg-primary">@ve.SoGhe</span>
+                                                                Ghế: <span class="badge bg-primary">@(ve?.SoGhe ?? "N/A")</span>
                                                             </small>
                                                         </div>
                                                         <div class="mb-2">
                                                             <small class="text-muted">
                                                                 <i class="fas fa-clock me-1"></i>
-                                                                @ve.LichChieu.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")
+                                                                @(ve?.LichChieu != null ? ve.LichChieu.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm") : "N/A")
                                                             </small>
                                                         </div>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             @{
                                                                 // Tính giá thực tế đã thanh toán (có áp dụng voucher)
-                                                                var tongTienGoc = hoaDon.CTHDs.Sum(ct => ct.Ve.Gia);
+                                                                var tongTienGoc = hoaDon.CTHDs.Sum(ct => ct.Ve?.Gia ?? 0);
                                                                 var tileGiamGia = tongTienGoc > 0 ? hoaDon.TongTien / tongTienGoc : 1;
-                                                                var giaThucTe = ve.Gia * tileGiamGia;
+                                                                var giaThucTe = (ve?.Gia ?? 0) * tileGiamGia;
                                                             }
                                                             <span class="fw-bold text-success">@giaThucTe.ToString("N0") VNĐ</span>
                                                             @if (tileGiamGia < 1)
                                                             {
                                                                 <div class="text-end">
-                                                                    <small class="text-muted text-decoration-line-through">@ve.Gia.ToString("N0") VNĐ</small>
+                                                                    <small class="text-muted text-decoration-line-through">@(ve != null ? ve.Gia.ToString("N0") : "N/A") VNĐ</small>
                                                                 </div>
                                                             }
                                                             @{
-                                                                var isExpired = ve.HanSuDung < DateTime.Now;
-                                                                var isUpcoming = ve.LichChieu.ThoiGianBatDau > DateTime.Now;
+                                                                var isExpired = ve?.HanSuDung < DateTime.Now;
+                                                                var isUpcoming = ve?.LichChieu != null && ve.LichChieu.ThoiGianBatDau > DateTime.Now;
                                                             }
-                                                            @if (isExpired)
+                                                            @if (isExpired == true)
                                                             {
                                                                 <span class="badge bg-secondary">Đã hết hạn</span>
                                                             }
-                                                            else if (isUpcoming)
+                                                            else if (isUpcoming == true)
                                                             {
                                                                 <span class="badge bg-success">Sắp chiếu</span>
                                                             }
@@ -128,7 +128,7 @@
                                                         </div>
                                                         <div class="mt-2">
                                                             <small class="text-muted">
-                                                                Mã vé: <code>@ve.MaVe</code>
+                                                                Mã vé: <code>@(ve?.MaVe ?? "N/A")</code>
                                                             </small>
                                                         </div>
                                                     </div>

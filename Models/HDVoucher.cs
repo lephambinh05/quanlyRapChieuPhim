@@ -5,11 +5,9 @@ namespace CinemaManagement.Models
 {
     public class HDVoucher
     {
-        [StringLength(10)]
-        public string MaHoaDon { get; set; } = string.Empty;
+        public string? MaHoaDon { get; set; }
 
-        [StringLength(10)]
-        public string MaGiamGia { get; set; } = string.Empty;
+        public string? MaGiamGia { get; set; }
 
         public int SoLuongVoucher { get; set; }
 

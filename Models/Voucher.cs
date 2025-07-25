@@ -7,22 +7,22 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaGiamGia { get; set; } = string.Empty;
+        public string? MaGiamGia { get; set; }
 
         [StringLength(100)]
-        public string TenGiamGia { get; set; } = string.Empty;
+        public string? TenGiamGia { get; set; }
 
         public int PhanTramGiam { get; set; }
 
         [Column(TypeName = "nvarchar(max)")]
-        public string MoTa { get; set; } = string.Empty;
+        public string? MoTa { get; set; }
 
         public DateTime ThoiGianBatDau { get; set; }
 
         public DateTime ThoiGianKetThuc { get; set; }
 
         [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
         // Navigation properties
         [ForeignKey("MaNhanVien")]

@@ -7,19 +7,19 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaTK { get; set; } = string.Empty;
+        public string? MaTK { get; set; }
 
         [StringLength(100)]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; }
 
         [StringLength(255)]
-        public string MatKhau { get; set; } = string.Empty;
+        public string? MatKhau { get; set; }
 
         [StringLength(50)]
-        public string Role { get; set; } = string.Empty;
+        public string? Role { get; set; }
 
         [StringLength(20)]
-        public string TrangThai { get; set; } = string.Empty;
+        public string? TrangThai { get; set; }
 
         [StringLength(10)]
         public string? MaNhanVien { get; set; }

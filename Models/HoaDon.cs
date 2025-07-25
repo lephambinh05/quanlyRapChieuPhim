@@ -9,8 +9,7 @@ namespace CinemaManagement.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [StringLength(10)]
-        public string MaHoaDon { get; set; } = string.Empty;
+        public string? MaHoaDon { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal TongTien { get; set; }
@@ -19,13 +18,11 @@ namespace CinemaManagement.Models
 
         public int SoLuong { get; set; }
 
-        [StringLength(10)]
-        public string MaKhachHang { get; set; } = string.Empty;
+        public string? MaKhachHang { get; set; }
 
-        [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
-        public string TrangThai { get; set; } = "Chờ chuyển khoản";
+        public string? TrangThai { get; set; } = "Chờ chuyển khoản";
 
         // Navigation properties
         [ForeignKey("MaKhachHang")]

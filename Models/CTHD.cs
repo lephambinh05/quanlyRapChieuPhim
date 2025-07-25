@@ -7,17 +7,17 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaCTHD { get; set; } = string.Empty;
+        public string? MaCTHD { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal DonGia { get; set; }
 
         [StringLength(10)]
-        public string MaVe { get; set; } = string.Empty;
+        public string? MaVe { get; set; }
 
         // KHÔNG dùng MaHoaDon làm khóa ngoại nữa, chỉ để tra cứu
         [StringLength(10)]
-        public string MaHoaDon { get; set; } = string.Empty;
+        public string? MaHoaDon { get; set; }
 
         public int HoaDonId { get; set; } // FK mới
 

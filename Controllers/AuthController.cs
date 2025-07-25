@@ -47,6 +47,11 @@ namespace CinemaManagement.Controllers
             HttpContext.Session.SetString("Role", taiKhoan.Role);
             HttpContext.Session.SetString("VaiTro", taiKhoan.Role); // Thêm để tương thích
 
+            // Ghi log đăng nhập
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [LOGIN] Email: {taiKhoan.Email}, Role: {taiKhoan.Role}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+
             if (taiKhoan.NhanVien != null)
             {
                 HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.MaNhanVien);

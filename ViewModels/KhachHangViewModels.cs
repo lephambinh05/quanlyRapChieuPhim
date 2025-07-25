@@ -31,6 +31,9 @@ namespace CinemaManagement.ViewModels
         public string? MaVoucherChon { get; set; }
         public bool IsDirectPayment { get; set; } = false; // Thêm flag cho thanh toán trực tiếp
         public string? MaHoaDon { get; set; } // Thêm thuộc tính này để truyền mã hóa đơn khi thanh toán lại
+        public int ThoiGianConLai { get; set; }
+        public HoaDon? HoaDon { get; set; }
+        public bool IsExpired { get; set; } = false;
     }
 
     public class ThanhToanThanhCongViewModel

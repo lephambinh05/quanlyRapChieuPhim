@@ -16,14 +16,11 @@ namespace CinemaManagement.Models
         [Column(TypeName = "decimal(10,2)")]
         public decimal Gia { get; set; }
 
-        [StringLength(10)]
-        public string MaPhong { get; set; } = string.Empty;
+        public string? MaPhong { get; set; }
 
-        [StringLength(10)]
-        public string MaPhim { get; set; } = string.Empty;
+        public string? MaPhim { get; set; }
 
-        [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
         // Navigation properties
         [ForeignKey("MaPhong")]

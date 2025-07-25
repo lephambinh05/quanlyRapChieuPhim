@@ -1,615 +1,221 @@
-[2025-07-23 23:25:40] [ERROR] [KhachHangController] [DEBUG] Số lượng item lấy từ TempGioHangItems: 1
-[2025-07-23 23:25:40] [ERROR] [KhachHangController] [DEBUG] TempGioHangItem 1: MaGhe=G6006, SoGhe=A6, Gia=140000.00, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, ThoiGianChieu=7/24/2025 6:00:00 PM, TenPhong=Phòng 6
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[MaTK] = TK004
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[Role] = Khách hàng
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: []
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 0
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Session TempGioHang rỗng, thử lấy lại từ TempGioHangItems với MaHoaDon=HD046
-[2025-07-23 23:25:43] [ERROR] [KhachHangController] [DEBUG] Đã lấy lại 1 item từ TempGioHangItems theo MaHoaDon=HD046
-[2025-07-23 23:34:56] [ERROR] [KhachHangController] [DEBUG] JSON banking API: {
-    "status": "success",
-    "message": "Th\u00e0nh c\u00f4ng",
-    "msg": "Th\u00e0nh c\u00f4ng",
-    "statuswhmcs": 1,
-    "transactions": [
-        {
-            "transactionID": 5417,
-            "amount": 140000,
-            "description": "HD014 FT25205808586233 GD 341336-072325 23:04:03",
-            "transactionDate": "24\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5416,
-            "amount": 1000000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-22:52:19 700195",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5415,
-            "amount": 239000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-21:08:34 592875",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5414,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:31:49 447621",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5413,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:27:17 440557",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5412,
-            "amount": 400000,
-            "description": "MBVCB.10294341019.5204BFTVG2LX4T2E.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 706833-072325 19:26:27",
-            "transactionDate": "24\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5411,
-            "amount": 550000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-16:17:00 109522",
-            "transactionDate": "23\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5410,
-            "amount": 1630000,
-            "description": "MBVCB.10291817994.5204BFTVG2LVP8S2.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 965109-072325 16:12:43",
-            "transactionDate": "23\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5409,
-            "amount": 12786,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-14:29:07 439204",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5408,
-            "amount": 30000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-09:56:01 047881",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5407,
-            "amount": 60000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-02:37:57 796128",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5406,
-            "amount": 100000,
-            "description": "MBVCB.10275029285.5202BFTVG2LEVBPY.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 828256-072125 21:25:53",
-            "transactionDate": "22\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5405,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-16:38:58 339485",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5404,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-15:27:48 228427",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5403,
-            "amount": 30000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-14:33:56 151480",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5402,
-            "amount": 84000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:27:03 511479",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5401,
-            "amount": 105000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:31 511404",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5400,
-            "amount": 54000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:09 511345",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5399,
-            "amount": 25000,
-            "description": "DH00000002 FT25200155949766 GD 898834-071925 03:18:13",
-            "transactionDate": "19\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5398,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:17:31 509939",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5397,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-00:05:36 458401",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5396,
-            "amount": 500000,
-            "description": "MBVCB.10241910255.5199BFTVG2LTCKEJ.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 661527-071825 20:00:54",
-            "transactionDate": "19\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5395,
-            "amount": 1,
-            "description": "##Lai nhap von#",
-            "transactionDate": "14\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5394,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-20:51:32 960924",
-            "transactionDate": "15\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5393,
-            "amount": 85000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-19:04:08 789651",
-            "transactionDate": "15\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5392,
-            "amount": 15000,
-            "description": "ODJJRVQTN2PKVNP MPOS-140725-15:55:15 447679",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5391,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-15:10:32 369823",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5390,
-            "amount": 95000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-14:47:09 331557",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5389,
-            "amount": 25000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-12:17:05 118359",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5388,
-            "amount": 293000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-130725-22:50:02 528970",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5387,
-            "amount": 65000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-130725-09:59:27 487416",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5386,
-            "amount": 222000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-120725-22:42:50 139714",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5385,
-            "amount": 166000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-120725-18:45:47 811852",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5384,
-            "amount": 200000,
-            "description": "MBVCB.10167657053.5193BFTVG22PYV8N.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 400493-071225 12:57:16",
-            "transactionDate": "14\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5383,
-            "amount": 48000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-17:51:54 157856",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5382,
-            "amount": 155000,
-            "description": "THANH TOAN CHO LOTTERIA XUANHONG TB - 110725 16:03:30 16658198",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5381,
-            "amount": 80000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:42:50 912347",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5380,
-            "amount": 180000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:39:01 905443",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5379,
-            "amount": 60000,
-            "description": "LE PHAM BINH CHUYEN KHOAN - 23DH114883 - 1 AO-110725-12:11:37 578647",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5378,
-            "amount": 25000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-09:11:10 274456",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        }
-    ]
-}
-[2025-07-23 23:35:39] [ERROR] [KhachHangController] [DEBUG] Số lượng item lấy từ TempGioHangItems: 1
-[2025-07-23 23:35:39] [ERROR] [KhachHangController] [DEBUG] TempGioHangItem 1: MaGhe=G6006, SoGhe=A6, Gia=140000.00, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, ThoiGianChieu=7/24/2025 6:00:00 PM, TenPhong=Phòng 6
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[MaTK] = TK004
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[Role] = Khách hàng
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: []
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 0
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Session TempGioHang rỗng, thử lấy lại từ TempGioHangItems với MaHoaDon=HD047
-[2025-07-23 23:35:42] [ERROR] [KhachHangController] [DEBUG] Đã lấy lại 1 item từ TempGioHangItems theo MaHoaDon=HD047
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[MaTK] = TK004
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[Role] = Khách hàng
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC092","MaGhe":"G3001","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 3","PhongChieu":"Ph\u00F2ng 3","SoGhe":"A1","ThoiGianChieu":"2025-07-24T10:00:00","Gia":150000}]
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC092","MaGhe":"G3001","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 3","PhongChieu":"Ph\u00F2ng 3","SoGhe":"A1","ThoiGianChieu":"2025-07-24T10:00:00","Gia":150000}]
-[2025-07-23 23:40:44] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
-[2025-07-23 23:43:20] [ERROR] [KhachHangController] [DEBUG] JSON banking API: {
-    "status": "success",
-    "message": "Th\u00e0nh c\u00f4ng",
-    "msg": "Th\u00e0nh c\u00f4ng",
-    "statuswhmcs": 1,
-    "transactions": [
-        {
-            "transactionID": 5418,
-            "amount": 150000,
-            "description": "HD049 FT25205530314161 GD 414382-072325 23:41:02",
-            "transactionDate": "24\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5417,
-            "amount": 140000,
-            "description": "HD014 FT25205808586233 GD 341336-072325 23:04:03",
-            "transactionDate": "24\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5416,
-            "amount": 1000000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-22:52:19 700195",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5415,
-            "amount": 239000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-21:08:34 592875",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5414,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:31:49 447621",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5413,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-19:27:17 440557",
-            "transactionDate": "24\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5412,
-            "amount": 400000,
-            "description": "MBVCB.10294341019.5204BFTVG2LX4T2E.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 706833-072325 19:26:27",
-            "transactionDate": "24\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5411,
-            "amount": 550000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-230725-16:17:00 109522",
-            "transactionDate": "23\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5410,
-            "amount": 1630000,
-            "description": "MBVCB.10291817994.5204BFTVG2LVP8S2.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 965109-072325 16:12:43",
-            "transactionDate": "23\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5409,
-            "amount": 12786,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-14:29:07 439204",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5408,
-            "amount": 30000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-09:56:01 047881",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5407,
-            "amount": 60000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-220725-02:37:57 796128",
-            "transactionDate": "22\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5406,
-            "amount": 100000,
-            "description": "MBVCB.10275029285.5202BFTVG2LEVBPY.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 828256-072125 21:25:53",
-            "transactionDate": "22\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5405,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-16:38:58 339485",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5404,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-15:27:48 228427",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5403,
-            "amount": 30000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-14:33:56 151480",
-            "transactionDate": "21\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5402,
-            "amount": 84000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:27:03 511479",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5401,
-            "amount": 105000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:31 511404",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5400,
-            "amount": 54000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:26:09 511345",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5399,
-            "amount": 25000,
-            "description": "DH00000002 FT25200155949766 GD 898834-071925 03:18:13",
-            "transactionDate": "19\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5398,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-03:17:31 509939",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5397,
-            "amount": 50000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-190725-00:05:36 458401",
-            "transactionDate": "19\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5396,
-            "amount": 500000,
-            "description": "MBVCB.10241910255.5199BFTVG2LTCKEJ.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 661527-071825 20:00:54",
-            "transactionDate": "19\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5395,
-            "amount": 1,
-            "description": "##Lai nhap von#",
-            "transactionDate": "14\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5394,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-20:51:32 960924",
-            "transactionDate": "15\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5393,
-            "amount": 85000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-19:04:08 789651",
-            "transactionDate": "15\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5392,
-            "amount": 15000,
-            "description": "ODJJRVQTN2PKVNP MPOS-140725-15:55:15 447679",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5391,
-            "amount": 100000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-15:10:32 369823",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5390,
-            "amount": 95000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-14:47:09 331557",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5389,
-            "amount": 25000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-140725-12:17:05 118359",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5388,
-            "amount": 293000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-130725-22:50:02 528970",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5387,
-            "amount": 65000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-130725-09:59:27 487416",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5386,
-            "amount": 222000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-120725-22:42:50 139714",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5385,
-            "amount": 166000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-120725-18:45:47 811852",
-            "transactionDate": "14\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5384,
-            "amount": 200000,
-            "description": "MBVCB.10167657053.5193BFTVG22PYV8N.PHAM THI THANH LOAN chuyen tien.CT tu 0031000284126 PHAM THI THANH LOAN toi 35639567 LE PHAM BINH tai ACB GD 400493-071225 12:57:16",
-            "transactionDate": "14\/07\/2025",
-            "type": "IN"
-        },
-        {
-            "transactionID": 5383,
-            "amount": 48000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-17:51:54 157856",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5382,
-            "amount": 155000,
-            "description": "THANH TOAN CHO LOTTERIA XUANHONG TB - 110725 16:03:30 16658198",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5381,
-            "amount": 80000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:42:50 912347",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5380,
-            "amount": 180000,
-            "description": "LE PHAM BINH CHUYEN KHOAN-110725-15:39:01 905443",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        },
-        {
-            "transactionID": 5379,
-            "amount": 60000,
-            "description": "LE PHAM BINH CHUYEN KHOAN - 23DH114883 - 1 AO-110725-12:11:37 578647",
-            "transactionDate": "11\/07\/2025",
-            "type": "OUT"
-        }
-    ]
-}
+[2025-07-26 00:35:18] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:35:18] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:36:45] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:36:45] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC091, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 00:36:49] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC091                                             , seatIds: G1003                                             , tongTien: 100000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 00:36:49] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:49] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:49] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:50] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G1003                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A3","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMPd5a9efc, TongTien=100000, ThoiGianTao=7/26/2025 12:36:50 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=21, MaHoaDon=TMPd5a9efc, TongTien=100000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CT20250725073605D5                                
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G1003                                             , MaLichChieu=LC091                                             , SoGhe=A3
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE003, MaPhim=PH001                                             , MaPhong=PC001                                             , MaLichChieu=LC091                                             , Gia=100000, SoGhe=A3, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 1
+[2025-07-26 00:36:50] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CT546896afbb, DonGia=100000, MaVe=VE003, MaHoaDon=HD6e62e38d, HoaDonId=21
+[2025-07-26 00:38:53] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:38:53] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:45:29] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:45:29] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:45:45] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang, TempGioHang: null
+[2025-07-26 00:45:45] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: []
+[2025-07-26 00:45:45] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:45:45] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:45:45] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:45:45] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:47:17] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:47:17] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:47:17] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:47:17] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:47:37] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:47:37] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:47:37] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:47:37] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:48:14] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2001                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:48:14] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:48:14] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:48:14] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:48:46] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:48:46] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 00:48:46] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:48:46] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:50:49] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:50:49] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 00:50:49] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:50:49] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:50:49] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:50:49] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:51:03] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:51:03] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:52:00] [LOGIN] Email: hoa.nt@gmail.com, Role: Khách hàng
+[2025-07-26 00:52:00] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:52:00] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:52:03] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: HD0000021                                         , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang, TempGioHang: null
+[2025-07-26 00:52:03] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: []
+[2025-07-26 00:52:07] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:52:07] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC091, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:52:11] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC091                                             , seatIds: G1004                                             , tongTien: 100000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:52:11] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:11] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:11] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:15] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G1004                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC091                                             ","MaGhe":"G1004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 1","PhongChieu":"Ph\u00F2ng 1","SoGhe":"A4","ThoiGianChieu":"2025-07-25T22:53:00","Gia":100000}]
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMP3dfeb81, TongTien=100000, ThoiGianTao=7/26/2025 12:52:15 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=22, MaHoaDon=TMP3dfeb81, TongTien=100000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CT546896afbb                                      
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G1004                                             , MaLichChieu=LC091                                             , SoGhe=A4
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE004, MaPhim=PH001                                             , MaPhong=PC001                                             , MaLichChieu=LC091                                             , Gia=100000, SoGhe=A4, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 1
+[2025-07-26 00:52:15] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CTedc6d8f6dc, DonGia=100000, MaVe=VE004, MaHoaDon=HD3231b370, HoaDonId=22
+[2025-07-26 00:54:18] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:54:18] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:54:23] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:54:23] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:54:28] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2001                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:54:28] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:29] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:29] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:32] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:32] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:33] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G2001                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMP97d1600, TongTien=120000, ThoiGianTao=7/26/2025 12:54:33 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=23, MaHoaDon=TMP97d1600, TongTien=120000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CTedc6d8f6dc                                      
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G2001                                             , MaLichChieu=LC006                                             , SoGhe=A1
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE005, MaPhim=PH001                                             , MaPhong=PC002                                             , MaLichChieu=LC006                                             , Gia=120000, SoGhe=A1, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 2
+[2025-07-26 00:54:33] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CTa9fd88bae1, DonGia=120000, MaVe=VE005, MaHoaDon=HD75704afa, HoaDonId=23
+[2025-07-26 00:56:37] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:56:37] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:56:41] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:56:41] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 00:56:57] [ERROR] [KhachHangController] [ACTION] [2025-07-26 00:56:57] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:04:02] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:04:02] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:04:05] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:04:05] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:04:08] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2002                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:04:08] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:08] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:08] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:10] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G2002                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMP65e0ce0, TongTien=120000, ThoiGianTao=7/26/2025 1:04:10 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=24, MaHoaDon=TMP65e0ce0, TongTien=120000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CTedc6d8f6dc                                      
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G2002                                             , MaLichChieu=LC006                                             , SoGhe=A2
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE006, MaPhim=PH001                                             , MaPhong=PC002                                             , MaLichChieu=LC006                                             , Gia=120000, SoGhe=A2, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 2
+[2025-07-26 01:04:10] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CT8beff7bf45, DonGia=120000, MaVe=VE006, MaHoaDon=HD6558637f, HoaDonId=24
+[2025-07-26 01:06:13] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:06:13] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:06:17] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:06:17] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:16:45] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:16:45] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:16:48] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2003                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:16:48] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:48] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:48] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:50] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G2003                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2003                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A3","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMPa80e639, TongTien=120000, ThoiGianTao=7/26/2025 1:16:50 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=25, MaHoaDon=TMPa80e639, TongTien=120000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CTedc6d8f6dc                                      
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G2003                                             , MaLichChieu=LC006                                             , SoGhe=A3
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE007, MaPhim=PH001                                             , MaPhong=PC002                                             , MaLichChieu=LC006                                             , Gia=120000, SoGhe=A3, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 2
+[2025-07-26 01:16:50] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CTffe47ab338, DonGia=120000, MaVe=VE007, MaHoaDon=HDb36cd467, HoaDonId=25
+[2025-07-26 01:18:53] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:18:53] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:44:34] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:44:34] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:44:42] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2004                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:44:42] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:42] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:42] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:44] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G2004                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2004                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A4","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMPb397236, TongTien=120000, ThoiGianTao=7/26/2025 1:44:44 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=26, MaHoaDon=TMPb397236, TongTien=120000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CTffe47ab338                                      
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G2004                                             , MaLichChieu=LC006                                             , SoGhe=A4
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE008, MaPhim=PH001                                             , MaPhong=PC002                                             , MaLichChieu=LC006                                             , Gia=120000, SoGhe=A4, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 2
+[2025-07-26 01:44:44] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CT667b7c4a54, DonGia=120000, MaVe=VE008, MaHoaDon=HD6f99d3e0, HoaDonId=26
+[2025-07-26 01:44:47] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:44:47] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 01:51:49] [ERROR] [KhachHangController] [ACTION] [2025-07-26 01:51:49] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:15:21] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:15:21] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:17:49] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:17:49] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:26:02] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:26:02] [ChiTietPhim] Email: hoa.nt@gmail.com, id: PH005                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:26:04] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:26:04] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC046, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:26:11] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:26:11] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:36:59] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:36:59] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:42:51] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2001                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:42:51] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:51] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:51] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:53] [ACTION] [XuLyThanhToan] Email: hoa.nt@gmail.com, paymentMethod: banking, maHoaDonTemp: , seatIds: G2001                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session keys: MaTK, Email, Role, VaiTro, MaKhachHang, TenKhachHang, TempGioHang
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[MaTK] = TK004                                             
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[Email] = hoa.nt@gmail.com
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[Role] = Khách hàng
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[VaiTro] = Khách hàng
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[MaKhachHang] = KH002                                             
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[TenKhachHang] = Ngô Thị Hoa
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] Session[TempGioHang] = [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Bắt đầu lấy TempGioHang từ session
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Dữ liệu gioHang sau khi lấy từ session: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2001                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A1","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Số lượng item trong gioHang: 1
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Tạo HoaDon: MaHoaDon=TMP29934f5, TongTien=120000, ThoiGianTao=7/26/2025 2:42:53 AM, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=banking
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Sau SaveChanges HoaDon: Id=27, MaHoaDon=TMP29934f5, TongTien=120000, SoLuong=1, MaKhachHang=KH002                                             , TrangThai=Chờ chuyển khoản
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [ERROR] Không parse được số thứ tự CTHD từ MaCTHD=CTffe47ab338                                      
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Xử lý ghế: MaGhe=G2001                                             , MaLichChieu=LC006                                             , SoGhe=A1
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Tạo vé: MaVe=VE009, MaPhim=PH001                                             , MaPhong=PC002                                             , MaLichChieu=LC006                                             , Gia=120000, SoGhe=A1, TenPhim=Nhà tù Shawshank – The Shawshank Redemption, TenPhong=Phòng 2
+[2025-07-26 02:42:53] [ERROR] [KhachHangController] [DEBUG] Tạo CTHD: MaCTHD=CTe7f609094d, DonGia=120000, MaVe=VE009, MaHoaDon=HD1e3fd1a2, HoaDonId=27
+[2025-07-26 02:44:56] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:44:56] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 02:45:38] [ERROR] [KhachHangController] [ACTION] [2025-07-26 02:45:38] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 03:13:38] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:13:38] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 03:13:39] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:13:39] [ChiTietPhim] Email: hoa.nt@gmail.com, id: PH001                                             , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 03:13:41] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:13:41] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 03:13:46] [ACTION] [POST ThanhToan] Email: hoa.nt@gmail.com, maLichChieu: LC006                                             , seatIds: G2002                                             , tongTien: 120000, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang
+[2025-07-26 03:13:46] [DEBUG] TempGioHang sau khi lưu: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 03:13:46] [ACTION] [GET ThanhToan] Email: hoa.nt@gmail.com, maHoaDon: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang, TempGioHang: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 03:13:46] [ERROR] [KhachHangController] [DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: [{"MaLichChieu":"LC006                                             ","MaGhe":"G2002                                             ","TenPhim":"Nh\u00E0 t\u00F9 Shawshank \u2013 The Shawshank Redemption","TenPhong":"Ph\u00F2ng 2","PhongChieu":"Ph\u00F2ng 2","SoGhe":"A2","ThoiGianChieu":"2025-07-26T09:00:00","Gia":120000}]
+[2025-07-26 03:25:08] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:25:08] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 03:25:11] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:25:11] [ChonGhe] Email: hoa.nt@gmail.com, maLichChieu: LC006, SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang
+[2025-07-26 03:27:06] [LOGIN] Email: hoa.nt@gmail.com, Role: Khách hàng
+[2025-07-26 03:27:06] [ERROR] [KhachHangController] [ACTION] [2025-07-26 03:27:06] [Index] Email: hoa.nt@gmail.com, theLoai: , searchTerm: , SessionKeys: MaTK,Email,Role,VaiTro,MaKhachHang,TenKhachHang,TempGioHang

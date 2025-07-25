@@ -7,21 +7,21 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string MaPhong { get; set; } = string.Empty;
+        public string? MaPhong { get; set; }
 
         [StringLength(50)]
-        public string TenPhong { get; set; } = string.Empty;
+        public string? TenPhong { get; set; }
 
         public int SoChoNgoi { get; set; }
 
         [StringLength(50)]
-        public string LoaiPhong { get; set; } = string.Empty;
+        public string? LoaiPhong { get; set; }
 
         [StringLength(50)]
-        public string TrangThai { get; set; } = string.Empty;
+        public string? TrangThai { get; set; }
 
         [StringLength(10)]
-        public string MaNhanVien { get; set; } = string.Empty;
+        public string? MaNhanVien { get; set; }
 
         // Navigation properties
         [ForeignKey("MaNhanVien")]

@@ -60,6 +60,9 @@
                             Sau khi chuyển khoản thành công, bạn sẽ được chuyển sang trang xác nhận.
                         </div>
                     </div>
+                    <div class="text-center mt-4">
+                        <span id="countdown-timer" class="fw-bold text-danger" style="font-size:1.2rem;"></span>
+                    </div>
                     <div class="text-center mt-3">
                         <a href="@Url.Action("Index", "KhachHang")" class="modern-btn-main w-100"><i class="fas fa-arrow-left me-1"></i>Quay lại trang chủ</a>
                     </div>
@@ -85,5 +88,40 @@
             }
         });
     }
+    // Đếm ngược 2 phút
+    let countdown = @Model.ThoiGianConLai;
+    let timerInterval;
+    function startCountdown() {
+        updateTimerDisplay();
+        if (countdown <= 0) {
+            document.getElementById('countdown-timer').innerText = 'Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.';
+            setTimeout(function(){
+                window.location.href = '@Url.Action("Index", "KhachHang")';
+            }, 2500);
+            return;
+        }
+        timerInterval = setInterval(function() {
+            countdown--;
+            updateTimerDisplay();
+            if (countdown <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('countdown-timer').innerText = 'Đã hết thời gian giữ ghế! Đơn hàng sẽ bị hủy.';
+                setTimeout(function(){
+                    window.location.href = '@Url.Action("Index", "KhachHang")';
+                }, 2500);
+            }
+        }, 1000);
+    }
+    function updateTimerDisplay() {
+        if (countdown > 0) {
+            let min = Math.floor(countdown / 60);
+            let sec = countdown % 60;
+            let timeStr = (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
+            document.getElementById('countdown-timer').innerHTML = '<i class="fas fa-hourglass-half me-1"></i>Thời gian giữ ghế: <span class="text-danger">' + timeStr + '</span>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        startCountdown();
+    });
 </script>
 } 

@@ -393,26 +393,34 @@
                     }
                 }
 
-                var button = $(this);
-                button.prop('disabled', true);
-                button.html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+                // Lưu danh sách ghế vào sessionStorage để truyền sang trang thanh toán (nếu cần)
+                sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+                sessionStorage.setItem('totalAmount', totalAmount);
+                sessionStorage.setItem('lichChieuId', lichChieuId);
 
-                console.log('Số ghế được chọn:', selectedSeats.length);
-                console.log('Danh sách ghế chi tiết:', JSON.stringify(selectedSeats, null, 2));
-                console.log('Tổng tiền:', totalAmount);
-                console.log('Mã lịch chiếu:', lichChieuId);
+                // Gửi dữ liệu ghế lên server trước khi chuyển sang trang thanh toán
+                var postData = {
+                    maLichChieu: lichChieuId,
+                    tongTien: totalAmount
+                };
+                selectedSeats.forEach(function(seat, idx) {
+                    postData['selectedSeats[' + idx + '].MaGhe'] = seat.id;
+                    postData['selectedSeats[' + idx + '].SoGhe'] = seat.number;
+                    postData['selectedSeats[' + idx + '].GiaGhe'] = seat.price;
+                    postData['selectedSeats[' + idx + '].LoaiGhe'] = seat.type;
+                });
 
-                try {
-                    // Chuyển đến trang thanh toán với thông tin ghế đã chọn
-                    proceedToPaymentWithSeats(selectedSeats, button);
-                } catch (error) {
-                    console.error('Lỗi trong quá trình xử lý thanh toán:', error);
-                    alert('Có lỗi xảy ra: ' + error.message);
-                    
-                    // Reset button
-                    button.prop('disabled', false);
-                    button.html('<i class="fas fa-credit-card me-2"></i>Thanh toán');
-                }
+                $.ajax({
+                    url: '/KhachHang/ThanhToan',
+                    method: 'POST',
+                    data: postData,
+                    success: function(response) {
+                        window.location.href = '/KhachHang/ThanhToan';
+                    },
+                    error: function(xhr) {
+                        alert('Có lỗi khi gửi dữ liệu ghế lên server: ' + xhr.responseText);
+                    }
+                });
             });
 
             // Hàm chuyển đến thanh toán trực tiếp
@@ -525,7 +533,7 @@
             function startPeriodicRefresh() {
                 refreshInterval = setInterval(function() {
                     refreshSeatStatus();
-                }, 30000); // Refresh mỗi 30 giây
+                }, 5000); // Refresh mỗi 5 giây
             }
 
             function refreshSeatStatus() {
