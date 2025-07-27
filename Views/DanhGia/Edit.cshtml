@@ -1,0 +1,128 @@
+@model CinemaManagement.ViewModels.DanhGiaViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa đánh giá phim";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit text-primary"></i>
+                        Chỉnh sửa đánh giá phim: @Model.TenPhim
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="MaPhim" />
+                        <input type="hidden" asp-for="TenPhim" />
+                        <input type="hidden" asp-for="MaKhachHang" />
+                        <input type="hidden" asp-for="HoTenKhachHang" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Phim:</label>
+                            <input type="text" class="form-control" value="@Model.TenPhim" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Khách hàng:</label>
+                            <input type="text" class="form-control" value="@Model.HoTenKhachHang" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SoSao" class="form-label">Đánh giá sao:</label>
+                            <div class="rating-stars">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <input type="radio" asp-for="SoSao" value="@i" id="star@(i)" class="rating-input" />
+                                    <label for="star@(i)" class="rating-star @(Model.SoSao >= i ? "text-warning" : "")">
+                                        <i class="fas fa-star"></i>
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="SoSao" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NoiDungBinhLuan" class="form-label">Bình luận (không bắt buộc):</label>
+                            <textarea asp-for="NoiDungBinhLuan" class="form-control" rows="4" 
+                                      placeholder="Chia sẻ cảm nhận của bạn về phim này..."></textarea>
+                            <span asp-validation-for="NoiDungBinhLuan" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="KhachHang" asp-action="Details" asp-route-maPhim="@Model.MaPhim" 
+                               class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Cập nhật đánh giá
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .rating-input {
+        display: none;
+    }
+
+    .rating-star {
+        font-size: 2rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .rating-star:hover,
+    .rating-star:hover ~ .rating-star,
+    .rating-input:checked ~ .rating-star {
+        color: #ffc107;
+    }
+
+    .rating-input:checked ~ .rating-star {
+        color: #ffc107;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Hiển thị sao khi hover
+            $('.rating-star').hover(
+                function() {
+                    $(this).prevAll('.rating-star').addClass('text-warning');
+                },
+                function() {
+                    $(this).prevAll('.rating-star').removeClass('text-warning');
+                }
+            );
+
+            // Xử lý click vào sao
+            $('.rating-star').click(function() {
+                var starIndex = $(this).index();
+                var radioValue = 5 - starIndex;
+                $('#star' + radioValue).prop('checked', true);
+                
+                // Cập nhật hiển thị sao
+                $('.rating-star').removeClass('text-warning');
+                $(this).prevAll('.rating-star').addClass('text-warning');
+                $(this).addClass('text-warning');
+            });
+        });
+    </script>
+} 

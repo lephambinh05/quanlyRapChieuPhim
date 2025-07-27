@@ -1,0 +1,127 @@
+@model CinemaManagement.ViewModels.TwoFactorSetupViewModel
+@{
+    ViewData["Title"] = "Thiết lập Xác thực Hai Yếu tố";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Thiết lập Xác thực Hai Yếu tố
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Hướng dẫn thiết lập</h5>
+                        <p class="mb-0">Để bảo vệ tài khoản của bạn, hãy thiết lập xác thực hai yếu tố bằng ứng dụng xác thực như Google Authenticator, Microsoft Authenticator hoặc Authy.</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-qrcode me-2"></i>Bước 1: Quét mã QR
+                            </h5>
+                            <div class="text-center mb-4">
+                                <img src="data:image/png;base64,@Model.QrCodeImage" alt="QR Code" class="img-fluid border rounded" style="max-width: 200px;" />
+                            </div>
+                            <p class="text-muted small">
+                                <i class="fas fa-mobile-alt me-1"></i>
+                                Mở ứng dụng xác thực và quét mã QR bên cạnh
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-key me-2"></i>Bước 2: Nhập mã thủ công
+                            </h5>
+                            <div class="alert alert-warning">
+                                <strong>Mã bí mật:</strong>
+                                <code class="d-block mt-2 p-2 bg-light">@Model.ManualEntryKey</code>
+                            </div>
+                            <p class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Nếu không thể quét mã QR, hãy nhập mã bí mật vào ứng dụng xác thực
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-keyboard me-2"></i>Bước 3: Xác nhận thiết lập
+                            </h5>
+                            <form asp-action="TwoFactorEnable" method="post">
+                                <input type="hidden" name="Secret" value="@Model.Secret" />
+                                <input type="hidden" name="QrCodeImage" value="@Model.QrCodeImage" />
+                                <input type="hidden" name="Email" value="@Model.Email" />
+                                <input type="hidden" name="ManualEntryKey" value="@Model.ManualEntryKey" />
+
+                                <div class="form-group">
+                                    <label for="Code" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Mã xác thực 6 chữ số
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control form-control-lg text-center" 
+                                           id="Code" 
+                                           name="Code" 
+                                           maxlength="6" 
+                                           pattern="\d{6}" 
+                                           placeholder="000000" 
+                                           required 
+                                           autocomplete="off" />
+                                    <div class="form-text">
+                                        <i class="fas fa-clock me-1"></i>
+                                        Nhập mã 6 chữ số từ ứng dụng xác thực của bạn
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <a href="@Url.Action("TwoFactorStatus", "Auth")" class="btn btn-secondary me-md-2">
+                                        <i class="fas fa-times me-2"></i>Hủy
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-check me-2"></i>Kích hoạt 2FA
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Phần mã dự phòng đã được xóa -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-focus vào input code
+        document.getElementById('Code').focus();
+
+        // Auto-format mã 6 chữ số
+        document.getElementById('Code').addEventListener('input', function(e) {
+            var value = e.target.value.replace(/\D/g, '');
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+            e.target.value = value;
+        });
+
+        // Validate form
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var code = document.getElementById('Code').value;
+            if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+                e.preventDefault();
+                alert('Vui lòng nhập mã xác thực 6 chữ số hợp lệ.');
+                document.getElementById('Code').focus();
+            }
+        });
+    </script>
+} 

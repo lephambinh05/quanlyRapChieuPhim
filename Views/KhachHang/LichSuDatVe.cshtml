@@ -198,10 +198,10 @@
             // Tooltip
             $('[data-bs-toggle="tooltip"]').tooltip();
             
-            // Auto refresh trạng thái hóa đơn mỗi 30 giây
-            setInterval(function() {
-                refreshOrderStatus();
-            }, 30000);
+            // Auto refresh trạng thái hóa đơn - removed auto-refresh
+            // setInterval(function() {
+            //     refreshOrderStatus();
+            // }, 30000);
             
             // Kiểm tra và cập nhật trạng thái hết hạn ngay khi load trang
             checkExpiredOrders();

@@ -29,10 +29,18 @@ namespace CinemaManagement.Models
         [StringLength(10)]
         public string? MaNhanVien { get; set; }
 
+        // Rating properties (calculated from DanhGia)
+        [NotMapped]
+        public double DiemTrungBinh => DanhGias.Any() ? DanhGias.Average(d => d.SoSao) : 0;
+
+        [NotMapped]
+        public int TongSoDanhGia => DanhGias.Count;
+
         // Navigation properties
         [ForeignKey("MaNhanVien")]
         public virtual NhanVien NhanVien { get; set; } = null!;
         public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
         public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+        public virtual ICollection<DanhGia> DanhGias { get; set; } = new List<DanhGia>();
     }
 }

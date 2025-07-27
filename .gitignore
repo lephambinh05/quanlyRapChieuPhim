@@ -33,3 +33,17 @@ obj/Debug/net9.0/compressed/utap0t7kpr-6ukhryfubh.gz
 obj/Debug/net9.0/compressed/x18ihn609o-ay5nd8zt9x.gz
 bin/Debug/net9.0/CinemaManagement.dll
 bin/Debug/net9.0/CinemaManagement.exe
+
+# Security files
+appsettings.Production.json
+appsettings.Development.json
+*.pfx
+*.key
+*.pem
+
+# Log files
+*.log
+error_log.txt
+
+# User secrets
+appsettings.Local.json

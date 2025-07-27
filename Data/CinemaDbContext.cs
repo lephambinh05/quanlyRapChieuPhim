@@ -21,6 +21,7 @@ namespace CinemaManagement.Data
         public DbSet<HoaDon> HoaDons { get; set; }
         public DbSet<CTHD> CTHDs { get; set; }
         public DbSet<HDVoucher> HDVouchers { get; set; }
+        public DbSet<DanhGia> DanhGias { get; set; }
         public DbSet<CinemaManagement.Models.TempGioHangItem> TempGioHangItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,6 +45,7 @@ namespace CinemaManagement.Data
             modelBuilder.Entity<HoaDon>().ToTable("HoaDon");
             modelBuilder.Entity<CTHD>().ToTable("CTHD");
             modelBuilder.Entity<HDVoucher>().ToTable("HD_voucher");
+            modelBuilder.Entity<DanhGia>().ToTable("DanhGia");
 
             // Configure TaiKhoan relationships with explicit foreign keys
             modelBuilder.Entity<TaiKhoan>()

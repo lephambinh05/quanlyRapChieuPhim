@@ -1,0 +1,169 @@
+@model CinemaManagement.ViewModels.TwoFactorStatusViewModel
+@{
+    ViewData["Title"] = "Bảo mật 2FA";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Bảo mật Two-Factor Authentication (2FA)
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        @if (Model.IsEnabled)
+                                        {
+                                            <i class="fas fa-shield-check text-success" style="font-size: 3rem;"></i>
+                                            <h5 class="text-success mt-2">2FA Đã Bật</h5>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-shield-alt text-muted" style="font-size: 3rem;"></i>
+                                            <h5 class="text-muted mt-2">2FA Chưa Bật</h5>
+                                        }
+                                    </div>
+                                    
+                                    <p class="text-muted">
+                                        @if (Model.IsEnabled)
+                                        {
+                                            <span>Tài khoản của bạn được bảo vệ bằng xác thực 2 yếu tố</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Tăng cường bảo mật cho tài khoản của bạn</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-cog me-2"></i>
+                                        Tùy chọn
+                                    </h6>
+                                    
+                                    @if (!Model.IsEnabled)
+                                    {
+                                        <div class="d-grid gap-2">
+                                            <a asp-controller="Auth" asp-action="TwoFactorSetup" 
+                                               class="btn btn-primary">
+                                                <i class="fas fa-plus-circle me-2"></i>
+                                                Bật 2FA
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-grid gap-2">
+                                            <button type="button" class="btn btn-outline-danger" 
+                                                    data-bs-toggle="modal" data-bs-target="#disable2FAModal">
+                                                <i class="fas fa-times-circle me-2"></i>
+                                                Tắt 2FA
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.IsEnabled)
+                    {
+                        <div class="mt-4">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Thông tin 2FA
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Ngày thiết lập:</strong> @Model.SetupDate?.ToString("dd/MM/yyyy HH:mm")</p>
+                                            <p><strong>Trạng thái:</strong> 
+                                                <span class="badge bg-success">Đã kích hoạt</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Phần backup codes đã được xóa -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tắt 2FA -->
+<div class="modal fade" id="disable2FAModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Xác nhận tắt 2FA
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Cảnh báo:</strong> Việc tắt 2FA sẽ làm giảm tính bảo mật của tài khoản.</p>
+                <p>Bạn có chắc chắn muốn tắt Two-Factor Authentication?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    Hủy
+                </button>
+                <form asp-controller="Auth" asp-action="TwoFactorDisable" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>
+                        Tắt 2FA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+} 

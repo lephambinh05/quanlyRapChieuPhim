@@ -4,6 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/chi-tiet-phim.css" />
+}
+
 <div class="container-fluid mt-4">
     <!-- Thông tin phim -->
     <div class="row">
@@ -33,24 +37,110 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h5>Thông tin phim</h5>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td><strong>Thể loại:</strong></td>
-                                    <td>@Model.TheLoai</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Thời lượng:</strong></td>
-                                    <td>@Model.ThoiLuong phút</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Độ tuổi:</strong></td>
-                                    <td>@Model.DoTuoiPhanAnh</td>
-                                </tr>
-                            </table>
-                            
-                            <h6>Mô tả</h6>
-                            <p class="text-justify">@Model.MoTa</p>
+                            <div class="movie-details">
+                                <div class="movie-header mb-4">
+                                    <h3 class="movie-title-main">@Model.TenPhim</h3>
+                                    <div class="movie-badges">
+                                        <span class="badge bg-primary me-2">@Model.TheLoai</span>
+                                        <span class="badge bg-info me-2">@Model.ThoiLuong phút</span>
+                                        <span class="badge bg-warning">@Model.DoTuoiPhanAnh</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="movie-info-grid">
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-film"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <label>Thể loại</label>
+                                            <span>@Model.TheLoai</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <label>Thời lượng</label>
+                                            <span>@Model.ThoiLuong phút</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-item">
+                                        <div class="info-icon">
+                                            <i class="fas fa-user-friends"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <label>Độ tuổi</label>
+                                            <span>@Model.DoTuoiPhanAnh</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="movie-description mt-4">
+                                    <h6 class="description-title">
+                                        <i class="fas fa-align-left me-2"></i>Mô tả
+                                    </h6>
+                                    <div class="description-content">
+                                        <p>@Model.MoTa</p>
+                                    </div>
+                                </div>
+
+                                <!-- Rating Section -->
+                                <div class="movie-rating mt-4">
+                                    <h6 class="description-title">
+                                        <i class="fas fa-star me-2"></i>Đánh giá
+                                    </h6>
+                                    <div class="rating-summary">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="average-rating me-3">
+                                                <span class="rating-score">@Model.DiemTrungBinh.ToString("F1")</span>
+                                                <div class="stars-display">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        if (i <= Math.Round(Model.DiemTrungBinh))
+                                                        {
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="far fa-star text-warning"></i>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="rating-info">
+                                                <div class="total-reviews">@Model.TongSoDanhGia đánh giá</div>
+                                                <div class="rating-actions">
+                                                    <a asp-controller="DanhGia" asp-action="List" asp-route-maPhim="@Model.MaPhim" 
+                                                       class="btn btn-outline-primary btn-sm me-2">
+                                                        <i class="fas fa-eye"></i> Xem tất cả
+                                                    </a>
+                                                    @{
+                                                        var currentUser = Context.Session.GetString("MaKhachHang");
+                                                        if (!string.IsNullOrEmpty(currentUser))
+                                                        {
+                                                            <a asp-controller="DanhGia" asp-action="Create" asp-route-maPhim="@Model.MaPhim" 
+                                                               class="btn btn-warning btn-sm">
+                                                                <i class="fas fa-star"></i> Đánh giá
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a asp-controller="Auth" asp-action="Login" 
+                                                               class="btn btn-warning btn-sm">
+                                                                <i class="fas fa-sign-in-alt"></i> Đăng nhập để đánh giá
+                                                            </a>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,6 +170,72 @@
                 <div class="card-body" id="scheduleDetailContainer">
                     <div id="scheduleDetailContent">
                         <!-- Nội dung sẽ được load bằng JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phim liên quan/đề xuất -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-star me-2"></i>Phim liên quan & Đề xuất
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        @if (ViewBag.PhimLienQuan != null && ((List<CinemaManagement.Models.Phim>)ViewBag.PhimLienQuan).Count > 0)
+                        {
+                            foreach (var phimLienQuan in (List<CinemaManagement.Models.Phim>)ViewBag.PhimLienQuan)
+                            {
+                                <div class="col-md-6 col-lg-4 col-xl-3">
+                                    <div class="related-movie-card">
+                                        <div class="movie-poster">
+                                            @if (!string.IsNullOrEmpty(phimLienQuan.ViTriFilePhim))
+                                            {
+                                                <img src="@phimLienQuan.ViTriFilePhim" alt="@phimLienQuan.TenPhim" 
+                                                     class="img-fluid rounded">
+                                            }
+                                            else
+                                            {
+                                                <div class="placeholder-poster">
+                                                    <i class="fas fa-film"></i>
+                                                </div>
+                                            }
+                                            <div class="movie-overlay">
+                                                <div class="overlay-content">
+                                                    <a href="@Url.Action("ChiTietPhim", new { id = phimLienQuan.MaPhim })" 
+                                                       class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="movie-info">
+                                            <h6 class="movie-title">@phimLienQuan.TenPhim</h6>
+                                            <div class="movie-meta">
+                                                <span class="badge bg-primary me-1">@phimLienQuan.TheLoai</span>
+                                                <span class="badge bg-info me-1">@phimLienQuan.ThoiLuong phút</span>
+                                                <span class="badge bg-warning">@phimLienQuan.DoTuoiPhanAnh</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                <div class="text-center py-5">
+                                    <i class="fas fa-film fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Không có phim liên quan</h5>
+                                    <p class="text-muted">Hiện tại chưa có phim tương tự để đề xuất.</p>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

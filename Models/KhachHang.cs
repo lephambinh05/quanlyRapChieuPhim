@@ -20,5 +20,6 @@ namespace CinemaManagement.Models
         // Navigation properties
         public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
         public virtual ICollection<HoaDon> HoaDons { get; set; } = new List<HoaDon>();
+        public virtual ICollection<DanhGia> DanhGias { get; set; } = new List<DanhGia>();
     }
 }

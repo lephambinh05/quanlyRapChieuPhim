@@ -529,11 +529,11 @@
                 }
             }
 
-            // Làm mới trạng thái ghế định kỳ
+            // Làm mới trạng thái ghế định kỳ - removed auto-refresh
             function startPeriodicRefresh() {
-                refreshInterval = setInterval(function() {
-                    refreshSeatStatus();
-                }, 5000); // Refresh mỗi 5 giây
+                // refreshInterval = setInterval(function() {
+                //     refreshSeatStatus();
+                // }, 5000); // Refresh mỗi 5 giây
             }
 
             function refreshSeatStatus() {

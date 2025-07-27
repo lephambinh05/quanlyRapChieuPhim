@@ -17,24 +17,49 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-film me-2"></i>Danh sách phim đang chiếu
-                    </h4>
-                </div>
+                                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">
+                                    <i class="fas fa-film me-2"></i>Danh sách phim đang chiếu
+                                </h4>
+                                @if (Model != null && Model.Any())
+                                {
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-list me-1"></i>@Model.Count phim
+                                    </span>
+                                }
+                            </div>
+                        </div>
                 <div class="card-body">
                     <!-- Bộ lọc và tìm kiếm -->
                     <div class="row mb-4">
-                        <div class="col-md-6">
-                            <form method="get" class="d-flex">
-                                <input type="text" name="searchTerm" class="form-control me-2" 
-                                       placeholder="Tìm kiếm phim..." value="@ViewBag.CurrentSearch">
-                                <button type="submit" class="btn btn-outline-primary">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </form>
+                        <div class="col-md-4">
+                            <div class="search-container position-relative">
+                                <div class="input-group">
+                                    <input type="text" id="searchInput" name="searchTerm" class="form-control search-input" 
+                                           placeholder="Tìm kiếm phim, thể loại..." value="@ViewBag.CurrentSearch"
+                                           autocomplete="off">
+                                    <button type="button" class="btn btn-outline-primary" id="searchBtn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="advancedSearchBtn" 
+                                            data-bs-toggle="modal" data-bs-target="#advancedSearchModal">
+                                        <i class="fas fa-filter"></i>
+                                    </button>
+                                </div>
+                                <!-- Autocomplete dropdown -->
+                                <div id="searchSuggestions" class="search-suggestions" style="display: none;">
+                                    <div class="suggestions-header">
+                                        <i class="fas fa-lightbulb me-2"></i>
+                                        <span>Gợi ý tìm kiếm</span>
+                                    </div>
+                                    <div id="suggestionsList" class="suggestions-list">
+                                        <!-- Suggestions will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" 
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,13 +77,103 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-2">
+                                <div class="dropdown flex-grow-1">
+                                    <button class="btn btn-outline-info dropdown-toggle w-100" type="button" 
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-sort me-1"></i>
+                                        @{
+                                            var sortOptionsDisplay = new Dictionary<string, string>
+                                            {
+                                                { "name", "Tên phim" },
+                                                { "price", "Giá vé" },
+                                                { "popularity", "Độ phổ biến" },
+                                                { "duration", "Thời lượng" },
+                                                { "rating", "Đánh giá" }
+                                            };
+                                            var currentSortBy = ViewBag.CurrentSortBy ?? "name";
+                                            @sortOptionsDisplay[currentSortBy]
+                                        }
+                                    </button>
+                                    <ul class="dropdown-menu w-100">
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = "name", sortOrder = ViewBag.CurrentSortOrder, theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-font me-2"></i>Tên phim
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = "price", sortOrder = ViewBag.CurrentSortOrder, theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-tag me-2"></i>Giá vé
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = "popularity", sortOrder = ViewBag.CurrentSortOrder, theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-fire me-2"></i>Độ phổ biến
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = "duration", sortOrder = ViewBag.CurrentSortOrder, theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-clock me-2"></i>Thời lượng
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = "rating", sortOrder = ViewBag.CurrentSortOrder, theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-star me-2"></i>Đánh giá
+                                        </a></li>
+                                    </ul>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-warning dropdown-toggle" type="button" 
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-sort-amount-@(ViewBag.CurrentSortOrder == "desc" ? "down" : "up")"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = ViewBag.CurrentSortBy, sortOrder = "asc", theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-sort-amount-up me-2"></i>Tăng dần
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Index", new { sortBy = ViewBag.CurrentSortBy, sortOrder = "desc", theLoai = ViewBag.CurrentTheLoai, searchTerm = ViewBag.CurrentSearch })">
+                                            <i class="fas fa-sort-amount-down me-2"></i>Giảm dần
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Thông tin sắp xếp hiện tại -->
+                    @if (!string.IsNullOrEmpty(ViewBag.CurrentSortBy) || !string.IsNullOrEmpty(ViewBag.CurrentTheLoai) || !string.IsNullOrEmpty(ViewBag.CurrentSearch))
+                    {
+                        <div class="alert alert-info alert-dismissible fade show mb-3" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-filter me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong>Bộ lọc hiện tại:</strong>
+                                    @{
+                                        var filters = new List<string>();
+                                        if (!string.IsNullOrEmpty(ViewBag.CurrentSearch))
+                                            filters.Add($"Tìm kiếm: \"{ViewBag.CurrentSearch}\"");
+                                        if (!string.IsNullOrEmpty(ViewBag.CurrentTheLoai))
+                                            filters.Add($"Thể loại: {ViewBag.CurrentTheLoai}");
+                                        if (!string.IsNullOrEmpty(ViewBag.CurrentSortBy))
+                                        {
+                                            var sortOptionsFilter = new Dictionary<string, string>
+                                            {
+                                                { "name", "Tên phim" },
+                                                { "price", "Giá vé" },
+                                                { "popularity", "Độ phổ biến" },
+                                                { "duration", "Thời lượng" },
+                                                { "rating", "Đánh giá" }
+                                            };
+                                            var sortOrderText = ViewBag.CurrentSortOrder == "desc" ? "giảm dần" : "tăng dần";
+                                            filters.Add($"Sắp xếp: {sortOptionsFilter[ViewBag.CurrentSortBy]} ({sortOrderText})");
+                                        }
+                                    }
+                                    <span class="text-muted">@string.Join(" | ", filters)</span>
+                                </div>
+                                <a href="@Url.Action("Index")" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i>Xóa bộ lọc
+                                </a>
+                            </div>
+                        </div>
+                    }
 
                     <!-- Danh sách phim -->
                     @if (Model != null && Model.Any())
                     {
                         <!-- Carousel Phim -->
-                        <div id="phimCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div id="phimCarousel" class="carousel slide">
                             <!-- Indicators -->
                             <div class="carousel-indicators">
                                 @{
@@ -118,6 +233,22 @@
                                                                             <i class="fas fa-users me-2 text-info"></i>
                                                                             <span class="small">@phim.DoTuoiPhanAnh</span>
                                                                         </div>
+                                                                        @if (ViewBag.CurrentSortBy == "price")
+                                                                        {
+                                                                            var giaTrungBinh = phim.LichChieus?.Where(lc => lc.ThoiGianBatDau >= DateTime.Now)?.Average(lc => lc.Gia) ?? 0;
+                                                                            <div class="info-line">
+                                                                                <i class="fas fa-tag me-2 text-primary"></i>
+                                                                                <span class="small fw-bold">@giaTrungBinh.ToString("N0") ₫</span>
+                                                                            </div>
+                                                                        }
+                                                                        @if (ViewBag.CurrentSortBy == "popularity")
+                                                                        {
+                                                                            var soVeBan = phim.Ves?.Count(v => v.TrangThai == "Đã sử dụng") ?? 0;
+                                                                            <div class="info-line">
+                                                                                <i class="fas fa-fire me-2 text-danger"></i>
+                                                                                <span class="small fw-bold">@soVeBan vé đã bán</span>
+                                                                            </div>
+                                                                        }
                                                                     </div>
                                                                     <p class="card-text small text-muted mt-2">
                                                                         @(phim.MoTa.Length > 80 ? phim.MoTa.Substring(0, 80) + "..." : phim.MoTa)
@@ -200,6 +331,89 @@
                             <p class="text-muted">Hiện tại chưa có lịch chiếu nào trong hệ thống.</p>
                         </div>
                     }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Search Modal -->
+<div class="modal fade" id="advancedSearchModal" tabindex="-1" aria-labelledby="advancedSearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="advancedSearchModalLabel">
+                    <i class="fas fa-search-plus me-2"></i>Tìm kiếm nâng cao
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="advancedSearchForm">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="advancedQuery" class="form-label">Từ khóa tìm kiếm</label>
+                            <input type="text" class="form-control" id="advancedQuery" 
+                                   placeholder="Nhập tên phim, thể loại, mô tả...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="advancedGenre" class="form-label">Thể loại</label>
+                            <select class="form-select" id="advancedGenre">
+                                <option value="">Tất cả thể loại</option>
+                                @if (ViewBag.TheLoais != null)
+                                {
+                                    @foreach (string theLoai in ViewBag.TheLoais)
+                                    {
+                                        <option value="@theLoai">@theLoai</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="advancedRating" class="form-label">Độ tuổi</label>
+                            <select class="form-select" id="advancedRating">
+                                <option value="">Tất cả độ tuổi</option>
+                                <option value="P">P - Mọi lứa tuổi</option>
+                                <option value="C13">C13 - Trên 13 tuổi</option>
+                                <option value="C16">C16 - Trên 16 tuổi</option>
+                                <option value="C18">C18 - Trên 18 tuổi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="minDuration" class="form-label">Thời lượng tối thiểu (phút)</label>
+                            <input type="number" class="form-control" id="minDuration" min="0" max="300" placeholder="0">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="maxDuration" class="form-label">Thời lượng tối đa (phút)</label>
+                            <input type="number" class="form-control" id="maxDuration" min="0" max="300" placeholder="300">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-primary" id="performAdvancedSearch">
+                    <i class="fas fa-search me-1"></i>Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Results Modal -->
+<div class="modal fade" id="searchResultsModal" tabindex="-1" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="searchResultsModalLabel">
+                    <i class="fas fa-list me-2"></i>Kết quả tìm kiếm
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="searchResultsContainer">
+                    <!-- Search results will be populated here -->
                 </div>
             </div>
         </div>
@@ -289,8 +503,8 @@
                 });
             }
 
-            // Update status every minute
-            setInterval(updateShowtimeStatus, 60000);
+            // Update status manually - removed auto-refresh
+            // setInterval(updateShowtimeStatus, 60000);
         });
 
         function loadScheduleForDate(selectedDate) {
@@ -452,6 +666,284 @@
             var cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
             $('#cart-count').text(cart.length);
         }
+
+        // Search and Autocomplete functionality
+        $(document).ready(function() {
+            var searchTimeout;
+            var currentSuggestions = [];
+
+            // Highlight dropdown item hiện tại
+            $('.dropdown-item').each(function() {
+                var href = $(this).attr('href');
+                if (href && href.includes('sortBy=' + '@ViewBag.CurrentSortBy')) {
+                    $(this).addClass('sort-active');
+                }
+            });
+
+            // Animation cho dropdown items
+            $('.dropdown-item').hover(
+                function() {
+                    $(this).find('i').addClass('fa-bounce');
+                },
+                function() {
+                    $(this).find('i').removeClass('fa-bounce');
+                }
+            );
+
+            // Tooltip cho các nút sắp xếp
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Auto-submit form khi thay đổi dropdown
+            $('.sort-dropdown select').on('change', function() {
+                $(this).closest('form').submit();
+            });
+
+            // Search input autocomplete
+            $('#searchInput').on('input', function() {
+                var query = $(this).val().trim();
+                
+                clearTimeout(searchTimeout);
+                
+                if (query.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+
+                searchTimeout = setTimeout(function() {
+                    fetchSuggestions(query);
+                }, 300);
+            });
+
+            // Handle search button click
+            $('#searchBtn').on('click', function() {
+                performSearch();
+            });
+
+            // Handle Enter key in search input
+            $('#searchInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+
+            // Handle suggestion clicks
+            $(document).on('click', '.suggestion-item', function() {
+                var suggestion = $(this).data('suggestion');
+                $('#searchInput').val(suggestion.title);
+                hideSuggestions();
+                
+                if (suggestion.type === 'phim') {
+                    // Navigate to movie detail
+                    window.location.href = '/KhachHang/ChiTietPhim/' + suggestion.id;
+                } else if (suggestion.type === 'genre') {
+                    // Filter by genre
+                    window.location.href = '/KhachHang/Index?theLoai=' + encodeURIComponent(suggestion.genre);
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    hideSuggestions();
+                }
+            });
+
+            // Advanced search functionality
+            $('#performAdvancedSearch').on('click', function() {
+                performAdvancedSearch();
+            });
+
+            // Handle Enter key in advanced search
+            $('#advancedQuery').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    performAdvancedSearch();
+                }
+            });
+
+            function fetchSuggestions(query) {
+                $.ajax({
+                    url: '/KhachHang/SearchPhim',
+                    method: 'GET',
+                    data: { query: query, limit: 8 },
+                    success: function(response) {
+                        if (response.success) {
+                            currentSuggestions = response.suggestions;
+                            displaySuggestions(response.suggestions);
+                        }
+                    },
+                    error: function() {
+                        console.log('Error fetching suggestions');
+                    }
+                });
+            }
+
+            function displaySuggestions(suggestions) {
+                var $suggestionsList = $('#suggestionsList');
+                $suggestionsList.empty();
+
+                if (suggestions.length === 0) {
+                    $suggestionsList.append(`
+                        <div class="suggestion-item no-results">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <span>Không tìm thấy kết quả</span>
+                        </div>
+                    `);
+                } else {
+                    suggestions.forEach(function(suggestion, index) {
+                        var icon = suggestion.type === 'phim' ? 'fas fa-film' : 'fas fa-tag';
+                        var badge = suggestion.type === 'genre' ? '<span class="badge bg-info ms-2">Thể loại</span>' : '';
+                        
+                        $suggestionsList.append(`
+                            <div class="suggestion-item" data-suggestion='${JSON.stringify(suggestion)}'>
+                                <div class="d-flex align-items-center">
+                                    <i class="${icon} me-2"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="suggestion-title">${suggestion.title}</div>
+                                        ${suggestion.type === 'phim' ? 
+                                            `<div class="suggestion-details">
+                                                <small class="text-muted">
+                                                    ${suggestion.genre} • ${suggestion.duration} phút • ${suggestion.rating}
+                                                </small>
+                                            </div>` : ''
+                                        }
+                                    </div>
+                                    ${badge}
+                                </div>
+                            </div>
+                        `);
+                    });
+                }
+
+                $('#searchSuggestions').show();
+            }
+
+            function hideSuggestions() {
+                $('#searchSuggestions').hide();
+            }
+
+            function performSearch() {
+                var query = $('#searchInput').val().trim();
+                if (query) {
+                    window.location.href = '/KhachHang/Index?searchTerm=' + encodeURIComponent(query);
+                }
+            }
+
+            function performAdvancedSearch() {
+                var query = $('#advancedQuery').val().trim();
+                var genre = $('#advancedGenre').val();
+                var rating = $('#advancedRating').val();
+                var minDuration = $('#minDuration').val();
+                var maxDuration = $('#maxDuration').val();
+
+                // Build query parameters
+                var params = [];
+                if (query) params.push('query=' + encodeURIComponent(query));
+                if (genre) params.push('genre=' + encodeURIComponent(genre));
+                if (rating) params.push('rating=' + encodeURIComponent(rating));
+                if (minDuration) params.push('minDuration=' + minDuration);
+                if (maxDuration) params.push('maxDuration=' + maxDuration);
+
+                var url = '/KhachHang/AdvancedSearch?' + params.join('&');
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            displayAdvancedSearchResults(response.results);
+                            $('#advancedSearchModal').modal('hide');
+                            $('#searchResultsModal').modal('show');
+                        } else {
+                            alert('Có lỗi xảy ra: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi tìm kiếm');
+                    }
+                });
+            }
+
+            function displayAdvancedSearchResults(results) {
+                var $container = $('#searchResultsContainer');
+                $container.empty();
+
+                if (results.length === 0) {
+                    $container.html(`
+                        <div class="text-center py-5">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Không tìm thấy kết quả</h5>
+                            <p class="text-muted">Thử thay đổi tiêu chí tìm kiếm</p>
+                        </div>
+                    `);
+                    return;
+                }
+
+                var html = `
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Tìm thấy <strong>${results.length}</strong> kết quả
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                `;
+
+                results.forEach(function(movie) {
+                    var imageUrl = movie.imageUrl || '/images/movie-placeholder.svg';
+                    var scheduleBadge = movie.hasSchedule ? 
+                        '<span class="badge bg-success ms-2">Có lịch chiếu</span>' : 
+                        '<span class="badge bg-secondary ms-2">Chưa có lịch</span>';
+
+                    html += `
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 search-result-card">
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <img src="${imageUrl}" alt="${movie.title}" 
+                                         class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: cover;"
+                                         onerror="this.src='/images/movie-placeholder.svg'">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">${movie.title}</h6>
+                                    <div class="card-text">
+                                        <div class="mb-2">
+                                            <i class="fas fa-tag me-2 text-success"></i>
+                                            <span class="small">${movie.genre}</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fas fa-clock me-2 text-warning"></i>
+                                            <span class="small">${movie.duration} phút</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fas fa-users me-2 text-info"></i>
+                                            <span class="small">${movie.rating}</span>
+                                            ${scheduleBadge}
+                                        </div>
+                                    </div>
+                                    <p class="card-text small text-muted mt-2">
+                                        ${movie.description && movie.description.length > 100 ? 
+                                            movie.description.substring(0, 100) + '...' : 
+                                            movie.description || 'Không có mô tả'}
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="/KhachHang/ChiTietPhim/${movie.id}" class="btn btn-primary btn-sm w-100">
+                                        <i class="fas fa-info-circle me-1"></i>Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                $container.html(html);
+            }
+        });
     </script>
     <style>
         .lich-chieu-item {
@@ -764,6 +1256,240 @@
         /* Schedule transition */
         .schedule-transition {
             transition: all 0.3s ease;
+        }
+
+        /* Sorting Styles */
+        .sort-dropdown .dropdown-item {
+            transition: all 0.2s ease;
+            padding: 8px 15px;
+        }
+
+        .sort-dropdown .dropdown-item:hover {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            transform: translateX(5px);
+        }
+
+        .sort-dropdown .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .btn-outline-info:hover {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-outline-warning:hover {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+
+        /* Active sort indicator */
+        .sort-active {
+            background-color: #007bff !important;
+            color: white !important;
+        }
+
+        /* Sort order indicator */
+        .sort-order-indicator {
+            font-size: 12px;
+            margin-left: 5px;
+            opacity: 0.8;
+        }
+
+        /* Responsive sorting */
+        @@media (max-width: 768px) {
+            .sort-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sort-controls .dropdown {
+                width: 100%;
+            }
+
+            .card-header .d-flex {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .alert .d-flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .alert .btn {
+                align-self: center;
+            }
+        }
+
+        /* Mobile optimization */
+        @@media (max-width: 576px) {
+            .phim-carousel-card .card-body {
+                padding: 10px;
+            }
+
+            .phim-carousel-card .card-title {
+                font-size: 14px;
+            }
+
+            .info-line {
+                font-size: 12px;
+            }
+
+            .dropdown-menu {
+                max-height: 200px;
+                overflow-y: auto;
+            }
+        }
+
+        /* Search and Autocomplete Styles */
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            border-color: #007bff;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1050;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .suggestions-header {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .suggestions-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background-color: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item.no-results {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 2px;
+        }
+
+        .suggestion-details {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        /* Advanced Search Modal Styles */
+        .modal-lg .modal-body {
+            padding: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        /* Search Results Styles */
+        .search-result-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .search-result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+
+        .search-result-card .card-img-top {
+            transition: all 0.3s ease;
+        }
+
+        .search-result-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+        /* Search Button Animation */
+        #searchBtn, #advancedSearchBtn {
+            transition: all 0.3s ease;
+        }
+
+        #searchBtn:hover, #advancedSearchBtn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Loading Animation */
+        .search-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Search */
+        @@media (max-width: 768px) {
+            .search-suggestions {
+                max-height: 300px;
+            }
+
+            .suggestion-item {
+                padding: 10px 12px;
+            }
+
+            .modal-lg {
+                margin: 10px;
+            }
         }
     </style>
 }

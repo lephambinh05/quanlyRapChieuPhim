@@ -1,22 +1,111 @@
 using Microsoft.EntityFrameworkCore;
 using CinemaManagement.Data;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using CinemaManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add Memory Cache
+builder.Services.AddMemoryCache();
+
+// Add Antiforgery
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.HttpOnly = true;
+});
+
 // Add Entity Framework
 builder.Services.AddDbContext<CinemaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add Data Protection
+builder.Services.AddDataProtection();
 
 // Add Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromHours(8); // Tăng từ 2 giờ lên 8 giờ
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.MaxAge = TimeSpan.FromHours(8); // Tăng từ 2 giờ lên 8 giờ
+});
+
+// Add Email and Password Reset Services
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
+builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
+
+// Add Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.LogoutPath = "/Auth/Logout";
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(8); // Tăng từ 2 giờ lên 8 giờ
+    options.SlidingExpiration = true;
+})
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/signin-google";
+    options.SaveTokens = true;
+    options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.None;
+    options.CorrelationCookie.HttpOnly = true;
+    options.CorrelationCookie.MaxAge = TimeSpan.FromHours(1);
+    
+    // Thêm logging chi tiết
+    options.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents
+    {
+        OnRemoteFailure = context =>
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] RemoteFailure: {context.Failure?.Message}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+            return Task.CompletedTask;
+        },
+        OnTicketReceived = context =>
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] TicketReceived\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+            return Task.CompletedTask;
+        },
+        OnCreatingTicket = context =>
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] CreatingTicket\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+            return Task.CompletedTask;
+        },
+        OnRedirectToAuthorizationEndpoint = context =>
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] RedirectToAuthorizationEndpoint: {context.RedirectUri}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        }
+    };
 });
 
 var app = builder.Build();
@@ -72,17 +161,39 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// XÓA hoặc comment dòng: app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Add Google authentication callback handler
+app.MapGet("/signin-google", async (HttpContext context) =>
+{
+    try
+    {
+        var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+        var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] MapGet /signin-google được gọi\n";
+        System.IO.File.AppendAllText(logPath, logLine);
+        
+        // Redirect to Auth controller để xử lý
+        context.Response.Redirect("/Auth/ExternalLoginCallback");
+    }
+    catch (Exception ex)
+    {
+        var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+        var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] MapGet Exception: {ex.Message}\n";
+        System.IO.File.AppendAllText(logPath, logLine);
+        
+        context.Response.Redirect("/Auth/Login?error=google_auth_error");
+    }
+});
 
 app.Run();
