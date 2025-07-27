@@ -1,0 +1,165 @@
+@model CinemaManagement.ViewModels.DanhGiaListViewModel
+
+@{
+    ViewData["Title"] = "Đánh giá phim: " + Model.TenPhim;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-star text-warning"></i>
+                            Đánh giá phim: @Model.TenPhim
+                        </h4>
+                        <a asp-controller="KhachHang" asp-action="Details" asp-route-maPhim="@Model.MaPhim" 
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Thống kê đánh giá -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 class="text-warning mb-0">@Model.DiemTrungBinh.ToString("F1")</h3>
+                                    <div class="stars-display">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= Math.Round(Model.DiemTrungBinh))
+                                            {
+                                                <i class="fas fa-star text-warning"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star text-warning"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <p class="mb-0">Điểm trung bình</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 class="text-primary mb-0">@Model.TongSoDanhGia</h3>
+                                    <p class="mb-0">Tổng số đánh giá</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách đánh giá -->
+                    @if (Model.DanhGias.Any())
+                    {
+                        <div class="row">
+                            @foreach (var danhGia in Model.DanhGias)
+                            {
+                                <div class="col-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <h6 class="mb-0 me-3">@danhGia.HoTenKhachHang</h6>
+                                                        <div class="stars-display">
+                                                            @for (int i = 1; i <= 5; i++)
+                                                            {
+                                                                if (i <= danhGia.SoSao)
+                                                                {
+                                                                    <i class="fas fa-star text-warning"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="far fa-star text-muted"></i>
+                                                                }
+                                                            }
+                                                        </div>
+                                                        @if (danhGia.DaXemPhim)
+                                                        {
+                                                            <span class="badge bg-success ms-2">
+                                                                <i class="fas fa-check"></i> Đã xem phim
+                                                            </span>
+                                                        }
+                                                    </div>
+                                                    
+                                                    @if (!string.IsNullOrEmpty(danhGia.NoiDungBinhLuan))
+                                                    {
+                                                        <p class="mb-2">@danhGia.NoiDungBinhLuan</p>
+                                                    }
+                                                    
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-clock"></i>
+                                                        @danhGia.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")
+                                                    </small>
+                                                </div>
+                                                
+                                                @{
+                                                    var currentUser = Context.Session.GetString("MaKhachHang");
+                                                    if (currentUser != null)
+                                                    {
+                                                        // Kiểm tra xem đây có phải đánh giá của user hiện tại không
+                                                        // (Cần thêm logic để so sánh với MaKhachHang của đánh giá)
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                                    type="button" data-bs-toggle="dropdown">
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a class="dropdown-item" href="#">
+                                                                        <i class="fas fa-edit"></i> Chỉnh sửa
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form method="post" asp-action="Delete" asp-route-id="@danhGia.Id" 
+                                                                          style="display: inline;">
+                                                                        @Html.AntiForgeryToken()
+                                                                        <button type="submit" class="dropdown-item text-danger" 
+                                                                                onclick="return confirm('Bạn có chắc muốn xóa đánh giá này?')">
+                                                                            <i class="fas fa-trash"></i> Xóa
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Chưa có đánh giá nào cho phim này</h5>
+                            <p class="text-muted">Hãy là người đầu tiên đánh giá phim này!</p>
+                            <a asp-action="Create" asp-route-maPhim="@Model.MaPhim" class="btn btn-primary">
+                                <i class="fas fa-star"></i> Đánh giá ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stars-display {
+        display: inline-block;
+    }
+    
+    .stars-display i {
+        font-size: 0.9rem;
+    }
+</style> 

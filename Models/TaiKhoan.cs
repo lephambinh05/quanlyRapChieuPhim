@@ -27,6 +27,18 @@ namespace CinemaManagement.Models
         [StringLength(10)]
         public string? MaKhachHang { get; set; }
 
+        // 2FA Properties
+        [StringLength(32)]
+        public string? TwoFactorSecret { get; set; }
+
+        public bool TwoFactorEnabled { get; set; } = false;
+
+        public bool TwoFactorVerified { get; set; } = false;
+
+        // BackupCodes đã được xóa
+
+        public DateTime? TwoFactorSetupDate { get; set; }
+
         // Navigation properties
         public virtual NhanVien? NhanVien { get; set; }
         public virtual KhachHang? KhachHang { get; set; }

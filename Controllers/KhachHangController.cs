@@ -30,9 +30,9 @@ namespace CinemaManagement.Controllers
         }
 
         // Trang chủ khách hàng - Hiển thị danh sách phim
-        public async Task<IActionResult> Index(string? theLoai, string? searchTerm)
+        public async Task<IActionResult> Index(string? theLoai, string? searchTerm, string? sortBy, string? sortOrder)
         {
-            WriteErrorLog($"[ACTION] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [Index] Email: {HttpContext.Session.GetString("Email")}, theLoai: {theLoai}, searchTerm: {searchTerm}, SessionKeys: {string.Join(",", HttpContext.Session.Keys)}");
+            WriteErrorLog($"[ACTION] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [Index] Email: {HttpContext.Session.GetString("Email")}, theLoai: {theLoai}, searchTerm: {searchTerm}, sortBy: {sortBy}, sortOrder: {sortOrder}, SessionKeys: {string.Join(",", HttpContext.Session.Keys)}");
             if (!IsCustomerLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
@@ -51,6 +51,9 @@ namespace CinemaManagement.Controllers
             {
                 phims = phims.Where(p => p.TenPhim.Contains(searchTerm));
             }
+
+            // Sắp xếp phim
+            phims = ApplySorting(phims, sortBy, sortOrder);
 
             var phimList = await phims.ToListAsync();
 
@@ -97,28 +100,34 @@ namespace CinemaManagement.Controllers
             ViewBag.LichChieuDto = lichChieuDto; // Cho JavaScript serialization
             ViewBag.CurrentTheLoai = theLoai;
             ViewBag.CurrentSearch = searchTerm;
+            ViewBag.CurrentSortBy = sortBy ?? "name";
+            ViewBag.CurrentSortOrder = sortOrder ?? "asc";
 
             return View(phimList);
         }
 
         // Chi tiết phim
-        public async Task<IActionResult> ChiTietPhim(string id)
+        [Route("KhachHang/ChiTietPhim/{maPhim}")]
+        public async Task<IActionResult> ChiTietPhim(string maPhim)
         {
-            WriteErrorLog($"[ACTION] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ChiTietPhim] Email: {HttpContext.Session.GetString("Email")}, id: {id}, SessionKeys: {string.Join(",", HttpContext.Session.Keys)}");
+            WriteErrorLog($"[ACTION] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ChiTietPhim] Email: {HttpContext.Session.GetString("Email")}, maPhim: {maPhim}, SessionKeys: {string.Join(",", HttpContext.Session.Keys)}");
             if (!IsCustomerLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
             }
 
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(maPhim))
             {
                 return NotFound();
             }
 
+            // Trim khoảng trắng từ maPhim
+            maPhim = maPhim.Trim();
+
             var phim = await _context.Phims
                 .Include(p => p.LichChieus)
                     .ThenInclude(lc => lc.PhongChieu)
-                .FirstOrDefaultAsync(p => p.MaPhim == id);
+                .FirstOrDefaultAsync(p => p.MaPhim.Trim() == maPhim);
 
             if (phim == null)
             {
@@ -147,7 +156,28 @@ namespace CinemaManagement.Controllers
                 }
             }).ToList();
 
+            // Lấy phim liên quan/đề xuất
+            var phimLienQuan = await _context.Phims
+                .Where(p => p.MaPhim != maPhim && 
+                           (p.TheLoai == phim.TheLoai || 
+                            p.DoTuoiPhanAnh == phim.DoTuoiPhanAnh))
+                .Take(6)
+                .ToListAsync();
+
+            // Nếu không đủ 6 phim cùng thể loại, lấy thêm phim khác
+            if (phimLienQuan.Count < 6)
+            {
+                var phimKhac = await _context.Phims
+                    .Where(p => p.MaPhim != maPhim && 
+                               !phimLienQuan.Select(plq => plq.MaPhim).Contains(p.MaPhim))
+                    .Take(6 - phimLienQuan.Count)
+                    .ToListAsync();
+                
+                phimLienQuan.AddRange(phimKhac);
+            }
+
             ViewBag.LichChieus = lichChieuSimple;
+            ViewBag.PhimLienQuan = phimLienQuan;
 
             return View(phim);
         }
@@ -1357,6 +1387,188 @@ namespace CinemaManagement.Controllers
             lock (_logLock)
             {
                 System.IO.File.AppendAllText(logPath, logLine);
+            }
+        }
+
+        /// <summary>
+        /// Áp dụng sắp xếp cho danh sách phim
+        /// </summary>
+        private IQueryable<Phim> ApplySorting(IQueryable<Phim> phims, string? sortBy, string? sortOrder)
+        {
+            sortBy = sortBy?.ToLower() ?? "name";
+            sortOrder = sortOrder?.ToLower() ?? "asc";
+
+            switch (sortBy)
+            {
+                case "name":
+                    return sortOrder == "desc" ? phims.OrderByDescending(p => p.TenPhim) : phims.OrderBy(p => p.TenPhim);
+                
+                case "duration":
+                    return sortOrder == "desc" ? phims.OrderByDescending(p => p.ThoiLuong) : phims.OrderBy(p => p.ThoiLuong);
+                
+                case "price":
+                    // Sắp xếp theo giá vé trung bình từ lịch chiếu
+                    var phimsWithPrice = phims.Select(p => new
+                    {
+                        Phim = p,
+                        GiaTrungBinh = p.LichChieus.Where(lc => lc.ThoiGianBatDau >= DateTime.Now).Any() 
+                            ? p.LichChieus.Where(lc => lc.ThoiGianBatDau >= DateTime.Now).Average(lc => lc.Gia)
+                            : 0
+                    });
+                    
+                    if (sortOrder == "desc")
+                        return phimsWithPrice.OrderByDescending(x => x.GiaTrungBinh).Select(x => x.Phim);
+                    else
+                        return phimsWithPrice.OrderBy(x => x.GiaTrungBinh).Select(x => x.Phim);
+                
+                case "popularity":
+                    // Sắp xếp theo số lượng vé đã bán (độ phổ biến)
+                    var phimsWithPopularity = phims.Select(p => new
+                    {
+                        Phim = p,
+                        SoVeBan = p.Ves.Count(v => v.TrangThai == "Đã sử dụng")
+                    });
+                    
+                    if (sortOrder == "desc")
+                        return phimsWithPopularity.OrderByDescending(x => x.SoVeBan).Select(x => x.Phim);
+                    else
+                        return phimsWithPopularity.OrderBy(x => x.SoVeBan).Select(x => x.Phim);
+                
+                case "rating":
+                    // Sắp xếp theo độ tuổi phân ảnh (có thể coi như rating)
+                    return sortOrder == "desc" ? phims.OrderByDescending(p => p.DoTuoiPhanAnh) : phims.OrderBy(p => p.DoTuoiPhanAnh);
+                
+                default:
+                    return phims.OrderBy(p => p.TenPhim);
+            }
+        }
+
+        /// <summary>
+        /// API tìm kiếm phim với gợi ý
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> SearchPhim(string query, int limit = 10)
+        {
+            if (!IsCustomerLoggedIn())
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập" });
+            }
+
+            if (string.IsNullOrWhiteSpace(query) || query.Length < 2)
+            {
+                return Json(new { success = true, suggestions = new List<object>() });
+            }
+
+            try
+            {
+                var suggestions = await _context.Phims
+                    .Where(p => p.TenPhim.Contains(query) || 
+                               p.TheLoai.Contains(query) ||
+                               p.DoTuoiPhanAnh.Contains(query))
+                    .Select(p => new
+                    {
+                        id = p.MaPhim,
+                        title = p.TenPhim,
+                        genre = p.TheLoai,
+                        duration = p.ThoiLuong,
+                        rating = p.DoTuoiPhanAnh,
+                        type = "phim"
+                    })
+                    .Take(limit)
+                    .ToListAsync();
+
+                // Thêm gợi ý thể loại
+                var genreSuggestions = await _context.Phims
+                    .Where(p => p.TheLoai.Contains(query))
+                    .Select(p => p.TheLoai)
+                    .Distinct()
+                    .Take(3)
+                    .Select(genre => new
+                    {
+                        id = $"genre_{genre}",
+                        title = $"Thể loại: {genre}",
+                        genre = genre,
+                        type = "genre"
+                    })
+                    .ToListAsync();
+
+                var allSuggestions = suggestions.Cast<object>().Concat(genreSuggestions.Cast<object>()).ToList();
+
+                return Json(new { success = true, suggestions = allSuggestions });
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog($"SearchPhim error: {ex.Message}");
+                return Json(new { success = false, message = "Có lỗi xảy ra khi tìm kiếm" });
+            }
+        }
+
+        /// <summary>
+        /// API tìm kiếm nâng cao với bộ lọc
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> AdvancedSearch(string query, string? genre, int? minDuration, int? maxDuration, string? rating)
+        {
+            if (!IsCustomerLoggedIn())
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập" });
+            }
+
+            try
+            {
+                var phims = _context.Phims.AsQueryable();
+
+                // Tìm kiếm theo từ khóa
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    phims = phims.Where(p => p.TenPhim.Contains(query) || 
+                                            p.TheLoai.Contains(query) ||
+                                            p.MoTa.Contains(query));
+                }
+
+                // Lọc theo thể loại
+                if (!string.IsNullOrWhiteSpace(genre))
+                {
+                    phims = phims.Where(p => p.TheLoai == genre);
+                }
+
+                // Lọc theo thời lượng
+                if (minDuration.HasValue)
+                {
+                    phims = phims.Where(p => p.ThoiLuong >= minDuration.Value);
+                }
+
+                if (maxDuration.HasValue)
+                {
+                    phims = phims.Where(p => p.ThoiLuong <= maxDuration.Value);
+                }
+
+                // Lọc theo độ tuổi
+                if (!string.IsNullOrWhiteSpace(rating))
+                {
+                    phims = phims.Where(p => p.DoTuoiPhanAnh == rating);
+                }
+
+                var results = await phims
+                    .Select(p => new
+                    {
+                        id = p.MaPhim,
+                        title = p.TenPhim,
+                        genre = p.TheLoai,
+                        duration = p.ThoiLuong,
+                        rating = p.DoTuoiPhanAnh,
+                        description = p.MoTa,
+                        imageUrl = p.ViTriFilePhim,
+                        hasSchedule = p.LichChieus.Any(lc => lc.ThoiGianBatDau >= DateTime.Now)
+                    })
+                    .ToListAsync();
+
+                return Json(new { success = true, results = results, total = results.Count });
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog($"AdvancedSearch error: {ex.Message}");
+                return Json(new { success = false, message = "Có lỗi xảy ra khi tìm kiếm" });
             }
         }
     }

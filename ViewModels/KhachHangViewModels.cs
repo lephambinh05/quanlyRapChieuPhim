@@ -81,4 +81,28 @@ namespace CinemaManagement.ViewModels
         public decimal GiaGhe { get; set; }
         public string LoaiGhe { get; set; } = string.Empty;
     }
+
+    public class PhimSortViewModel
+    {
+        public string? SortBy { get; set; } = "name"; // name, price, popularity, rating, duration
+        public string? SortOrder { get; set; } = "asc"; // asc, desc
+        public string? TheLoai { get; set; }
+        public string? SearchTerm { get; set; }
+        
+        // Các tùy chọn sắp xếp
+        public static readonly Dictionary<string, string> SortOptions = new Dictionary<string, string>
+        {
+            { "name", "Tên phim" },
+            { "price", "Giá vé" },
+            { "popularity", "Độ phổ biến" },
+            { "duration", "Thời lượng" },
+            { "rating", "Đánh giá" }
+        };
+        
+        public static readonly Dictionary<string, string> SortOrders = new Dictionary<string, string>
+        {
+            { "asc", "Tăng dần" },
+            { "desc", "Giảm dần" }
+        };
+    }
 }

@@ -2,22 +2,264 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaManagement.Data;
 using CinemaManagement.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using CinemaManagement.Services;
+using CinemaManagement.ViewModels;
 
 namespace CinemaManagement.Controllers
 {
     public class AuthController : Controller
     {
         private readonly CinemaDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IPasswordResetService _passwordResetService;
+        private readonly ITwoFactorService _twoFactorService;
 
-        public AuthController(CinemaDbContext context)
+        public AuthController(CinemaDbContext context, IEmailService emailService, IPasswordResetService passwordResetService, ITwoFactorService twoFactorService)
         {
             _context = context;
+            _emailService = emailService;
+            _passwordResetService = passwordResetService;
+            _twoFactorService = twoFactorService;
         }
 
         // GET: Auth/Login
         public IActionResult Login()
         {
             return View();
+        }
+
+        // GET: Auth/GoogleLogin
+        public IActionResult GoogleLogin()
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Bắt đầu GoogleLogin\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "http://localhost:5039/signin-google"
+            };
+
+            logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] RedirectUri: {properties.RedirectUri}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+            
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        // GET: Auth/GoogleCallback - Redirect to signin-google
+        public IActionResult GoogleCallback()
+        {
+            return Redirect("/signin-google");
+        }
+
+        // GET: Auth/ExternalLoginCallback
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Bắt đầu ExternalLoginCallback\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+
+            if (remoteError != null)
+            {
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] RemoteError: {remoteError}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+                ViewBag.ErrorMessage = $"Lỗi từ provider: {remoteError}";
+                return RedirectToAction("Login");
+            }
+
+            try
+            {
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Đang authenticate với Google...\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                var info = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+                
+                if (!info.Succeeded)
+                {
+                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] AuthenticateAsync thất bại\n";
+                    System.IO.File.AppendAllText(logPath, logLine);
+                    ViewBag.ErrorMessage = "Đăng nhập Google thất bại";
+                    return RedirectToAction("Login");
+                }
+
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] AuthenticateAsync thành công\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                var claims = info.Principal.Claims;
+                var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                var googleId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Email: {email}, Name: {name}, GoogleId: {googleId}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] Không thể lấy email từ Google\n";
+                    System.IO.File.AppendAllText(logPath, logLine);
+                    ViewBag.ErrorMessage = "Không thể lấy thông tin email từ Google";
+                    return RedirectToAction("Login");
+                }
+
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Đang tìm tài khoản trong database...\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                var existingAccount = await _context.TaiKhoans
+                    .Include(t => t.NhanVien)
+                    .Include(t => t.KhachHang)
+                    .FirstOrDefaultAsync(t => t.Email == email);
+
+                if (existingAccount != null)
+                {
+                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Tìm thấy tài khoản cũ: {existingAccount.MaTK}\n";
+                    System.IO.File.AppendAllText(logPath, logLine);
+                    return await LoginWithGoogleAccount(existingAccount);
+                }
+                else
+                {
+                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Không tìm thấy tài khoản, sẽ tạo mới\n";
+                    System.IO.File.AppendAllText(logPath, logLine);
+                    return await CreateGoogleAccount(email, name, googleId);
+                }
+            }
+            catch (Exception ex)
+            {
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_EXCEPTION] Exception: {ex.Message}\nStackTrace: {ex.StackTrace}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+                ViewBag.ErrorMessage = "Có lỗi xảy ra khi xử lý đăng nhập Google";
+                return RedirectToAction("Login");
+            }
+        }
+
+        private async Task<IActionResult> LoginWithGoogleAccount(TaiKhoan taiKhoan)
+        {
+            if (taiKhoan.TrangThai != "Hoạt động")
+            {
+                ViewBag.ErrorMessage = "Tài khoản đã bị khóa";
+                return RedirectToAction("Login");
+            }
+
+            // Lưu thông tin vào session
+            HttpContext.Session.SetString("MaTK", taiKhoan.MaTK);
+            HttpContext.Session.SetString("Email", taiKhoan.Email);
+            HttpContext.Session.SetString("Role", taiKhoan.Role);
+            HttpContext.Session.SetString("VaiTro", taiKhoan.Role);
+
+            // Ghi log đăng nhập
+            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_LOGIN] Email: {taiKhoan.Email}, Role: {taiKhoan.Role}\n";
+            System.IO.File.AppendAllText(logPath, logLine);
+
+            if (taiKhoan.NhanVien != null)
+            {
+                HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.MaNhanVien);
+                HttpContext.Session.SetString("TenNhanVien", taiKhoan.NhanVien.TenNhanVien);
+                HttpContext.Session.SetString("ChucVu", taiKhoan.NhanVien.ChucVu);
+            }
+
+            if (taiKhoan.KhachHang != null)
+            {
+                HttpContext.Session.SetString("MaKhachHang", taiKhoan.KhachHang.MaKhachHang);
+                HttpContext.Session.SetString("TenKhachHang", taiKhoan.KhachHang.HoTen);
+            }
+
+            // Redirect based on role
+            if (taiKhoan.Role == "Quản lý")
+            {
+                return RedirectToAction("Index", "QuanLy");
+            }
+            else if (taiKhoan.Role == "Nhân viên")
+            {
+                return RedirectToAction("Index", "BanVe");
+            }
+            else if (taiKhoan.Role == "Khách hàng")
+            {
+                return RedirectToAction("Index", "KhachHang");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        private async Task<IActionResult> CreateGoogleAccount(string email, string name, string googleId)
+        {
+            try
+            {
+                // Ghi log bắt đầu tạo tài khoản
+                var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+                var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE] Bắt đầu tạo tài khoản cho email: {email}, name: {name}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                // Tạo mã khách hàng mới
+                var lastCustomer = await _context.KhachHangs.OrderByDescending(k => k.MaKhachHang).FirstOrDefaultAsync();
+                var newMaKhachHang = "KH001";
+                if (lastCustomer != null)
+                {
+                    var lastNumber = int.Parse(lastCustomer.MaKhachHang.Substring(2));
+                    newMaKhachHang = $"KH{(lastNumber + 1):D3}";
+                }
+
+                // Tạo khách hàng mới
+                var khachHang = new KhachHang
+                {
+                    MaKhachHang = newMaKhachHang,
+                    HoTen = name ?? "Khách hàng Google",
+                    SDT = "0000000000", // Mặc định
+                    DiemTichLuy = 0
+                };
+
+                _context.KhachHangs.Add(khachHang);
+                await _context.SaveChangesAsync();
+
+                // Ghi log đã tạo khách hàng
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE] Đã tạo khách hàng: {newMaKhachHang}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                // Tạo mã tài khoản mới
+                var lastAccount = await _context.TaiKhoans.OrderByDescending(t => t.MaTK).FirstOrDefaultAsync();
+                var newMaTK = "TK001";
+                if (lastAccount != null)
+                {
+                    var lastNumber = int.Parse(lastAccount.MaTK.Substring(2));
+                    newMaTK = $"TK{(lastNumber + 1):D3}";
+                }
+
+                // Tạo tài khoản mới
+                var taiKhoan = new TaiKhoan
+                {
+                    MaTK = newMaTK,
+                    Email = email,
+                    MatKhau = $"google_{googleId}", // Mật khẩu đặc biệt cho Google
+                    Role = "Khách hàng",
+                    TrangThai = "Hoạt động",
+                    MaKhachHang = newMaKhachHang,
+                    MaNhanVien = null
+                };
+
+                _context.TaiKhoans.Add(taiKhoan);
+                await _context.SaveChangesAsync();
+
+                // Ghi log tạo tài khoản
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE] Đã tạo tài khoản: {newMaTK} cho email: {email}, Name: {name}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                // Đăng nhập với tài khoản mới
+                return await LoginWithGoogleAccount(taiKhoan);
+            }
+            catch (Exception ex)
+            {
+                var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+                var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE_ERROR] {ex.Message}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                ViewBag.ErrorMessage = "Có lỗi xảy ra khi tạo tài khoản Google";
+                return RedirectToAction("Login");
+            }
         }
 
         // POST: Auth/Login
@@ -41,11 +283,39 @@ namespace CinemaManagement.Controllers
                 return View();
             }
 
-            // Lưu thông tin vào session
+            // Kiểm tra 2FA
+            if (taiKhoan.TwoFactorEnabled)
+            {
+                // Lưu thông tin tạm thời vào session
+                HttpContext.Session.SetString("UserEmail", taiKhoan.Email);
+                HttpContext.Session.SetString("UserRole", taiKhoan.Role);
+                HttpContext.Session.SetString("TempMaTK", taiKhoan.MaTK);
+                HttpContext.Session.SetString("TempVaiTro", taiKhoan.Role);
+
+                if (taiKhoan.NhanVien != null)
+                {
+                    HttpContext.Session.SetString("TempMaNhanVien", taiKhoan.NhanVien.MaNhanVien);
+                    HttpContext.Session.SetString("TempTenNhanVien", taiKhoan.NhanVien.TenNhanVien);
+                    HttpContext.Session.SetString("TempChucVu", taiKhoan.NhanVien.ChucVu);
+                }
+
+                if (taiKhoan.KhachHang != null)
+                {
+                    HttpContext.Session.SetString("TempMaKhachHang", taiKhoan.KhachHang.MaKhachHang);
+                    HttpContext.Session.SetString("TempTenKhachHang", taiKhoan.KhachHang.HoTen);
+                }
+
+                // Chuyển hướng đến trang xác thực 2FA
+                return RedirectToAction("TwoFactorVerify");
+            }
+
+            // Lưu thông tin vào session (nếu không có 2FA)
             HttpContext.Session.SetString("MaTK", taiKhoan.MaTK);
             HttpContext.Session.SetString("Email", taiKhoan.Email);
             HttpContext.Session.SetString("Role", taiKhoan.Role);
-            HttpContext.Session.SetString("VaiTro", taiKhoan.Role); // Thêm để tương thích
+            HttpContext.Session.SetString("VaiTro", taiKhoan.Role);
+            HttpContext.Session.SetString("UserEmail", taiKhoan.Email);
+            HttpContext.Session.SetString("UserRole", taiKhoan.Role);
 
             // Ghi log đăng nhập
             var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
@@ -85,9 +355,10 @@ namespace CinemaManagement.Controllers
         }
 
         // GET: Auth/Logout
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
 
@@ -202,5 +473,408 @@ namespace CinemaManagement.Controllers
                 TenKhachHang = a.KhachHang?.HoTen
             }));
         }
+
+        // GET: Auth/ForgotPassword
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // POST: Auth/ForgotPassword
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ResetPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                // Kiểm tra email có tồn tại trong hệ thống không
+                var taiKhoan = await _context.TaiKhoans
+                    .Include(t => t.KhachHang)
+                    .Include(t => t.NhanVien)
+                    .FirstOrDefaultAsync(t => t.Email == model.Email);
+
+                if (taiKhoan == null)
+                {
+                    // Không cho biết email có tồn tại hay không để bảo mật
+                    ViewBag.SuccessMessage = "Nếu email tồn tại trong hệ thống, bạn sẽ nhận được email hướng dẫn đặt lại mật khẩu.";
+                    return View();
+                }
+
+                // Tạo token reset password
+                var token = await _passwordResetService.GenerateResetTokenAsync(model.Email);
+
+                // Tạo link reset password
+                var resetLink = Url.Action("ResetPassword", "Auth", new { email = model.Email, token = token }, Request.Scheme, Request.Host.Value);
+
+                // Lấy tên người dùng
+                var userName = taiKhoan.KhachHang?.HoTen ?? taiKhoan.NhanVien?.TenNhanVien ?? "Người dùng";
+
+                // Gửi email
+                var emailSent = await _emailService.SendPasswordResetEmailAsync(model.Email, resetLink, userName);
+
+                if (emailSent)
+                {
+                    ViewBag.SuccessMessage = "Email hướng dẫn đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.";
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Có lỗi xảy ra khi gửi email. Vui lòng thử lại sau.";
+                }
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+                var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [FORGOT_PASSWORD_ERROR] {ex.Message}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                ViewBag.ErrorMessage = "Có lỗi xảy ra. Vui lòng thử lại sau.";
+                return View(model);
+            }
+        }
+
+        // GET: Auth/ResetPassword
+        public async Task<IActionResult> ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                ViewBag.ErrorMessage = "Link không hợp lệ.";
+                return RedirectToAction("Login");
+            }
+
+            // Kiểm tra token có hợp lệ không
+            var isValidToken = await _passwordResetService.ValidateResetTokenAsync(email, token);
+            if (!isValidToken)
+            {
+                ViewBag.ErrorMessage = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
+                return RedirectToAction("Login");
+            }
+
+            var model = new ResetPasswordConfirmModel
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+        // POST: Auth/ResetPassword
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordConfirmModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                // Kiểm tra token có hợp lệ không
+                var isValidToken = await _passwordResetService.ValidateResetTokenAsync(model.Email, model.Token);
+                if (!isValidToken)
+                {
+                    ViewBag.ErrorMessage = "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
+                    return RedirectToAction("Login");
+                }
+
+                // Tìm tài khoản
+                var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == model.Email);
+                if (taiKhoan == null)
+                {
+                    ViewBag.ErrorMessage = "Tài khoản không tồn tại.";
+                    return RedirectToAction("Login");
+                }
+
+                // Cập nhật mật khẩu
+                taiKhoan.MatKhau = model.NewPassword;
+                await _context.SaveChangesAsync();
+
+                // Đánh dấu token đã được sử dụng
+                await _passwordResetService.UseResetTokenAsync(model.Email, model.Token);
+
+                // Gửi email thông báo thành công
+                var userName = taiKhoan.KhachHang?.HoTen ?? taiKhoan.NhanVien?.TenNhanVien ?? "Người dùng";
+                await _emailService.SendPasswordResetSuccessEmailAsync(model.Email, userName);
+
+                ViewBag.SuccessMessage = "Mật khẩu đã được đặt lại thành công. Bạn có thể đăng nhập với mật khẩu mới.";
+                return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+                var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [RESET_PASSWORD_ERROR] {ex.Message}\n";
+                System.IO.File.AppendAllText(logPath, logLine);
+
+                ViewBag.ErrorMessage = "Có lỗi xảy ra khi đặt lại mật khẩu. Vui lòng thử lại sau.";
+                return View(model);
+            }
+        }
+
+        // 2FA Actions
+        // GET: Auth/TwoFactorSetup
+        public async Task<IActionResult> TwoFactorSetup()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == userEmail);
+            if (taiKhoan == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (taiKhoan.TwoFactorEnabled)
+            {
+                return RedirectToAction("TwoFactorStatus");
+            }
+
+            var secret = await _twoFactorService.GenerateSecretAsync();
+            var qrCodeImage = await _twoFactorService.GenerateQrCodeAsync(userEmail, secret);
+
+            var model = new TwoFactorSetupViewModel
+            {
+                Secret = secret,
+                QrCodeImage = qrCodeImage,
+                Email = userEmail,
+                ManualEntryKey = secret
+            };
+
+            return View(model);
+        }
+
+        // POST: Auth/TwoFactorEnable
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorEnable(TwoFactorEnableViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("TwoFactorSetup");
+            }
+
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == userEmail);
+            if (taiKhoan == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var isValidCode = await _twoFactorService.ValidateCodeAsync(model.Secret, model.Code);
+            if (!isValidCode)
+            {
+                ViewBag.ErrorMessage = "Mã xác thực không đúng. Vui lòng thử lại.";
+                return RedirectToAction("TwoFactorSetup");
+            }
+
+            // Kích hoạt 2FA
+            taiKhoan.TwoFactorSecret = model.Secret;
+            taiKhoan.TwoFactorEnabled = true;
+            taiKhoan.TwoFactorVerified = true;
+            taiKhoan.TwoFactorSetupDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.SuccessMessage = "Xác thực hai yếu tố đã được kích hoạt thành công!";
+            return RedirectToAction("TwoFactorStatus");
+        }
+
+        // GET: Auth/TwoFactorVerify
+        public IActionResult TwoFactorVerify(string returnUrl = null)
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new TwoFactorVerifyViewModel
+            {
+                ReturnUrl = returnUrl
+            };
+
+            return View(model);
+        }
+
+        // POST: Auth/TwoFactorVerify
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorVerify(TwoFactorVerifyViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == userEmail);
+            if (taiKhoan == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var isValidCode = await _twoFactorService.ValidateCodeAsync(taiKhoan.TwoFactorSecret, model.Code);
+
+            if (!isValidCode)
+            {
+                ViewBag.ErrorMessage = "Mã xác thực không đúng. Vui lòng thử lại.";
+                return View(model);
+            }
+
+            // Đánh dấu đã xác thực 2FA
+            HttpContext.Session.SetString("TwoFactorVerified", "true");
+
+            // Lưu thông tin chính thức vào session
+            var tempMaTK = HttpContext.Session.GetString("TempMaTK");
+            var tempVaiTro = HttpContext.Session.GetString("TempVaiTro");
+            var tempMaNhanVien = HttpContext.Session.GetString("TempMaNhanVien");
+            var tempTenNhanVien = HttpContext.Session.GetString("TempTenNhanVien");
+            var tempChucVu = HttpContext.Session.GetString("TempChucVu");
+            var tempMaKhachHang = HttpContext.Session.GetString("TempMaKhachHang");
+            var tempTenKhachHang = HttpContext.Session.GetString("TempTenKhachHang");
+
+            if (!string.IsNullOrEmpty(tempMaTK))
+            {
+                HttpContext.Session.SetString("MaTK", tempMaTK);
+                HttpContext.Session.SetString("VaiTro", tempVaiTro);
+            }
+
+            if (!string.IsNullOrEmpty(tempMaNhanVien))
+            {
+                HttpContext.Session.SetString("MaNhanVien", tempMaNhanVien);
+                HttpContext.Session.SetString("TenNhanVien", tempTenNhanVien);
+                HttpContext.Session.SetString("ChucVu", tempChucVu);
+            }
+
+            if (!string.IsNullOrEmpty(tempMaKhachHang))
+            {
+                HttpContext.Session.SetString("MaKhachHang", tempMaKhachHang);
+                HttpContext.Session.SetString("TenKhachHang", tempTenKhachHang);
+            }
+
+            // Xóa session tạm thời
+            HttpContext.Session.Remove("TempMaTK");
+            HttpContext.Session.Remove("TempVaiTro");
+            HttpContext.Session.Remove("TempMaNhanVien");
+            HttpContext.Session.Remove("TempTenNhanVien");
+            HttpContext.Session.Remove("TempChucVu");
+            HttpContext.Session.Remove("TempMaKhachHang");
+            HttpContext.Session.Remove("TempTenKhachHang");
+
+            if (!string.IsNullOrEmpty(model.ReturnUrl))
+            {
+                return Redirect(model.ReturnUrl);
+            }
+
+            // Chuyển hướng dựa trên role
+            var userRole = HttpContext.Session.GetString("UserRole");
+            if (userRole == "Quản lý")
+            {
+                return RedirectToAction("Index", "QuanLy");
+            }
+            else if (userRole == "Nhân viên")
+            {
+                return RedirectToAction("Index", "BanVe");
+            }
+            else
+            {
+                return RedirectToAction("Index", "KhachHang");
+            }
+        }
+
+        // GET: Auth/TwoFactorStatus
+        public async Task<IActionResult> TwoFactorStatus()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == userEmail);
+            if (taiKhoan == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new TwoFactorStatusViewModel
+            {
+                IsEnabled = taiKhoan.TwoFactorEnabled,
+                IsVerified = taiKhoan.TwoFactorVerified,
+                SetupDate = taiKhoan.TwoFactorSetupDate
+            };
+
+            return View(model);
+        }
+
+        // GET: Auth/TwoFactorDisable
+        public IActionResult TwoFactorDisable()
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View(new TwoFactorDisableViewModel());
+        }
+
+        // POST: Auth/TwoFactorDisable
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorDisable(TwoFactorDisableViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(t => t.Email == userEmail);
+            if (taiKhoan == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var isValidCode = await _twoFactorService.ValidateCodeAsync(taiKhoan.TwoFactorSecret, model.Code);
+            if (!isValidCode)
+            {
+                ViewBag.ErrorMessage = "Mã xác thực không đúng. Vui lòng thử lại.";
+                return View(model);
+            }
+
+            // Tắt 2FA
+            taiKhoan.TwoFactorEnabled = false;
+            taiKhoan.TwoFactorVerified = false;
+            taiKhoan.TwoFactorSecret = null;
+            taiKhoan.TwoFactorSetupDate = null;
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.SuccessMessage = "Xác thực hai yếu tố đã được tắt thành công!";
+            return RedirectToAction("TwoFactorStatus");
+        }
+
+        // TwoFactorBackupCodes action đã được xóa
     }
 }

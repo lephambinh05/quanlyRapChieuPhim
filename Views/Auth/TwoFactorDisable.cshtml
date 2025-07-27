@@ -1,0 +1,119 @@
+@model CinemaManagement.ViewModels.TwoFactorDisableViewModel
+@{
+    ViewData["Title"] = "Tắt Xác thực Hai Yếu tố";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-times-circle me-2"></i>
+                        Tắt Xác thực Hai Yếu tố
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i>Cảnh báo bảo mật</h5>
+                        <p class="mb-0">Việc tắt xác thực hai yếu tố sẽ làm giảm mức độ bảo mật của tài khoản. Bạn có chắc chắn muốn tiếp tục?</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Lưu ý</h6>
+                        <ul class="mb-0">
+                            <li>Tài khoản sẽ chỉ được bảo vệ bằng mật khẩu</li>
+                            <li>Bạn có thể kích hoạt lại 2FA bất cứ lúc nào</li>
+                            <li>Tất cả mã dự phòng sẽ bị xóa</li>
+                        </ul>
+                    </div>
+
+                    <form asp-action="TwoFactorDisable" method="post">
+                        <div class="form-group mb-4">
+                            <label for="Code" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Mã xác thực cuối cùng
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg text-center" 
+                                   asp-for="Code" 
+                                   maxlength="6" 
+                                   pattern="\d{6}" 
+                                   placeholder="000000" 
+                                   required 
+                                   autocomplete="off" />
+                            <div class="form-text">
+                                <i class="fas fa-clock me-1"></i>
+                                Nhập mã 6 chữ số từ ứng dụng xác thực để xác nhận
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-times me-2"></i>Tắt 2FA
+                            </button>
+                            <a href="@Url.Action("TwoFactorStatus", "Auth")" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-question-circle me-2"></i>Thay vì tắt 2FA, bạn có thể:
+                        </h6>
+                        <div class="btn-group-vertical w-100">
+                            <a href="@Url.Action("TwoFactorBackupCodes", "Auth")" class="btn btn-outline-info mb-2">
+                                <i class="fas fa-key me-2"></i>Tạo mã dự phòng mới
+                            </a>
+                            <a href="@Url.Action("TwoFactorStatus", "Auth")" class="btn btn-outline-primary">
+                                <i class="fas fa-cog me-2"></i>Quản lý 2FA
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-focus vào input code
+        document.getElementById('Code').focus();
+
+        // Auto-format mã 6 chữ số
+        document.getElementById('Code').addEventListener('input', function(e) {
+            var value = e.target.value.replace(/\D/g, '');
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+            e.target.value = value;
+        });
+
+        // Confirm before submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var code = document.getElementById('Code').value;
+            if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+                e.preventDefault();
+                alert('Vui lòng nhập mã xác thực 6 chữ số hợp lệ.');
+                document.getElementById('Code').focus();
+                return;
+            }
+
+            if (!confirm('Bạn có chắc chắn muốn tắt xác thực hai yếu tố? Điều này sẽ làm giảm mức độ bảo mật của tài khoản.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+} 
