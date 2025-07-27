@@ -400,5 +400,3 @@ Nếu bạn gặp lỗi, hãy tạo issue mới với thông tin:
   - Có thể điều chỉnh thời gian timeout trong code nếu muốn thay đổi logic hủy đơn.
 
 ---
-970834593906-sjneku9bpr26mm80lbc1m6pcljacfa3l.apps.googleusercontent.com id
-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 secret
