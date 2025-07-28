@@ -11,20 +11,20 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình Serilog
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.AspNetCore.SignalR", LogEventLevel.Debug)
-    .MinimumLevel.Override("CinemaManagement.Hubs", LogEventLevel.Debug)
-    .MinimumLevel.Override("CinemaManagement.Controllers", LogEventLevel.Debug)
-    .WriteTo.Console()
-    .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt"), 
-        fileSizeLimitBytes: 10485760,
-        retainedFileCountLimit: 5,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-    .CreateLogger();
+// Log.Logger = new LoggerConfiguration()
+//     .MinimumLevel.Information()
+//     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+//     .MinimumLevel.Override("Microsoft.AspNetCore.SignalR", LogEventLevel.Debug)
+//     .MinimumLevel.Override("CinemaManagement.Hubs", LogEventLevel.Debug)
+//     .MinimumLevel.Override("CinemaManagement.Controllers", LogEventLevel.Debug)
+//     .WriteTo.Console()
+//     .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt"), 
+//         fileSizeLimitBytes: 10485760,
+//         retainedFileCountLimit: 5,
+//         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+//     .CreateLogger();
 
-builder.Host.UseSerilog();
+// builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -67,6 +67,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
 builder.Services.AddScoped<IChatLogService, ChatLogService>();
+builder.Services.AddScoped<BankingService>();
 
 // Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -232,6 +233,41 @@ if (!Directory.Exists(logsDirectory))
 try
 {
     Log.Information("Starting Cinema Management Application");
+    
+    // Tự động mở trình duyệt khi khởi động (chỉ trong Development)
+    if (app.Environment.IsDevelopment())
+    {
+        var urls = app.Urls.ToList();
+        if (urls.Any())
+        {
+            var url = urls.First();
+            if (url.StartsWith("https://"))
+            {
+                try
+                {
+                    // Chờ một chút để ứng dụng khởi động hoàn toàn
+                    await Task.Delay(2000);
+                    
+                    // Mở trình duyệt với URL của ứng dụng
+                    var processStartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = url,
+                        UseShellExecute = true
+                    };
+                    System.Diagnostics.Process.Start(processStartInfo);
+                    
+                    Console.WriteLine($"✅ Đã tự động mở trình duyệt: {url}");
+                    Log.Information($"Auto-opened browser: {url}");
+                }
+                catch (Exception browserEx)
+                {
+                    Console.WriteLine($"⚠️ Không thể mở trình duyệt: {browserEx.Message}");
+                    Log.Warning($"Failed to open browser: {browserEx.Message}");
+                }
+            }
+        }
+    }
+    
     app.Run();
 }
 catch (Exception ex)

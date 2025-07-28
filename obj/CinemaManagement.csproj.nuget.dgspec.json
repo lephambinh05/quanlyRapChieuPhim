@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LEGION\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj": {}
+    "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-2\\CinemaManagement.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LEGION\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj": {
+    "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-2\\CinemaManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LEGION\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj",
+        "projectUniqueName": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-2\\CinemaManagement.csproj",
         "projectName": "CinemaManagement",
-        "projectPath": "C:\\Users\\LEGION\\Downloads\\quanlyRapChieuPhim\\CinemaManagement.csproj",
-        "packagesPath": "C:\\Users\\LEGION\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LEGION\\Downloads\\quanlyRapChieuPhim\\obj\\",
+        "projectPath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-2\\CinemaManagement.csproj",
+        "packagesPath": "C:\\Users\\lephambinh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lephambinh\\Downloads\\quanlyRapChieuPhim-2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\LEGION\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lephambinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,9 +43,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
+          "auditMode": "all"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -115,7 +115,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
