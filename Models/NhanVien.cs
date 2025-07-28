@@ -7,7 +7,7 @@ namespace CinemaManagement.Models
     {
         [Key]
         [StringLength(10)]
-        public string? MaNhanVien { get; set; }
+        public string? maNhanVien { get; set; }
 
         [StringLength(100)]
         public string? TenNhanVien { get; set; }

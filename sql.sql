@@ -451,3 +451,323 @@ DELETE FROM HD_voucher;
 DELETE FROM Ve;
 DELETE FROM HoaDon;
 DELETE FROM TempGioHangItems;
+
+  SELECT * FROM CTHD WHERE maHoaDon IS NULL OR HoaDonId IS NULL;
+  SELECT * FROM HD_voucher WHERE maHoaDon IS NULL OR HoaDonId IS NULL;
+
+  -- Xóa chi tiết hóa đơn liên quan trước (nếu chưa xóa)
+DELETE FROM CTHD WHERE maHoaDon = 'HD052';
+
+-- Xóa voucher hóa đơn liên quan (nếu có)
+DELETE FROM HD_voucher WHERE maHoaDon = 'HD052';
+
+-- Xóa hóa đơn
+DELETE FROM HoaDon WHERE maHoaDon = 'HD052';
+
+-- Lấy danh sách ghế đã bán cho lịch chiếu LC093
+SELECT maGhe FROM Ve WHERE maLichChieu = 'LC093' AND trangThai = N'Đã bán';
+
+-- Lấy danh sách ghế đang giữ tạm cho lịch chiếu LC093
+SELECT MaGhe FROM TempGioHangItems WHERE MaLichChieu = 'LC093';
+
+-- Lấy tất cả ghế của phòng chiếu
+SELECT maGhe, soGhe FROM GheNgoi WHERE maPhong = 'PC001';
+
+-- Kiểm tra vé chưa bán cho ghế G1002
+SELECT * FROM Ve WHERE maGhe = 'G1002' AND trangThai != N'Đã bán';
+
+-- Kiểm tra bản ghi tạm giữ ghế cho G1002
+SELECT * FROM TempGioHangItems WHERE MaGhe = 'G1002';
+
+ALTER TABLE HoaDon ADD TrangThai NVARCHAR(50) NULL;
+ALTER TABLE HoaDon ADD Id INT IDENTITY(1,1) PRIMARY KEY;
+
+ALTER TABLE HoaDon ADD TrangThai NVARCHAR(50) NULL;
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'TrangThai';
+
+  SELECT COLUMN_NAME
+  FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_NAME = 'HoaDon' AND COLUMN_NAME = 'Id';
+
+  ALTER TABLE HoaDon ADD Id INT IDENTITY(1,1);
+
+  ALTER TABLE TempGioHangItems ADD HoaDonId INT NULL;
+
+    ALTER TABLE TempGioHangItems ADD CONSTRAINT FK_TempGioHangItems_HoaDon FOREIGN KEY (HoaDonId) REFERENCES HoaDon(Id);
+
+	ALTER TABLE TempGioHangItems ADD HoaDonId INT NULL;
+
+	ALTER TABLE TempGioHangItems ADD HoaDonId INT NULL;
+
+	   SELECT COLUMN_NAME
+   FROM INFORMATION_SCHEMA.COLUMNS
+   WHERE TABLE_NAME = 'TempGioHangItems' AND COLUMN_NAME = 'HoaDonId';
+
+   SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'TempGioHangItems';
+select * from TempGioHangItems
+sp_help TempGioHangItems
+ALTER TABLE TempGioHangItems ADD HoaDonId INT NULL;
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'TempGioHangItems' AND COLUMN_NAME = 'HoaDonId';
+
+ALTER TABLE CTHD ADD HoaDonId INT NULL;
+ALTER TABLE HD_Voucher ADD HoaDonId INT NULL;
+
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'HD_Voucher' AND COLUMN_NAME = 'HoaDonId';
+
+ALTER TABLE HD_Voucher ADD HoaDonId INT NULL;
+
+ALTER TABLE HD_Voucher
+ADD CONSTRAINT FK_HD_Voucher_HoaDon FOREIGN KEY (HoaDonId) REFERENCES HoaDon(Id);
+
+  SELECT * FROM CTHD WHERE HoaDonId IS NULL;
+  SELECT * FROM HD_Voucher WHERE HoaDonId IS NULL;
+
+  -- Cập nhật cho CTHD
+UPDATE CTHD
+SET HoaDonId = h.Id
+FROM CTHD c
+JOIN HoaDon h ON c.MaHoaDon = h.MaHoaDon
+WHERE c.HoaDonId IS NULL;
+
+-- Cập nhật cho HD_Voucher
+UPDATE HD_Voucher
+SET HoaDonId = h.Id
+FROM HD_Voucher v
+JOIN HoaDon h ON v.MaHoaDon = h.MaHoaDon
+WHERE v.HoaDonId IS NULL;
+
+select * from HoaDon
+
+  SELECT MaGhe, TrangThai FROM GheNgoi WHERE MaGhe = 'G1001'; -- hoặc mã ghế bạn muốn kiểm tra
+
+  SELECT MaVe, MaGhe, TrangThai FROM Ve WHERE MaVe IN ('VE002', 'VE003', 'VE004', 'VE005', 'VE006', 'VE007', 'VE008');
+UPDATE Ve
+SET TrangThai = 'Chưa đặt'
+WHERE MaVe IN ('VE002', 'VE003', 'VE004', 'VE005', 'VE006', 'VE007', 'VE008');
+
+-- Xem tất cả tài khoản
+SELECT * FROM TaiKhoan;
+
+-- Xem tài khoản có email Google
+SELECT * FROM TaiKhoan WHERE Email LIKE '%@gmail.com%';
+
+-- Xem tài khoản khách hàng
+SELECT t.*, k.HoTen, k.SDT 
+FROM TaiKhoan t 
+LEFT JOIN KhachHang k ON t.MaKhachHang = k.MaKhachHang 
+WHERE t.Role = 'Khách hàng';
+
+ALTER TABLE TaiKhoan 
+ADD TwoFactorSecret NVARCHAR(32) NULL,
+    TwoFactorEnabled BIT NOT NULL DEFAULT 0,
+    TwoFactorVerified BIT NOT NULL DEFAULT 0,
+    BackupCodes NVARCHAR(200) NULL,
+    TwoFactorSetupDate DATETIME NULL;
+
+-- 2. Tạo bảng lưu trữ password reset tokens
+CREATE TABLE PasswordResetTokens (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(100) NOT NULL,
+    Token NVARCHAR(100) NOT NULL,
+    ExpiryDate DATETIME NOT NULL,
+    IsUsed BIT NOT NULL DEFAULT 0,
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+-- 3. Tạo index cho bảng PasswordResetTokens
+CREATE INDEX IX_PasswordResetTokens_Email ON PasswordResetTokens(Email);
+CREATE INDEX IX_PasswordResetTokens_Token ON PasswordResetTokens(Token);
+
+-- 4. Kiểm tra kết quả
+SELECT 'Migration hoàn thành!' as Status;
+
+-- 5. Kiểm tra cấu trúc bảng TaiKhoan sau khi cập nhật
+SELECT 
+    COLUMN_NAME,
+    DATA_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'TaiKhoan' 
+ORDER BY ORDINAL_POSITION;
+
+-- 6. Kiểm tra bảng PasswordResetTokens
+SELECT 
+    COLUMN_NAME,
+    DATA_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'PasswordResetTokens' 
+ORDER BY ORDINAL_POSITION; 
+
+-- Tạo bảng DanhGia với kiểu dữ liệu chính xác
+CREATE TABLE DanhGia (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    maKhachHang CHAR(50) NOT NULL,
+    maPhim CHAR(50) NOT NULL,
+    SoSao INT NOT NULL CHECK (SoSao BETWEEN 1 AND 5),
+    NoiDungBinhLuan NVARCHAR(1000) NULL,
+    NgayDanhGia DATETIME NOT NULL DEFAULT GETDATE(),
+    DaXemPhim BIT NOT NULL DEFAULT 0
+);
+
+-- Thêm foreign key constraints
+ALTER TABLE DanhGia 
+ADD CONSTRAINT FK_DanhGia_KhachHang 
+FOREIGN KEY (maKhachHang) REFERENCES KhachHang(maKhachHang);
+
+ALTER TABLE DanhGia 
+ADD CONSTRAINT FK_DanhGia_Phim 
+FOREIGN KEY (maPhim) REFERENCES Phim(maPhim);
+
+select * from danhgia
+
+SELECT MaPhim, LEN(MaPhim) as Length, LEN(LTRIM(RTRIM(MaPhim))) as TrimmedLength
+FROM Phim
+WHERE MaPhim LIKE '%PH007%'
+drop table chatroom
+drop table ChatMessage
+
+-- =============================================
+-- SCRIPT HOÀN CHỈNH SỬA LỖI CHAT SYSTEM
+-- =============================================
+
+-- Bước 1: Kiểm tra cấu trúc hiện tại
+PRINT '=== KIỂM TRA CẤU TRÚC HIỆN TẠI ===';
+SELECT 'ChatMessage' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'ChatMessage'
+UNION ALL
+SELECT 'ChatRoom' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'ChatRoom';
+
+-- Bước 2: Xóa foreign key constraints cũ
+PRINT '=== XÓA FOREIGN KEY CONSTRAINTS CŨ ===';
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ChatMessage_ChatRoom')
+BEGIN
+    ALTER TABLE ChatMessage DROP CONSTRAINT FK_ChatMessage_ChatRoom;
+    PRINT 'Đã xóa FK_ChatMessage_ChatRoom';
+END
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ChatRoom_KhachHang')
+BEGIN
+    ALTER TABLE ChatRoom DROP CONSTRAINT FK_ChatRoom_KhachHang;
+    PRINT 'Đã xóa FK_ChatRoom_KhachHang';
+END
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ChatRoom_NhanVien')
+BEGIN
+    ALTER TABLE ChatRoom DROP CONSTRAINT FK_ChatRoom_NhanVien;
+    PRINT 'Đã xóa FK_ChatRoom_NhanVien';
+END
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ChatMessage_KhachHang')
+BEGIN
+    ALTER TABLE ChatMessage DROP CONSTRAINT FK_ChatMessage_KhachHang;
+    PRINT 'Đã xóa FK_ChatMessage_KhachHang';
+END
+
+IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_ChatMessage_NhanVien')
+BEGIN
+    ALTER TABLE ChatMessage DROP CONSTRAINT FK_ChatMessage_NhanVien;
+    PRINT 'Đã xóa FK_ChatMessage_NhanVien';
+END
+
+-- Bước 3: Xóa bảng cũ
+PRINT '=== XÓA BẢNG CŨ ===';
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'ChatMessage')
+BEGIN
+    DROP TABLE ChatMessage;
+    PRINT 'Đã xóa bảng ChatMessage cũ';
+END
+
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'ChatRoom')
+BEGIN
+    DROP TABLE ChatRoom;
+    PRINT 'Đã xóa bảng ChatRoom cũ';
+END
+
+-- Bước 4: Tạo lại bảng ChatRoom với cấu trúc đúng
+PRINT '=== TẠO BẢNG CHATROOM ===';
+CREATE TABLE ChatRoom (
+    RoomId nvarchar(50) NOT NULL PRIMARY KEY,
+    RoomName nvarchar(100) NOT NULL,
+    RoomType nvarchar(20) NULL,
+    CustomerId nvarchar(10) NULL,
+    StaffId nvarchar(10) NULL,
+    CreatedAt datetime2 NOT NULL DEFAULT GETDATE(),
+    LastActivity datetime2 NOT NULL DEFAULT GETDATE(),
+    IsActive bit NOT NULL DEFAULT 1
+);
+PRINT 'Đã tạo bảng ChatRoom';
+
+-- Bước 5: Tạo lại bảng ChatMessage với cấu trúc đúng
+PRINT '=== TẠO BẢNG CHATMESSAGE ===';
+CREATE TABLE ChatMessage (
+    Id int IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    Content nvarchar(1000) NOT NULL,
+    Timestamp datetime2 NOT NULL DEFAULT GETDATE(),
+    SenderId nvarchar(10) NOT NULL,
+    SenderName nvarchar(50) NOT NULL,
+    SenderRole nvarchar(20) NOT NULL,
+    MessageType nvarchar(20) NULL DEFAULT 'text',
+    RoomId nvarchar(50) NULL,
+    IsRead bit NOT NULL DEFAULT 0
+);
+PRINT 'Đã tạo bảng ChatMessage';
+
+-- Bước 6: Tạo indexes để tối ưu hiệu suất
+PRINT '=== TẠO INDEXES ===';
+CREATE INDEX IX_ChatMessage_RoomId ON ChatMessage (RoomId);
+CREATE INDEX IX_ChatMessage_Timestamp ON ChatMessage (Timestamp);
+CREATE INDEX IX_ChatMessage_SenderId ON ChatMessage (SenderId);
+CREATE INDEX IX_ChatRoom_CustomerId ON ChatRoom (CustomerId);
+CREATE INDEX IX_ChatRoom_StaffId ON ChatRoom (StaffId);
+PRINT 'Đã tạo tất cả indexes';
+
+-- Bước 7: Thêm dữ liệu mẫu
+PRINT '=== THÊM DỮ LIỆU MẪU ===';
+INSERT INTO ChatRoom (RoomId, RoomName, RoomType, CreatedAt, LastActivity, IsActive)
+VALUES 
+('support-general', 'Hỗ trợ chung', 'support', GETDATE(), GETDATE(), 1),
+('internal-staff', 'Chat nội bộ nhân viên', 'internal', GETDATE(), GETDATE(), 1),
+('management', 'Chat quản lý', 'internal', GETDATE(), GETDATE(), 1);
+PRINT 'Đã thêm 3 phòng chat mẫu';
+
+INSERT INTO ChatMessage (Content, Timestamp, SenderId, SenderName, SenderRole, MessageType, RoomId, IsRead)
+VALUES 
+('Chào mừng đến với hệ thống hỗ trợ!', GETDATE(), 'NV001', 'Nhân viên hỗ trợ', 'Nhân viên', 'text', 'support-general', 0),
+('Có ai cần hỗ trợ không?', GETDATE(), 'NV001', 'Nhân viên hỗ trợ', 'Nhân viên', 'text', 'support-general', 0),
+('Chào các bạn!', GETDATE(), 'NV002', 'Nguyễn Văn A', 'Nhân viên', 'text', 'internal-staff', 0);
+PRINT 'Đã thêm 3 tin nhắn mẫu';
+
+-- Bước 8: Kiểm tra kết quả
+PRINT '=== KIỂM TRA KẾT QUẢ ===';
+SELECT 'ChatRoom' as TableName, COUNT(*) as RecordCount FROM ChatRoom
+UNION ALL
+SELECT 'ChatMessage' as TableName, COUNT(*) as RecordCount FROM ChatMessage;
+
+SELECT 'Indexes' as Info, name as IndexName, object_name(object_id) as TableName
+FROM sys.indexes 
+WHERE object_id IN (OBJECT_ID('ChatMessage'), OBJECT_ID('ChatRoom'))
+AND name LIKE 'IX_%';
+
+PRINT '=== HOÀN THÀNH ===';
+PRINT 'Hệ thống chat đã được tạo thành công!';
+PRINT 'Bạn có thể truy cập:';
+PRINT '- Demo: https://localhost:7158/Chat/Demo';
+PRINT '- Customer Chat: https://localhost:7158/Chat/Index';
+PRINT '- Staff Management: https://localhost:7158/Chat/Manage';

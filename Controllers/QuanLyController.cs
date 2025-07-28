@@ -408,7 +408,7 @@ namespace CinemaManagement.Controllers
                     newMaPhim = $"P{(lastNumber + 1):D3}";
                 }
 
-                var maNhanVien = HttpContext.Session.GetString("MaNhanVien");
+                var maNhanVien = HttpContext.Session.GetString("maNhanVien");
                 if (string.IsNullOrEmpty(maNhanVien))
                 {
                     return Json(new { success = false, message = "Không tìm thấy thông tin nhân viên" });
@@ -511,3 +511,4 @@ namespace CinemaManagement.Controllers
         }
     }
 }
+

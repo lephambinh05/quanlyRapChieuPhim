@@ -16,7 +16,7 @@
                     </h4>
                 </div>
                 <div class="col-auto">
-                    <a href="@Url.Action("ChiTietPhim", new { id = Model.LichChieu.MaPhim })" class="btn btn-light">
+                    <a href="@Url.Action("ChiTietPhim", new { maPhim = Model.LichChieu.MaPhim.Trim() })" class="btn btn-light">
                         <i class="fas fa-arrow-left me-1"></i>Quay lại
                     </a>
                 </div>

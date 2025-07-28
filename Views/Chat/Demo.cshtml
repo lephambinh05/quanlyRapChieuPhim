@@ -1,0 +1,315 @@
+@{
+    ViewData["Title"] = "Demo Chat System";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>🎬 Demo Hệ thống Chat Realtime</h2>
+            <p class="text-muted">Test các tính năng chat của Cinema Management System</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Demo Chat Widget -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>💬 Chat Widget Demo (Khách hàng)</h5>
+                </div>
+                <div class="card-body">
+                    <div id="chat-widget" class="chat-widget">
+                        <div class="chat-header">
+                            <span>💬 Hỗ trợ trực tuyến</span>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleChat()">×</button>
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message system">
+                                <small class="text-muted">Hệ thống: Chào mừng bạn đến với Cinema Management!</small>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="message-input" placeholder="Nhập tin nhắn..." class="form-control">
+                            <button class="btn btn-primary" onclick="sendMessage()">📤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demo Chat Management -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>👥 Chat Management Demo (Nhân viên)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action active" onclick="switchRoom('support-general')">
+                                    💬 Hỗ trợ chung
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="switchRoom('internal-staff')">
+                                    👥 Chat nội bộ
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="switchRoom('management')">
+                                    🏢 Quản lý
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="chat-container">
+                                <div class="chat-messages" id="management-messages">
+                                    <div class="message system">
+                                        <small class="text-muted">Hệ thống: Chào mừng nhân viên!</small>
+                                    </div>
+                                </div>
+                                <div class="chat-input">
+                                    <input type="text" id="management-input" placeholder="Nhập tin nhắn..." class="form-control">
+                                    <button class="btn btn-primary" onclick="sendManagementMessage()">📤</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Controls -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>🧪 Test Controls</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-success btn-block" onclick="simulateCustomerMessage()">
+                                👤 Simulate Khách hàng
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-info btn-block" onclick="simulateStaffMessage()">
+                                👥 Simulate Nhân viên
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-warning btn-block" onclick="simulateSystemMessage()">
+                                🤖 Simulate Hệ thống
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-danger btn-block" onclick="clearMessages()">
+                                🗑️ Clear Messages
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-widget {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+.chat-input {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    background: white;
+    border-top: 1px solid #ddd;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.message.customer {
+    background: #007bff;
+    color: white;
+    margin-left: auto;
+}
+
+.message.staff {
+    background: #28a745;
+    color: white;
+}
+
+.message.system {
+    background: #6c757d;
+    color: white;
+    text-align: center;
+    max-width: 100%;
+}
+
+.chat-container {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-container .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+</style>
+
+<script>
+let currentRoom = 'support-general';
+let messageCounter = 0;
+
+// Toggle chat widget
+function toggleChat() {
+    const widget = document.getElementById('chat-widget');
+    widget.style.display = widget.style.display === 'none' ? 'flex' : 'none';
+}
+
+// Send message from customer widget
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        addMessage('customer', message, 'Khách hàng');
+        input.value = '';
+        
+        // Simulate response
+        setTimeout(() => {
+            addMessage('staff', 'Cảm ơn bạn đã liên hệ! Chúng tôi sẽ hỗ trợ bạn ngay.', 'Nhân viên hỗ trợ');
+        }, 1000);
+    }
+}
+
+// Send message from management
+function sendManagementMessage() {
+    const input = document.getElementById('management-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        addManagementMessage('staff', message, 'Nhân viên');
+        input.value = '';
+    }
+}
+
+// Switch chat room
+function switchRoom(roomId) {
+    currentRoom = roomId;
+    
+    // Update active state
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Clear messages and add welcome message
+    document.getElementById('management-messages').innerHTML = 
+        '<div class="message system"><small class="text-muted">Hệ thống: Đã chuyển sang phòng ' + roomId + '</small></div>';
+}
+
+// Add message to customer widget
+function addMessage(type, content, sender) {
+    const messagesContainer = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Add message to management
+function addManagementMessage(type, content, sender) {
+    const messagesContainer = document.getElementById('management-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Simulate customer message
+function simulateCustomerMessage() {
+    const messages = [
+        'Xin chào! Tôi muốn hỏi về lịch chiếu phim',
+        'Có suất chiếu nào vào tối nay không?',
+        'Giá vé là bao nhiêu vậy?',
+        'Có thể đặt vé online không?'
+    ];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    addMessage('customer', randomMessage, 'Khách hàng');
+}
+
+// Simulate staff message
+function simulateStaffMessage() {
+    const messages = [
+        'Chào bạn! Tôi có thể giúp gì cho bạn?',
+        'Vui lòng cho biết thêm thông tin',
+        'Cảm ơn bạn đã liên hệ!',
+        'Chúng tôi sẽ xử lý ngay'
+    ];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    addManagementMessage('staff', randomMessage, 'Nhân viên');
+}
+
+// Simulate system message
+function simulateSystemMessage() {
+    const messages = [
+        'Hệ thống: Tin nhắn đã được gửi thành công',
+        'Hệ thống: Có khách hàng mới vào chat',
+        'Hệ thống: Tin nhắn đã được đánh dấu đã đọc',
+        'Hệ thống: Kết nối ổn định'
+    ];
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    addMessage('system', randomMessage, 'Hệ thống');
+}
+
+// Clear all messages
+function clearMessages() {
+    document.getElementById('chat-messages').innerHTML = 
+        '<div class="message system"><small class="text-muted">Hệ thống: Chat đã được làm mới</small></div>';
+    document.getElementById('management-messages').innerHTML = 
+        '<div class="message system"><small class="text-muted">Hệ thống: Chat đã được làm mới</small></div>';
+}
+
+// Enter key handlers
+document.getElementById('message-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+document.getElementById('management-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendManagementMessage();
+    }
+});
+</script> 

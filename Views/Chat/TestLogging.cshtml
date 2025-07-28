@@ -1,0 +1,148 @@
+@{
+    ViewData["Title"] = "Test Logging";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>🧪 Test Chat Logging System</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="logMessage" class="form-label">Log Message:</label>
+                        <input type="text" class="form-control" id="logMessage" placeholder="Enter your test message">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="logLevel" class="form-label">Log Level:</label>
+                        <select class="form-control" id="logLevel">
+                            <option value="Information">Information</option>
+                            <option value="Warning">Warning</option>
+                            <option value="Error">Error</option>
+                            <option value="Debug">Debug</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button class="btn btn-primary" onclick="addTestLog()">Add Test Log</button>
+                        <button class="btn btn-success" onclick="testLogging()">Test Basic Logging</button>
+                        <button class="btn btn-info" onclick="viewLogs()">View Current Logs</button>
+                    </div>
+                    
+                    <div id="result" class="alert" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📋 Log Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Log File:</strong> <code>logs/error_log.txt</code></p>
+                    <p><strong>Log Format:</strong> Timestamp [Level] Message</p>
+                    <p><strong>Available Levels:</strong></p>
+                    <ul>
+                        <li><span class="badge bg-success">Information</span> - Normal operations</li>
+                        <li><span class="badge bg-warning">Warning</span> - Potential issues</li>
+                        <li><span class="badge bg-danger">Error</span> - Errors and exceptions</li>
+                        <li><span class="badge bg-info">Debug</span> - Detailed debugging info</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📊 Recent Logs</h5>
+                </div>
+                <div class="card-body">
+                    <div id="logContent" style="max-height: 400px; overflow-y: auto; background-color: #f8f9fa; padding: 10px; font-family: monospace; font-size: 12px;">
+                        <p class="text-muted">Click "View Current Logs" to see recent log entries...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function addTestLog() {
+    const message = document.getElementById('logMessage').value;
+    const level = document.getElementById('logLevel').value;
+    
+    if (!message) {
+        showResult('Please enter a message', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/Chat/AddTestLog', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `message=${encodeURIComponent(message)}&level=${encodeURIComponent(level)}`
+        });
+        
+        const result = await response.json();
+        showResult(result.message, result.success ? 'success' : 'danger');
+    } catch (error) {
+        showResult('Error: ' + error.message, 'danger');
+    }
+}
+
+async function testLogging() {
+    try {
+        const response = await fetch('/Chat/TestLogging');
+        const result = await response.json();
+        showResult(result.message, result.success ? 'success' : 'danger');
+    } catch (error) {
+        showResult('Error: ' + error.message, 'danger');
+    }
+}
+
+async function viewLogs() {
+    try {
+        const response = await fetch('/logs/error_log.txt');
+        const logs = await response.text();
+        
+        const logContent = document.getElementById('logContent');
+        logContent.innerHTML = logs.split('\n').map(line => {
+            if (line.includes('ERROR')) {
+                return `<div style="color: red;">${line}</div>`;
+            } else if (line.includes('WARN')) {
+                return `<div style="color: orange;">${line}</div>`;
+            } else if (line.includes('INF')) {
+                return `<div style="color: green;">${line}</div>`;
+            } else {
+                return `<div style="color: black;">${line}</div>`;
+            }
+        }).join('');
+        
+        showResult('Logs loaded successfully', 'success');
+    } catch (error) {
+        showResult('Error loading logs: ' + error.message, 'danger');
+    }
+}
+
+function showResult(message, type) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.className = `alert alert-${type}`;
+    resultDiv.textContent = message;
+    resultDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        resultDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Auto-refresh logs every 10 seconds
+setInterval(viewLogs, 10000);
+</script> 

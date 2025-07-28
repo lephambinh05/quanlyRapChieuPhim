@@ -10,7 +10,7 @@ namespace CinemaManagement.Models
 
         [Required]
         [StringLength(10)]
-        public string MaKhachHang { get; set; } = string.Empty;
+        public string maKhachHang { get; set; } = string.Empty;
 
         [Required]
         [StringLength(10)]
@@ -29,7 +29,7 @@ namespace CinemaManagement.Models
         public bool DaXemPhim { get; set; } = false;
 
         // Navigation properties
-        [ForeignKey("MaKhachHang")]
+        [ForeignKey("maKhachHang")]
         public virtual KhachHang KhachHang { get; set; } = null!;
 
         [ForeignKey("MaPhim")]

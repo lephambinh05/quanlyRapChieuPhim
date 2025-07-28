@@ -20,7 +20,7 @@ namespace CinemaManagement.Controllers
         public async Task<IActionResult> Index()
         {
             // Kiểm tra đăng nhập
-            var maNhanVien = HttpContext.Session.GetString("MaNhanVien");
+            var maNhanVien = HttpContext.Session.GetString("maNhanVien");
             if (string.IsNullOrEmpty(maNhanVien))
             {
                 return RedirectToAction("Login", "Auth");
@@ -210,7 +210,7 @@ namespace CinemaManagement.Controllers
         {
             try
             {
-                var maNhanVien = HttpContext.Session.GetString("MaNhanVien");
+                var maNhanVien = HttpContext.Session.GetString("maNhanVien");
                 if (string.IsNullOrEmpty(maNhanVien))
                 {
                     return Json(new { success = false, message = "Phiên đăng nhập hết hạn" });
@@ -292,9 +292,9 @@ namespace CinemaManagement.Controllers
 
                 // Tìm khách hàng
                 KhachHang? khachHang = null;
-                if (!string.IsNullOrEmpty(request.MaKhachHang))
+                if (!string.IsNullOrEmpty(request.maKhachHang))
                 {
-                    khachHang = await _context.KhachHangs.FindAsync(request.MaKhachHang);
+                    khachHang = await _context.KhachHangs.FindAsync(request.maKhachHang);
                 }
 
                 using var transaction = await _context.Database.BeginTransactionAsync();
@@ -308,8 +308,8 @@ namespace CinemaManagement.Controllers
                         TongTien = thanhTien,
                         ThoiGianTao = DateTime.Now,
                         SoLuong = danhSachGheDuocChon.Count,
-                        MaKhachHang = khachHang?.MaKhachHang ?? "GUEST", // GUEST cho khách lẻ
-                        MaNhanVien = maNhanVien
+                        maKhachHang = khachHang?.maKhachHang ?? "GUEST", // GUEST cho khách lẻ
+                        maNhanVien = maNhanVien
                     };
 
                     _context.HoaDons.Add(hoaDon);
@@ -398,7 +398,7 @@ namespace CinemaManagement.Controllers
                         khachHang.DiemTichLuy += diemTichLuyMoi;
                         _context.KhachHangs.Update(khachHang);
                         
-                        Console.WriteLine($"Cập nhật điểm tích lũy cho khách hàng {khachHang.MaKhachHang}: +{diemTichLuyMoi} điểm");
+                        Console.WriteLine($"Cập nhật điểm tích lũy cho khách hàng {khachHang.maKhachHang}: +{diemTichLuyMoi} điểm");
                     }
                     else
                     {
@@ -544,7 +544,7 @@ namespace CinemaManagement.Controllers
                         success = true,
                         khachHang = new
                         {
-                            maKhachHang = khachHang.MaKhachHang,
+                            maKhachHang = khachHang.maKhachHang,
                             hoTen = khachHang.HoTen,
                             sdt = khachHang.SDT,
                             diemTichLuy = khachHang.DiemTichLuy
@@ -666,7 +666,7 @@ namespace CinemaManagement.Controllers
 
     public class XacNhanThanhToanRequest
     {
-        public string? MaKhachHang { get; set; }
+        public string? maKhachHang { get; set; }
         public string? VoucherDuocChon { get; set; }
         public decimal TongTien { get; set; }
         public decimal TienGiamGia { get; set; }
@@ -679,3 +679,4 @@ namespace CinemaManagement.Controllers
         public decimal TongTien { get; set; }
     }
 }
+

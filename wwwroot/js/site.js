@@ -69,6 +69,57 @@ window.CinemaApp = {
             }
         });
         return isValid;
+    },
+
+    // Initialize rating stars
+    initRatingStars: function() {
+        $('.rating-stars').each(function() {
+            var $container = $(this);
+            var $hiddenInput = $container.siblings('#rating-value');
+            var $stars = $container.find('.rating-star');
+            
+            // Handle star click
+            $stars.on('click', function() {
+                var $clickedStar = $(this);
+                var ratingValue = $clickedStar.data('rating');
+                
+                // Update hidden input
+                $hiddenInput.val(ratingValue);
+                
+                // Update star display
+                $stars.removeClass('text-warning');
+                $stars.each(function(index) {
+                    if (index < ratingValue) {
+                        $(this).addClass('text-warning');
+                    }
+                });
+                
+                console.log('Rating selected:', ratingValue);
+            });
+            
+            // Handle hover effects
+            $stars.on('mouseenter', function() {
+                var $hoveredStar = $(this);
+                var hoverRating = $hoveredStar.data('rating');
+                
+                $stars.removeClass('text-warning');
+                $stars.each(function(index) {
+                    if (index < hoverRating) {
+                        $(this).addClass('text-warning');
+                    }
+                });
+            });
+            
+            $container.on('mouseleave', function() {
+                var currentRating = parseInt($hiddenInput.val()) || 0;
+                $stars.removeClass('text-warning');
+                $stars.each(function(index) {
+                    if (index < currentRating) {
+                        $(this).addClass('text-warning');
+                    }
+                });
+            });
+        });
     }
 };
 
@@ -115,6 +166,9 @@ $(document).ready(function() {
     $('input, select, textarea').on('input change', function() {
         $(this).removeClass('is-invalid');
     });
+
+    // Initialize rating stars
+    CinemaApp.initRatingStars();
 
     // Loading button state
     $('.btn[data-loading-text]').on('click', function() {

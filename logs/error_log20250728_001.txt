@@ -1,0 +1,233 @@
+2025-07-28 05:15:49.652 +07:00 [WRN] No store type was specified for the decimal property 'Gia' on entity type 'TempGioHangItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-07-28 05:15:50.010 +07:00 [DBG] Registered SignalR Protocol: json, implemented by Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.
+2025-07-28 05:15:50.064 +07:00 [INF] Starting Cinema Management Application
+2025-07-28 05:15:50.120 +07:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address https://127.0.0.1:7158: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+ ---> System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-07-28 05:15:50.126 +07:00 [FTL] Application terminated unexpectedly
+System.IO.IOException: Failed to bind to address https://127.0.0.1:7158: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+ ---> System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at Program.<Main>$(String[] args) in C:\Users\lephambinh\Downloads\quanlyRapChieuPhim-1\Program.cs:line 236
+2025-07-28 05:16:06.741 +07:00 [WRN] No store type was specified for the decimal property 'Gia' on entity type 'TempGioHangItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-07-28 05:16:07.107 +07:00 [DBG] Registered SignalR Protocol: json, implemented by Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.
+2025-07-28 05:16:07.155 +07:00 [INF] Starting Cinema Management Application
+2025-07-28 05:16:40.225 +07:00 [WRN] No store type was specified for the decimal property 'Gia' on entity type 'TempGioHangItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-07-28 05:16:40.580 +07:00 [DBG] Registered SignalR Protocol: json, implemented by Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.
+2025-07-28 05:16:40.636 +07:00 [INF] Starting Cinema Management Application
+2025-07-28 05:18:02.332 +07:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-07-28 05:18:13.021 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:18:13.036 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:18:13.038 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:18:13.043 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:18:13.043 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:18:13.044 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:18:13.049 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:18:13.053 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:18:13.053 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:18:13.055 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:20:54.119 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:20:54.119 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:20:54.119 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:20:54.291 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:20:54.312 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:20:54.313 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:20:54.313 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:20:54.313 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:20:54.313 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:20:54.325 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:20:54.326 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:20:54.326 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:20:54.328 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:21:06.433 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:21:06.434 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:21:06.434 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:21:06.541 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:21:06.562 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:21:06.562 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:21:06.563 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:21:06.563 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:21:06.563 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:21:06.574 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:21:06.575 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:21:06.575 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:21:06.577 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:21:28.947 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:21:28.947 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:21:28.947 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:21:29.068 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:21:29.071 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:21:29.071 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:21:29.072 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:21:29.072 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:21:29.072 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:21:29.093 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:21:29.094 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:21:29.094 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:21:29.107 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:26:09.064 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:26:09.064 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:26:09.064 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:26:09.519 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:26:09.528 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:26:09.529 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:26:09.529 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:26:09.529 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:26:09.529 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:26:09.530 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:26:09.531 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:26:09.531 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:26:09.533 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:26:21.720 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:26:21.720 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:26:21.720 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:26:21.835 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:26:21.857 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:26:21.857 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:26:21.857 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:26:21.857 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:26:21.857 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:26:21.872 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:26:21.872 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:26:21.872 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:26:21.875 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:26:29.847 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "2", Target: "Typing", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6, True ], StreamIds: [  ] }.
+2025-07-28 05:26:30.858 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "3", Target: "Typing", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6, False ], StreamIds: [  ] }.
+2025-07-28 05:26:31.523 +07:00 [DBG] Parameters to hub method 'SendMessage' are incorrect.
+System.IO.InvalidDataException: Invocation provides 2 argument(s) but target expects 3.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:28:04.412 +07:00 [DBG] Parameters to hub method 'SendMessage' are incorrect.
+System.IO.InvalidDataException: Invocation provides 2 argument(s) but target expects 3.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:28:43.384 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:28:43.384 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:28:43.384 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:28:43.866 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:28:44.023 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:28:44.024 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:28:44.024 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:28:44.024 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:28:44.024 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:28:44.212 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:28:44.212 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:28:44.212 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:28:44.232 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:28:58.073 +07:00 [INF] 🔌 CHAT DISCONNECTION: User KH002                                              disconnected
+2025-07-28 05:28:58.073 +07:00 [INF] User KH002                                              disconnected
+2025-07-28 05:28:58.073 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:28:58.528 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:28:58.714 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:28:58.714 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:28:58.714 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:28:58.714 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:28:58.714 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:28:58.717 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:28:58.718 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:28:58.718 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:28:58.722 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:29:10.449 +07:00 [WRN] No store type was specified for the decimal property 'Gia' on entity type 'TempGioHangItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-07-28 05:29:10.846 +07:00 [DBG] Registered SignalR Protocol: json, implemented by Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.
+2025-07-28 05:29:10.904 +07:00 [INF] Starting Cinema Management Application
+2025-07-28 05:29:18.519 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:29:18.524 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:29:18.525 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:29:18.533 +07:00 [INF] User connecting: , Name: , Role: 
+2025-07-28 05:29:18.534 +07:00 [WRN] User connecting without session data
+2025-07-28 05:30:08.402 +07:00 [DBG] OnConnectedAsync ending.
+2025-07-28 05:30:12.374 +07:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-07-28 05:30:15.992 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:30:16.093 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:30:16.094 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:30:16.099 +07:00 [INF] User connecting: KH002                                             , Name: Ngô Thị Hoa, Role: Khách hàng
+2025-07-28 05:30:16.101 +07:00 [INF] 🔌 CHAT CONNECTION: User KH002                                              (Ngô Thị Hoa) with role Khách hàng connected
+2025-07-28 05:30:16.104 +07:00 [INF] User KH002                                              added to customers group
+2025-07-28 05:30:16.251 +07:00 [DBG] Received hub invocation: InvocationMessage { InvocationId: "0", Target: "JoinRoom", Arguments: [ ecb5d71f-0f48-49c6-95a9-da95e30bc2b6 ], StreamIds: [  ] }.
+2025-07-28 05:30:16.254 +07:00 [INF] 🔌 SIGNALR SUCCESS: JoinRoom - User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:30:16.256 +07:00 [INF] User joined room: ecb5d71f-0f48-49c6-95a9-da95e30bc2b6
+2025-07-28 05:30:16.258 +07:00 [DBG] Parameters to hub method 'GetRoomMessages' are incorrect.
+System.IO.InvalidDataException: Invocation provides 1 argument(s) but target expects 2.
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.BindTypes(Utf8JsonReader& reader, IReadOnlyList`1 paramTypes)
+   at Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.ParseMessage(ReadOnlySequence`1 input, IInvocationBinder binder)
+2025-07-28 05:31:55.208 +07:00 [WRN] No store type was specified for the decimal property 'Gia' on entity type 'TempGioHangItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-07-28 05:31:55.624 +07:00 [DBG] Registered SignalR Protocol: json, implemented by Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.
+2025-07-28 05:31:55.682 +07:00 [INF] Starting Cinema Management Application
+2025-07-28 05:32:04.173 +07:00 [DBG] OnConnectedAsync started.
+2025-07-28 05:32:04.197 +07:00 [DBG] Found protocol implementation for requested protocol: json.
+2025-07-28 05:32:04.202 +07:00 [DBG] Completed connection handshake. Using HubProtocol 'json'.
+2025-07-28 05:32:04.212 +07:00 [INF] User connecting: , Name: , Role: 
+2025-07-28 05:32:04.214 +07:00 [WRN] User connecting without session data

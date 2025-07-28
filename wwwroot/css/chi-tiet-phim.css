@@ -335,6 +335,71 @@
     border-left: 4px solid #ffc107;
 }
 
+/* Rating Stars Input Styles */
+.rating-stars {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+}
+
+.rating-star {
+    cursor: pointer !important;
+    font-size: 2rem !important;
+    color: #ddd !important;
+    transition: color 0.2s ease !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: left !important;
+    position: relative !important;
+}
+
+.rating-star:hover i,
+.rating-star:hover ~ .rating-star i,
+.rating-star.text-warning i {
+    color: #ffc107 !important;
+}
+
+.rating-star i {
+    font-size: 2rem !important;
+    color: #ddd !important;
+}
+
+/* Đảm bảo màu vàng cho sao được chọn */
+.rating-star.text-warning i {
+    color: #ffc107 !important;
+}
+
+/* Hover effect */
+.rating-star:hover i {
+    color: #ffc107 !important;
+}
+
+/* Ẩn tất cả radio buttons trong rating */
+input[type="radio"] {
+    display: none !important;
+}
+
+.rating-input {
+    display: none !important;
+}
+
+/* Đảm bảo stars hiển thị ngang */
+.rating-stars * {
+    display: inline-block !important;
+}
+
+.rating-stars {
+    white-space: nowrap !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+}
+
 .rating-summary {
     display: flex;
     align-items: center;

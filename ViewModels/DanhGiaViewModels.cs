@@ -13,7 +13,7 @@ namespace CinemaManagement.ViewModels
 
         public string MaPhim { get; set; } = string.Empty;
         public string TenPhim { get; set; } = string.Empty;
-        public string MaKhachHang { get; set; } = string.Empty;
+        public string maKhachHang { get; set; } = string.Empty;
         public string HoTenKhachHang { get; set; } = string.Empty;
     }
 

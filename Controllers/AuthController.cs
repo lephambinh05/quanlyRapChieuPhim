@@ -17,13 +17,42 @@ namespace CinemaManagement.Controllers
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly ITwoFactorService _twoFactorService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(CinemaDbContext context, IEmailService emailService, IPasswordResetService passwordResetService, ITwoFactorService twoFactorService)
+        public AuthController(CinemaDbContext context, IEmailService emailService, IPasswordResetService passwordResetService, ITwoFactorService twoFactorService, ILogger<AuthController> logger)
         {
             _context = context;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
             _twoFactorService = twoFactorService;
+            _logger = logger;
+        }
+
+        // Helper method để kiểm tra trạng thái đăng nhập và chuyển hướng phù hợp
+        private IActionResult GetRedirectBasedOnLoginStatus()
+        {
+            var maNhanVien = HttpContext.Session.GetString("MaNhanVien");
+            var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
+            var role = HttpContext.Session.GetString("Role");
+
+            if (!string.IsNullOrEmpty(maNhanVien))
+            {
+                if (role == "Quản lý")
+                {
+                    return RedirectToAction("Index", "QuanLy");
+                }
+                else if (role == "Nhân viên")
+                {
+                    return RedirectToAction("Index", "BanVe");
+                }
+            }
+            else if (!string.IsNullOrEmpty(maKhachHang))
+            {
+                return RedirectToAction("Index", "KhachHang");
+            }
+
+            // Nếu chưa đăng nhập, chuyển về trang login
+            return RedirectToAction("Login");
         }
 
         // GET: Auth/Login
@@ -32,20 +61,23 @@ namespace CinemaManagement.Controllers
             return View();
         }
 
+        // GET: Auth/Home - Xử lý khi bấm vào logo
+        public IActionResult Home()
+        {
+            return GetRedirectBasedOnLoginStatus();
+        }
+
         // GET: Auth/GoogleLogin
         public IActionResult GoogleLogin()
         {
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
-            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Bắt đầu GoogleLogin\n";
-            System.IO.File.AppendAllText(logPath, logLine);
+            _logger.LogInformation("[GOOGLE_DEBUG] Bắt đầu GoogleLogin");
 
             var properties = new AuthenticationProperties
             {
                 RedirectUri = "http://localhost:5039/signin-google"
             };
 
-            logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] RedirectUri: {properties.RedirectUri}\n";
-            System.IO.File.AppendAllText(logPath, logLine);
+            _logger.LogInformation("[GOOGLE_DEBUG] RedirectUri: {RedirectUri}", properties.RedirectUri);
             
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
@@ -59,54 +91,45 @@ namespace CinemaManagement.Controllers
         // GET: Auth/ExternalLoginCallback
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
-            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Bắt đầu ExternalLoginCallback\n";
-            System.IO.File.AppendAllText(logPath, logLine);
+            _logger.LogInformation("[GOOGLE_DEBUG] Bắt đầu ExternalLoginCallback");
 
             if (remoteError != null)
             {
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] RemoteError: {remoteError}\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogError("[GOOGLE_ERROR] RemoteError: {RemoteError}", remoteError);
                 ViewBag.ErrorMessage = $"Lỗi từ provider: {remoteError}";
                 return RedirectToAction("Login");
             }
 
             try
             {
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Đang authenticate với Google...\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogInformation("[GOOGLE_DEBUG] Đang authenticate với Google...");
 
                 var info = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
                 
                 if (!info.Succeeded)
                 {
-                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] AuthenticateAsync thất bại\n";
-                    System.IO.File.AppendAllText(logPath, logLine);
+                    _logger.LogError("[GOOGLE_ERROR] AuthenticateAsync thất bại");
                     ViewBag.ErrorMessage = "Đăng nhập Google thất bại";
                     return RedirectToAction("Login");
                 }
 
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] AuthenticateAsync thành công\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogInformation("[GOOGLE_DEBUG] AuthenticateAsync thành công");
 
                 var claims = info.Principal.Claims;
                 var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
                 var googleId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Email: {email}, Name: {name}, GoogleId: {googleId}\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogInformation("[GOOGLE_DEBUG] Email: {Email}, Name: {Name}, GoogleId: {GoogleId}", email, name, googleId);
 
                 if (string.IsNullOrEmpty(email))
                 {
-                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_ERROR] Không thể lấy email từ Google\n";
-                    System.IO.File.AppendAllText(logPath, logLine);
+                    _logger.LogError("[GOOGLE_ERROR] Không thể lấy email từ Google");
                     ViewBag.ErrorMessage = "Không thể lấy thông tin email từ Google";
                     return RedirectToAction("Login");
                 }
 
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Đang tìm tài khoản trong database...\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogInformation("[GOOGLE_DEBUG] Đang tìm tài khoản trong database...");
 
                 var existingAccount = await _context.TaiKhoans
                     .Include(t => t.NhanVien)
@@ -115,21 +138,18 @@ namespace CinemaManagement.Controllers
 
                 if (existingAccount != null)
                 {
-                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Tìm thấy tài khoản cũ: {existingAccount.MaTK}\n";
-                    System.IO.File.AppendAllText(logPath, logLine);
+                    _logger.LogInformation("[GOOGLE_DEBUG] Tìm thấy tài khoản cũ: {MaTK}", existingAccount.MaTK);
                     return await LoginWithGoogleAccount(existingAccount);
                 }
                 else
                 {
-                    logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_DEBUG] Không tìm thấy tài khoản, sẽ tạo mới\n";
-                    System.IO.File.AppendAllText(logPath, logLine);
+                    _logger.LogInformation("[GOOGLE_DEBUG] Không tìm thấy tài khoản, sẽ tạo mới");
                     return await CreateGoogleAccount(email, name, googleId);
                 }
             }
             catch (Exception ex)
             {
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_EXCEPTION] Exception: {ex.Message}\nStackTrace: {ex.StackTrace}\n";
-                System.IO.File.AppendAllText(logPath, logLine);
+                _logger.LogError(ex, "[GOOGLE_EXCEPTION] Exception: {Message}", ex.Message);
                 ViewBag.ErrorMessage = "Có lỗi xảy ra khi xử lý đăng nhập Google";
                 return RedirectToAction("Login");
             }
@@ -156,14 +176,14 @@ namespace CinemaManagement.Controllers
 
             if (taiKhoan.NhanVien != null)
             {
-                HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.MaNhanVien);
+                HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.maNhanVien);
                 HttpContext.Session.SetString("TenNhanVien", taiKhoan.NhanVien.TenNhanVien);
                 HttpContext.Session.SetString("ChucVu", taiKhoan.NhanVien.ChucVu);
             }
 
             if (taiKhoan.KhachHang != null)
             {
-                HttpContext.Session.SetString("MaKhachHang", taiKhoan.KhachHang.MaKhachHang);
+                HttpContext.Session.SetString("MaKhachHang", taiKhoan.KhachHang.maKhachHang);
                 HttpContext.Session.SetString("TenKhachHang", taiKhoan.KhachHang.HoTen);
             }
 
@@ -196,18 +216,18 @@ namespace CinemaManagement.Controllers
                 System.IO.File.AppendAllText(logPath, logLine);
 
                 // Tạo mã khách hàng mới
-                var lastCustomer = await _context.KhachHangs.OrderByDescending(k => k.MaKhachHang).FirstOrDefaultAsync();
-                var newMaKhachHang = "KH001";
+                var lastCustomer = await _context.KhachHangs.OrderByDescending(k => k.maKhachHang).FirstOrDefaultAsync();
+                var newmaKhachHang = "KH001";
                 if (lastCustomer != null)
                 {
-                    var lastNumber = int.Parse(lastCustomer.MaKhachHang.Substring(2));
-                    newMaKhachHang = $"KH{(lastNumber + 1):D3}";
+                    var lastNumber = int.Parse(lastCustomer.maKhachHang.Substring(2));
+                    newmaKhachHang = $"KH{(lastNumber + 1):D3}";
                 }
 
                 // Tạo khách hàng mới
                 var khachHang = new KhachHang
                 {
-                    MaKhachHang = newMaKhachHang,
+                    maKhachHang = newmaKhachHang,
                     HoTen = name ?? "Khách hàng Google",
                     SDT = "0000000000", // Mặc định
                     DiemTichLuy = 0
@@ -217,7 +237,7 @@ namespace CinemaManagement.Controllers
                 await _context.SaveChangesAsync();
 
                 // Ghi log đã tạo khách hàng
-                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE] Đã tạo khách hàng: {newMaKhachHang}\n";
+                logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [GOOGLE_CREATE] Đã tạo khách hàng: {newmaKhachHang}\n";
                 System.IO.File.AppendAllText(logPath, logLine);
 
                 // Tạo mã tài khoản mới
@@ -237,8 +257,8 @@ namespace CinemaManagement.Controllers
                     MatKhau = $"google_{googleId}", // Mật khẩu đặc biệt cho Google
                     Role = "Khách hàng",
                     TrangThai = "Hoạt động",
-                    MaKhachHang = newMaKhachHang,
-                    MaNhanVien = null
+                    maKhachHang = newmaKhachHang,
+                    maNhanVien = null
                 };
 
                 _context.TaiKhoans.Add(taiKhoan);
@@ -294,14 +314,14 @@ namespace CinemaManagement.Controllers
 
                 if (taiKhoan.NhanVien != null)
                 {
-                    HttpContext.Session.SetString("TempMaNhanVien", taiKhoan.NhanVien.MaNhanVien);
+                    HttpContext.Session.SetString("TempMaNhanVien", taiKhoan.NhanVien.maNhanVien);
                     HttpContext.Session.SetString("TempTenNhanVien", taiKhoan.NhanVien.TenNhanVien);
                     HttpContext.Session.SetString("TempChucVu", taiKhoan.NhanVien.ChucVu);
                 }
 
                 if (taiKhoan.KhachHang != null)
                 {
-                    HttpContext.Session.SetString("TempMaKhachHang", taiKhoan.KhachHang.MaKhachHang);
+                    HttpContext.Session.SetString("TempMaKhachHang", taiKhoan.KhachHang.maKhachHang);
                     HttpContext.Session.SetString("TempTenKhachHang", taiKhoan.KhachHang.HoTen);
                 }
 
@@ -318,20 +338,18 @@ namespace CinemaManagement.Controllers
             HttpContext.Session.SetString("UserRole", taiKhoan.Role);
 
             // Ghi log đăng nhập
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
-            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [LOGIN] Email: {taiKhoan.Email}, Role: {taiKhoan.Role}\n";
-            System.IO.File.AppendAllText(logPath, logLine);
+            _logger.LogInformation("[LOGIN] Email: {Email}, Role: {Role}", taiKhoan.Email, taiKhoan.Role);
 
             if (taiKhoan.NhanVien != null)
             {
-                HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.MaNhanVien);
+                HttpContext.Session.SetString("MaNhanVien", taiKhoan.NhanVien.maNhanVien);
                 HttpContext.Session.SetString("TenNhanVien", taiKhoan.NhanVien.TenNhanVien);
                 HttpContext.Session.SetString("ChucVu", taiKhoan.NhanVien.ChucVu);
             }
 
             if (taiKhoan.KhachHang != null)
             {
-                HttpContext.Session.SetString("MaKhachHang", taiKhoan.KhachHang.MaKhachHang);
+                HttpContext.Session.SetString("MaKhachHang", taiKhoan.KhachHang.maKhachHang);
                 HttpContext.Session.SetString("TenKhachHang", taiKhoan.KhachHang.HoTen);
             }
 
@@ -401,18 +419,18 @@ namespace CinemaManagement.Controllers
             try
             {
                 // Tạo mã khách hàng mới
-                var lastCustomer = await _context.KhachHangs.OrderByDescending(k => k.MaKhachHang).FirstOrDefaultAsync();
-                var newMaKhachHang = "KH001";
+                var lastCustomer = await _context.KhachHangs.OrderByDescending(k => k.maKhachHang).FirstOrDefaultAsync();
+                var newmaKhachHang = "KH001";
                 if (lastCustomer != null)
                 {
-                    var lastNumber = int.Parse(lastCustomer.MaKhachHang.Substring(2));
-                    newMaKhachHang = $"KH{(lastNumber + 1):D3}";
+                    var lastNumber = int.Parse(lastCustomer.maKhachHang.Substring(2));
+                    newmaKhachHang = $"KH{(lastNumber + 1):D3}";
                 }
 
                 // Tạo khách hàng mới
                 var khachHang = new KhachHang
                 {
-                    MaKhachHang = newMaKhachHang,
+                    maKhachHang = newmaKhachHang,
                     HoTen = hoTen,
                     SDT = sdt,
                     DiemTichLuy = 0
@@ -438,8 +456,8 @@ namespace CinemaManagement.Controllers
                     MatKhau = password, // Trong thực tế nên hash password
                     Role = "Khách hàng",
                     TrangThai = "Hoạt động",
-                    MaKhachHang = newMaKhachHang,
-                    MaNhanVien = null
+                    maKhachHang = newmaKhachHang,
+                    maNhanVien = null
                 };
 
                 _context.TaiKhoans.Add(taiKhoan);
@@ -743,28 +761,30 @@ namespace CinemaManagement.Controllers
             // Lưu thông tin chính thức vào session
             var tempMaTK = HttpContext.Session.GetString("TempMaTK");
             var tempVaiTro = HttpContext.Session.GetString("TempVaiTro");
-            var tempMaNhanVien = HttpContext.Session.GetString("TempMaNhanVien");
+            var tempmaNhanVien = HttpContext.Session.GetString("TempMaNhanVien");
             var tempTenNhanVien = HttpContext.Session.GetString("TempTenNhanVien");
             var tempChucVu = HttpContext.Session.GetString("TempChucVu");
-            var tempMaKhachHang = HttpContext.Session.GetString("TempMaKhachHang");
+            var tempmaKhachHang = HttpContext.Session.GetString("TempMaKhachHang");
             var tempTenKhachHang = HttpContext.Session.GetString("TempTenKhachHang");
 
-            if (!string.IsNullOrEmpty(tempMaTK))
-            {
-                HttpContext.Session.SetString("MaTK", tempMaTK);
-                HttpContext.Session.SetString("VaiTro", tempVaiTro);
-            }
+            // Lưu thông tin cơ bản
+            HttpContext.Session.SetString("MaTK", tempMaTK ?? "");
+            HttpContext.Session.SetString("Email", userEmail);
+            HttpContext.Session.SetString("Role", tempVaiTro ?? "");
+            HttpContext.Session.SetString("VaiTro", tempVaiTro ?? "");
+            HttpContext.Session.SetString("UserEmail", userEmail);
+            HttpContext.Session.SetString("UserRole", tempVaiTro ?? "");
 
-            if (!string.IsNullOrEmpty(tempMaNhanVien))
+            if (!string.IsNullOrEmpty(tempmaNhanVien))
             {
-                HttpContext.Session.SetString("MaNhanVien", tempMaNhanVien);
+                HttpContext.Session.SetString("MaNhanVien", tempmaNhanVien);
                 HttpContext.Session.SetString("TenNhanVien", tempTenNhanVien);
                 HttpContext.Session.SetString("ChucVu", tempChucVu);
             }
 
-            if (!string.IsNullOrEmpty(tempMaKhachHang))
+            if (!string.IsNullOrEmpty(tempmaKhachHang))
             {
-                HttpContext.Session.SetString("MaKhachHang", tempMaKhachHang);
+                HttpContext.Session.SetString("MaKhachHang", tempmaKhachHang);
                 HttpContext.Session.SetString("TenKhachHang", tempTenKhachHang);
             }
 
@@ -878,3 +898,4 @@ namespace CinemaManagement.Controllers
         // TwoFactorBackupCodes action đã được xóa
     }
 }
+

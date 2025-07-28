@@ -69,7 +69,7 @@
                                     <small class="status-badge badge bg-info">@timeStatus</small>
                                     @if (isShowtime)
                                     {
-                                        <a href="@Url.Action("ChiTietPhim", new { id = lichChieu.MaPhim })" 
+                                        <a href="@Url.Action("ChiTietPhim", new { maPhim = lichChieu.MaPhim.Trim() })" 
                                            class="btn @btnClass btn-sm">
                                             <i class="fas fa-ticket-alt me-1"></i>@btnText
                                         </a>

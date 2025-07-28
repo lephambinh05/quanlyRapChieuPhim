@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using CinemaManagement.Data;
 using CinemaManagement.Models;
 using CinemaManagement.ViewModels;
+using System;
 
 namespace CinemaManagement.Controllers
 {
@@ -199,71 +200,84 @@ namespace CinemaManagement.Controllers
                 return NotFound();
             }
 
-            var danhSachVeMoi = new List<Ve>();
-            
-            // Lấy counter hiện tại cho ngày hôm nay
-            var today = DateTime.Now.ToString("yyMMdd");
-            var existingTicketsToday = await _context.Ves
-                .Where(v => v.MaVe.StartsWith($"V{today}"))
-                .Select(v => v.MaVe)
-                .ToListAsync();
-            
-            // Tìm số counter lớn nhất hiện tại
-            var maxCounter = 0;
-            foreach (var ticket in existingTicketsToday)
+            // Sử dụng transaction để đảm bảo tính nhất quán
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                if (ticket.Length == 10 && int.TryParse(ticket.Substring(7, 3), out int ticketCounter))
+                var danhSachVeMoi = new List<Ve>();
+                
+                // Lấy counter hiện tại cho ngày hôm nay - sử dụng MAX để tránh race condition
+                var today = DateTime.Now.ToString("yyMMdd");
+                var maxCounter = await _context.Ves
+                    .Where(v => v.MaVe.StartsWith($"V{today}"))
+                    .Select(v => v.MaVe)
+                    .ToListAsync();
+                
+                // Tìm số counter lớn nhất hiện tại
+                var currentMaxCounter = 0;
+                foreach (var ticket in maxCounter)
                 {
-                    maxCounter = Math.Max(maxCounter, ticketCounter);
-                }
-            }
-            
-            var counter = maxCounter + 1;
-
-            foreach (var maGhe in model.GheChon)
-            {
-                // Kiểm tra xem ghế đã có vé chưa
-                var veExist = await _context.Ves
-                    .AnyAsync(v => v.MaLichChieu == model.MaLichChieu && v.MaGhe == maGhe);
-
-                if (!veExist)
-                {
-                    var ghe = await _context.GheNgois.FirstOrDefaultAsync(g => g.MaGhe == maGhe);
-                    if (ghe != null)
+                    if (ticket.Length == 10 && int.TryParse(ticket.Substring(7, 3), out int ticketCounter))
                     {
-                        // Format: V + YYMMDD + 3 chữ số counter = 10 ký tự
-                        var maVe = $"V{today}{counter:D3}";
-                        counter++;
-
-                        var ve = new Ve
-                        {
-                            MaVe = maVe,
-                            TrangThai = "Chưa đặt",
-                            SoGhe = ghe.SoGhe,
-                            TenPhim = lichChieu.Phim.TenPhim,
-                            HanSuDung = lichChieu.ThoiGianBatDau.AddHours(2),
-                            Gia = lichChieu.Gia + ghe.GiaGhe,
-                            TenPhong = lichChieu.PhongChieu.TenPhong,
-                            MaGhe = maGhe,
-                            MaLichChieu = model.MaLichChieu,
-                            MaPhim = lichChieu.MaPhim,
-                            MaPhong = lichChieu.MaPhong
-                        };
-
-                        danhSachVeMoi.Add(ve);
+                        currentMaxCounter = Math.Max(currentMaxCounter, ticketCounter);
                     }
                 }
-            }
+                
+                var counter = currentMaxCounter + 1;
 
-            if (danhSachVeMoi.Any())
-            {
-                _context.Ves.AddRange(danhSachVeMoi);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = $"Đã phát hành thành công {danhSachVeMoi.Count} vé.";
+                foreach (var maGhe in model.GheChon)
+                {
+                    // Kiểm tra xem ghế đã có vé chưa
+                    var veExist = await _context.Ves
+                        .AnyAsync(v => v.MaLichChieu == model.MaLichChieu && v.MaGhe == maGhe);
+
+                    if (!veExist)
+                    {
+                        var ghe = await _context.GheNgois.FirstOrDefaultAsync(g => g.MaGhe == maGhe);
+                        if (ghe != null)
+                        {
+                            // Tạo mã vé với timestamp để tránh trùng lặp
+                            var timestamp = DateTime.Now.ToString("HHmmss");
+                            var maVe = $"V{today}{timestamp}{counter:D2}";
+                            counter++;
+
+                            var ve = new Ve
+                            {
+                                MaVe = maVe,
+                                TrangThai = "Chưa đặt",
+                                SoGhe = ghe.SoGhe,
+                                TenPhim = lichChieu.Phim.TenPhim,
+                                HanSuDung = lichChieu.ThoiGianBatDau.AddHours(2),
+                                Gia = lichChieu.Gia + ghe.GiaGhe,
+                                TenPhong = lichChieu.PhongChieu.TenPhong,
+                                MaGhe = maGhe,
+                                MaLichChieu = model.MaLichChieu,
+                                MaPhim = lichChieu.MaPhim,
+                                MaPhong = lichChieu.MaPhong
+                            };
+
+                            danhSachVeMoi.Add(ve);
+                        }
+                    }
+                }
+
+                if (danhSachVeMoi.Any())
+                {
+                    _context.Ves.AddRange(danhSachVeMoi);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["Success"] = $"Đã phát hành thành công {danhSachVeMoi.Count} vé.";
+                }
+                else
+                {
+                    await transaction.RollbackAsync();
+                    TempData["Error"] = "Không có vé nào được phát hành. Tất cả ghế đã có vé hoặc không hợp lệ.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "Không có vé nào được phát hành. Tất cả ghế đã có vé hoặc không hợp lệ.";
+                await transaction.RollbackAsync();
+                TempData["Error"] = $"Lỗi khi phát hành vé: {ex.Message}";
             }
 
             return RedirectToAction("DanhSachVe");

@@ -18,7 +18,7 @@
                     <form asp-action="Edit" method="post">
                         <input type="hidden" asp-for="MaPhim" />
                         <input type="hidden" asp-for="TenPhim" />
-                        <input type="hidden" asp-for="MaKhachHang" />
+                        <input type="hidden" asp-for="maKhachHang" />
                         <input type="hidden" asp-for="HoTenKhachHang" />
 
                         <div class="mb-3">
@@ -33,13 +33,13 @@
 
                         <div class="mb-3">
                             <label asp-for="SoSao" class="form-label">Đánh giá sao:</label>
-                            <div class="rating-stars">
+                            <input type="hidden" asp-for="SoSao" id="rating-value" />
+                            <div class="rating-stars" style="display: flex !important; flex-direction: row !important; align-items: center !important; gap: 5px !important;">
                                 @for (int i = 1; i <= 5; i++)
                                 {
-                                    <input type="radio" asp-for="SoSao" value="@i" id="star@(i)" class="rating-input" />
-                                    <label for="star@(i)" class="rating-star @(Model.SoSao >= i ? "text-warning" : "")">
-                                        <i class="fas fa-star"></i>
-                                    </label>
+                                    <div class="rating-star @(Model.SoSao >= i ? "text-warning" : "")" data-rating="@i" style="cursor: pointer !important; padding: 5px !important; background: white !important; border-radius: 3px !important;">
+                                        <i class="fas fa-star" style="font-size: 2rem !important;"></i>
+                                    </div>
                                 }
                             </div>
                             <span asp-validation-for="SoSao" class="text-danger"></span>
@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a asp-controller="KhachHang" asp-action="Details" asp-route-maPhim="@Model.MaPhim" 
+                            <a asp-controller="KhachHang" asp-action="ChiTietPhim" asp-route-maPhim="@Model.MaPhim.Trim()" 
                                class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Quay lại
                             </a>
@@ -68,61 +68,34 @@
     </div>
 </div>
 
-<style>
-    .rating-stars {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
-
-    .rating-input {
-        display: none;
-    }
-
-    .rating-star {
-        font-size: 2rem;
-        color: #ddd;
-        cursor: pointer;
-        transition: color 0.2s;
-    }
-
-    .rating-star:hover,
-    .rating-star:hover ~ .rating-star,
-    .rating-input:checked ~ .rating-star {
-        color: #ffc107;
-    }
-
-    .rating-input:checked ~ .rating-star {
-        color: #ffc107;
-    }
-</style>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     
-    <script>
-        $(document).ready(function() {
-            // Hiển thị sao khi hover
-            $('.rating-star').hover(
-                function() {
-                    $(this).prevAll('.rating-star').addClass('text-warning');
-                },
-                function() {
-                    $(this).prevAll('.rating-star').removeClass('text-warning');
-                }
-            );
-
-            // Xử lý click vào sao
-            $('.rating-star').click(function() {
-                var starIndex = $(this).index();
-                var radioValue = 5 - starIndex;
-                $('#star' + radioValue).prop('checked', true);
+            <script>
+            $(document).ready(function() {
+                // Xử lý click vào stars
+                $('.rating-star').click(function() {
+                    var rating = $(this).data('rating');
+                    $('#rating-value').val(rating);
+                    
+                    // Cập nhật hiển thị stars
+                    $('.rating-star').removeClass('text-warning');
+                    $('.rating-star').each(function() {
+                        if ($(this).data('rating') <= rating) {
+                            $(this).addClass('text-warning');
+                        }
+                    });
+                });
                 
-                // Cập nhật hiển thị sao
-                $('.rating-star').removeClass('text-warning');
-                $(this).prevAll('.rating-star').addClass('text-warning');
-                $(this).addClass('text-warning');
+                // Hiển thị sao đã chọn khi load trang
+                var selectedRating = @Model.SoSao;
+                if (selectedRating > 0) {
+                    $('.rating-star').each(function() {
+                        if ($(this).data('rating') <= selectedRating) {
+                            $(this).addClass('text-warning');
+                        }
+                    });
+                }
             });
-        });
-    </script>
+        </script>
 } 

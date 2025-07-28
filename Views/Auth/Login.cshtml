@@ -11,120 +11,42 @@
     <title>@ViewData["Title"] - Hệ thống Quản lý Rạp Chiếu Phim</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <style>
-        body {
-            background: linear-gradient(135deg, #0077BE 0%, #003366 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            max-width: 900px;
-            width: 100%;
-        }
-        .login-left {
-            background: linear-gradient(135deg, #0077BE 0%, #4A90E2 100%);
-            padding: 40px;
-            text-align: center;
-            color: white;
-        }
-        .login-right {
-            padding: 40px;
-        }
-        .cinema-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        .form-control {
-            border-radius: 10px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            border-color: #0077BE;
-            box-shadow: 0 0 0 0.2rem rgba(0, 119, 190, 0.25);
-        }
-        .form-control.is-invalid {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-        .form-control.is-valid {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        .invalid-feedback {
-            display: block;
-            font-size: 0.875rem;
-            color: #dc3545;
-            margin-top: 5px;
-        }
-        .valid-feedback {
-            display: block;
-            font-size: 0.875rem;
-            color: #28a745;
-            margin-top: 5px;
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #0077BE 0%, #4A90E2 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 15px;
-            font-weight: bold;
-            color: white;
-            width: 100%;
-        }
-        .btn-login:hover {
-            background: linear-gradient(135deg, #003366 0%, #0077BE 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.4);
-        }
-        .quick-login-btn {
-            padding: 12px 15px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-        }
-        .quick-login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .quick-login-btn:disabled {
-            transform: none;
-            box-shadow: none;
-        }
-        .quick-login-btn i {
-            font-size: 1.1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <div class="login-container">
+                <div class="auth-container">
                     <div class="row g-0">
-                        <div class="col-lg-6 login-left">
+                        <div class="col-lg-6 auth-left">
                             <div class="h-100 d-flex flex-column justify-content-center">
-                                <i class="fas fa-film cinema-icon"></i>
+                                <i class="fas fa-film auth-icon login"></i>
                                 <h2 class="mb-3">Hệ thống Quản lý</h2>
                                 <h3 class="mb-4">Rạp Chiếu Phim</h3>
                                 <p class="lead">Chào mừng bạn đến với hệ thống quản lý rạp chiếu phim hiện đại và chuyên nghiệp.</p>
-                                <div class="mt-4">
-                                    <i class="fas fa-ticket-alt me-3"></i>
-                                    <i class="fas fa-users me-3"></i>
-                                    <i class="fas fa-chart-bar me-3"></i>
-                                    <i class="fas fa-calendar-alt"></i>
+                                <div class="features-list">
+                                    <div class="feature-item">
+                                        <i class="fas fa-ticket-alt"></i>
+                                        <span>Đặt vé trực tuyến</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-users"></i>
+                                        <span>Quản lý khách hàng</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <span>Báo cáo thống kê</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Lịch chiếu phim</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 login-right">
+                        <div class="col-lg-6 auth-right">
                             <div class="h-100 d-flex flex-column justify-content-center">
                                 <h4 class="text-center mb-4">
                                     <i class="fas fa-sign-in-alt me-2 text-primary"></i>
@@ -166,7 +88,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-login" id="loginBtn">
+                                    <button type="submit" class="btn btn-auth" id="loginBtn">
                                         <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
                                     </button>
                                 </form>
@@ -180,8 +102,8 @@
                                     </a>
                                 </div>
 
-                                <div class="mt-4">
-                                    <h6 class="text-center mb-3">
+                                <div class="quick-login-container">
+                                    <h6 class="quick-login-title">
                                         <i class="fas fa-rocket me-2"></i>Đăng nhập nhanh
                                     </h6>
                                     <div class="row g-2">
@@ -189,7 +111,7 @@
                                             <button type="button" class="btn btn-success w-100 quick-login-btn mb-2" 
                                                     data-email="an.nv@gmail.com" 
                                                     data-password="hashed_password1">
-                                                <i class="fas fa-user-crown me-2"></i>
+                                                <i class="fas fa-user-crown"></i>
                                                 <span>Quản lý - Nguyễn Văn An (Dashboard)</span>
                                             </button>
                                         </div>
@@ -197,7 +119,7 @@
                                             <button type="button" class="btn btn-primary w-100 quick-login-btn" 
                                                     data-email="binh.tt@gmail.com" 
                                                     data-password="hashed_password2">
-                                                <i class="fas fa-ticket-alt me-2"></i>
+                                                <i class="fas fa-ticket-alt"></i>
                                                 <span>Nhân viên</span>
                                             </button>
                                         </div>
@@ -205,7 +127,7 @@
                                             <button type="button" class="btn btn-outline-info w-100 quick-login-btn" 
                                                     data-email="hoa.nt@gmail.com" 
                                                     data-password="hashed_password4">
-                                                <i class="fas fa-user me-2"></i>
+                                                <i class="fas fa-user"></i>
                                                 <span>Khách hàng</span>
                                             </button>
                                         </div>
@@ -250,122 +172,6 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Validation email
-            $('#email').on('input', function() {
-                var email = $(this).val();
-                var isValid = validateEmail(email);
-                
-                if (email.length > 0 && !isValid) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                    $('#emailFeedback').show();
-                    $('#emailValid').hide();
-                } else if (email.length > 0 && isValid) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                    $('#emailFeedback').hide();
-                    $('#emailValid').show();
-                } else {
-                    $(this).removeClass('is-invalid is-valid');
-                    $('#emailFeedback').hide();
-                    $('#emailValid').hide();
-                }
-            });
-
-            // Validation password
-            $('#password').on('input', function() {
-                var password = $(this).val();
-                
-                if (password.length > 0 && password.length < 6) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                    $('#passwordFeedback').show();
-                } else if (password.length >= 6) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                    $('#passwordFeedback').hide();
-                } else {
-                    $(this).removeClass('is-invalid is-valid');
-                    $('#passwordFeedback').hide();
-                }
-            });
-
-            // Validation form submit
-            $('#loginForm').on('submit', function(e) {
-                var email = $('#email').val();
-                var password = $('#password').val();
-                
-                // Reset previous states
-                $('#email, #password').removeClass('is-invalid');
-                $('.invalid-feedback').hide();
-                
-                var hasError = false;
-                
-                // Validate email
-                if (!email || !validateEmail(email)) {
-                    $('#email').addClass('is-invalid');
-                    $('#emailFeedback').show();
-                    hasError = true;
-                }
-                
-                // Validate password
-                if (!password || password.length < 6) {
-                    $('#password').addClass('is-invalid');
-                    $('#passwordFeedback').show();
-                    hasError = true;
-                }
-                
-                if (hasError) {
-                    e.preventDefault();
-                    return false;
-                }
-                
-                // Hiệu ứng loading
-                $('#loginBtn').prop('disabled', true);
-                $('#loginBtn').html('<i class="fas fa-spinner fa-spin me-2"></i>Đang đăng nhập...');
-            });
-
-            // Xử lý nút đăng nhập nhanh
-            $('.quick-login-btn').click(function() {
-                var email = $(this).data('email');
-                var password = $(this).data('password');
-                var originalHtml = $(this).html();
-                var $btn = $(this);
-                
-                // Điền thông tin vào form
-                $('#email').val(email);
-                $('#password').val(password);
-                
-                // Trigger validation
-                $('#email').trigger('input');
-                $('#password').trigger('input');
-                
-                // Hiệu ứng loading
-                $btn.prop('disabled', true);
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Đang đăng nhập...');
-                
-                // Submit form sau 800ms để người dùng thấy hiệu ứng
-                setTimeout(function() {
-                    $('#loginForm').submit();
-                }, 800);
-            });
-
-            // Hiệu ứng hover cho nút
-            $('.quick-login-btn').hover(
-                function() {
-                    $(this).addClass('shadow-sm');
-                },
-                function() {
-                    $(this).removeClass('shadow-sm');
-                }
-            );
-        });
-
-        // Email validation function
-        function validateEmail(email) {
-            var input = document.createElement('input');
-            input.type = 'email';
-            input.value = email;
-            return input.validity.valid && email.length > 0;
-        }
-    </script>
+    <script src="~/js/auth.js" asp-append-version="true"></script>
 </body>
 </html>
