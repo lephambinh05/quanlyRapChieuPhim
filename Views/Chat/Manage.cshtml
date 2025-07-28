@@ -1,0 +1,578 @@
+@model CinemaManagement.ViewModels.ChatViewModel
+@{
+    ViewData["Title"] = "Quản lý Chat";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar - Danh sách phòng chat -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        Danh sách phòng chat
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush" id="roomsList">
+                        <!-- Rooms will be loaded here -->
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createRoomModal">
+                        <i class="fas fa-plus me-1"></i>Tạo phòng mới
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments me-2"></i>
+                        <span id="currentRoomName">Chọn phòng chat</span>
+                    </h5>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2" id="onlineStatus">
+                            <i class="fas fa-circle me-1"></i>Trực tuyến
+                        </span>
+                        <small class="text-light">@Model.UserName</small>
+                    </div>
+                </div>
+                
+                <div class="card-body p-0">
+                    <!-- Messages Container -->
+                    <div id="messagesContainer" class="chat-messages" style="height: 400px; overflow-y: auto;">
+                        <div class="text-center py-4" id="noRoomSelected">
+                            <i class="fas fa-comments text-muted mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="text-muted">Chưa chọn phòng chat</h5>
+                            <p class="text-muted">Vui lòng chọn một phòng chat từ danh sách bên trái</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div id="typingIndicator" class="typing-indicator p-2 d-none">
+                        <small class="text-muted">
+                            <i class="fas fa-ellipsis-h me-1"></i>
+                            <span id="typingUser">Ai đó</span> đang nhập tin nhắn...
+                        </small>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="chat-input p-3 border-top" id="messageInputContainer" style="display: none;">
+                        <div class="input-group">
+                            <input type="text" id="messageInput" class="form-control" 
+                                   placeholder="Nhập tin nhắn..." maxlength="1000">
+                            <button class="btn btn-primary" type="button" id="sendButton">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <small class="text-muted">
+                                <span id="charCount">0</span>/1000 ký tự
+                            </small>
+                            <div>
+                                <button class="btn btn-sm btn-outline-secondary" id="sendSystemMessage">
+                                    <i class="fas fa-bell me-1"></i>Tin nhắn hệ thống
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Room Modal -->
+<div class="modal fade" id="createRoomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>Tạo phòng chat mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createRoomForm">
+                    <div class="mb-3">
+                        <label class="form-label">Tên phòng</label>
+                        <input type="text" class="form-control" id="roomName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Loại phòng</label>
+                        <select class="form-select" id="roomType">
+                            <option value="support">Hỗ trợ khách hàng</option>
+                            <option value="internal">Chat nội bộ</option>
+                            <option value="private">Phòng riêng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="customerSelect" style="display: none;">
+                        <label class="form-label">Khách hàng</label>
+                        <select class="form-select" id="customerId">
+                            <option value="">Chọn khách hàng...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="staffSelect" style="display: none;">
+                        <label class="form-label">Nhân viên phụ trách</label>
+                        <select class="form-select" id="staffId">
+                            <option value="">Chọn nhân viên...</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="createRoomBtn">
+                    <i class="fas fa-plus me-1"></i>Tạo phòng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Message Modal -->
+<div class="modal fade" id="systemMessageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-bell me-2"></i>Gửi tin nhắn hệ thống
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Nội dung tin nhắn</label>
+                    <textarea class="form-control" id="systemMessageContent" rows="3" maxlength="500"></textarea>
+                    <small class="text-muted">
+                        <span id="systemCharCount">0</span>/500 ký tự
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" id="sendSystemBtn">
+                    <i class="fas fa-bell me-1"></i>Gửi tin nhắn hệ thống
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .chat-messages {
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin: 8px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        
+        .message.own {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.other {
+            background: white;
+            border: 1px solid #dee2e6;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.system {
+            background: #ffc107;
+            color: #212529;
+            text-align: center;
+            max-width: 90%;
+            margin: 8px auto;
+            border-radius: 10px;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .typing-indicator {
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .room-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .room-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .room-item.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .room-item .unread-badge {
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .room-info {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+    <script>
+        let connection;
+        let currentRoomId = null;
+        let currentUserId = '@Model.UserId';
+        let currentUserName = '@Model.UserName';
+        let currentUserRole = '@Model.UserRole';
+        let isTyping = false;
+        let typingTimer;
+        let rooms = [];
+
+        // Khởi tạo SignalR connection
+        async function startConnection() {
+            try {
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/chatHub")
+                    .withAutomaticReconnect()
+                    .build();
+
+                // Xử lý sự kiện kết nối
+                connection.on("ReceiveMessage", function (message) {
+                    if (message.roomId === currentRoomId) {
+                        addMessage(message);
+                        scrollToBottom();
+                    }
+                    updateRoomUnreadCount(message.roomId);
+                });
+
+                connection.on("ReceiveSystemMessage", function (message) {
+                    if (message.roomId === currentRoomId) {
+                        addSystemMessage(message.content);
+                        scrollToBottom();
+                    }
+                });
+
+                connection.on("UserTyping", function (userName, isTyping) {
+                    if (currentRoomId) {
+                        showTypingIndicator(userName, isTyping);
+                    }
+                });
+
+                connection.on("RoomCreated", function (room) {
+                    loadRooms();
+                });
+
+                connection.on("MessagesMarkedAsRead", function (roomId) {
+                    updateRoomUnreadCount(roomId);
+                });
+
+                // Kết nối
+                await connection.start();
+                console.log("Đã kết nối SignalR");
+
+                // Load danh sách phòng
+                loadRooms();
+
+            } catch (err) {
+                console.error("Lỗi kết nối SignalR:", err);
+                showError("Không thể kết nối đến máy chủ chat");
+            }
+        }
+
+        // Load danh sách phòng
+        async function loadRooms() {
+            try {
+                const response = await fetch('/Chat/GetRooms');
+                rooms = await response.json();
+                renderRooms();
+            } catch (err) {
+                console.error("Lỗi load rooms:", err);
+            }
+        }
+
+        // Render danh sách phòng
+        function renderRooms() {
+            const roomsList = $('#roomsList');
+            roomsList.empty();
+
+            rooms.forEach(room => {
+                const roomItem = $(`
+                    <div class="list-group-item room-item" data-room-id="${room.roomId}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">${room.roomName}</h6>
+                                <div class="room-info">
+                                    <small>${room.roomType} • ${formatTime(room.lastActivity)}</small>
+                                </div>
+                                ${room.customerName ? `<small class="text-muted">Khách: ${room.customerName}</small>` : ''}
+                            </div>
+                            <div class="unread-badge" id="unread-${room.roomId}" style="display: none;">0</div>
+                        </div>
+                    </div>
+                `);
+
+                roomItem.on('click', () => selectRoom(room.roomId));
+                roomsList.append(roomItem);
+            });
+        }
+
+        // Chọn phòng
+        async function selectRoom(roomId) {
+            if (currentRoomId === roomId) return;
+
+            // Rời phòng cũ
+            if (currentRoomId) {
+                await connection.invoke("LeaveRoom", currentRoomId);
+            }
+
+            currentRoomId = roomId;
+            const room = rooms.find(r => r.roomId === roomId);
+            
+            // Cập nhật UI
+            $('.room-item').removeClass('active');
+            $(`.room-item[data-room-id="${roomId}"]`).addClass('active');
+            $('#currentRoomName').text(room.roomName);
+            $('#noRoomSelected').hide();
+            $('#messageInputContainer').show();
+
+            // Tham gia phòng mới
+            await connection.invoke("JoinRoom", roomId);
+            await connection.invoke("GetRoomMessages", roomId, 50);
+            await connection.invoke("MarkAsRead", roomId);
+
+            // Clear messages container
+            $('#messagesContainer').empty();
+        }
+
+        // Thêm tin nhắn vào container
+        function addMessage(message) {
+            const messageDiv = $('<div class="message"></div>');
+            const timeDiv = $('<div class="message-time"></div>');
+            
+            if (message.senderId === currentUserId) {
+                messageDiv.addClass('own');
+            } else {
+                messageDiv.addClass('other');
+            }
+            
+            messageDiv.text(message.content);
+            timeDiv.text(formatTime(message.timestamp));
+            messageDiv.append(timeDiv);
+            
+            $('#messagesContainer').append(messageDiv);
+        }
+
+        // Thêm tin nhắn hệ thống
+        function addSystemMessage(content) {
+            const messageDiv = $('<div class="message system"></div>');
+            messageDiv.text(content);
+            $('#messagesContainer').append(messageDiv);
+        }
+
+        // Hiển thị typing indicator
+        function showTypingIndicator(userName, isTyping) {
+            if (isTyping) {
+                $('#typingUser').text(userName);
+                $('#typingIndicator').removeClass('d-none');
+            } else {
+                $('#typingIndicator').addClass('d-none');
+            }
+        }
+
+        // Cập nhật số tin nhắn chưa đọc
+        function updateRoomUnreadCount(roomId) {
+            const badge = $(`#unread-${roomId}`);
+            if (badge.length) {
+                const currentCount = parseInt(badge.text()) || 0;
+                const newCount = currentCount + 1;
+                badge.text(newCount).show();
+            }
+        }
+
+        // Format thời gian
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('vi-VN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        // Scroll xuống cuối
+        function scrollToBottom() {
+            const container = document.getElementById('messagesContainer');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Gửi tin nhắn
+        async function sendMessage() {
+            const messageInput = $('#messageInput');
+            const message = messageInput.val().trim();
+            
+            if (!message || !connection || !currentRoomId) return;
+            
+            try {
+                await connection.invoke("SendMessage", currentRoomId, message);
+                messageInput.val('');
+                updateCharCount();
+            } catch (err) {
+                console.error("Lỗi gửi tin nhắn:", err);
+                showError("Không thể gửi tin nhắn");
+            }
+        }
+
+        // Gửi tin nhắn hệ thống
+        async function sendSystemMessage() {
+            const content = $('#systemMessageContent').val().trim();
+            
+            if (!content || !connection || !currentRoomId) return;
+            
+            try {
+                await connection.invoke("SendSystemMessage", currentRoomId, content);
+                $('#systemMessageContent').val('');
+                $('#systemCharCount').text('0');
+                $('#systemMessageModal').modal('hide');
+            } catch (err) {
+                console.error("Lỗi gửi tin nhắn hệ thống:", err);
+                showError("Không thể gửi tin nhắn hệ thống");
+            }
+        }
+
+        // Tạo phòng mới
+        async function createRoom() {
+            const roomName = $('#roomName').val().trim();
+            const roomType = $('#roomType').val();
+            const customerId = $('#customerId').val();
+            const staffId = $('#staffId').val();
+
+            if (!roomName) {
+                alert('Vui lòng nhập tên phòng');
+                return;
+            }
+
+            try {
+                const response = await fetch('/Chat/CreateRoom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        roomName: roomName,
+                        roomType: roomType,
+                        customerId: customerId || null,
+                        staffId: staffId || null
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    $('#createRoomModal').modal('hide');
+                    $('#createRoomForm')[0].reset();
+                    loadRooms();
+                }
+            } catch (err) {
+                console.error("Lỗi tạo phòng:", err);
+                showError("Không thể tạo phòng");
+            }
+        }
+
+        // Cập nhật số ký tự
+        function updateCharCount() {
+            const count = $('#messageInput').val().length;
+            $('#charCount').text(count);
+        }
+
+        // Xử lý typing
+        function handleTyping() {
+            if (!isTyping) {
+                isTyping = true;
+                connection.invoke("Typing", currentRoomId, true);
+            }
+            
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                isTyping = false;
+                connection.invoke("Typing", currentRoomId, false);
+            }, 1000);
+        }
+
+        // Event handlers
+        $(document).ready(function() {
+            // Khởi tạo connection
+            startConnection();
+            
+            // Gửi tin nhắn khi nhấn Enter
+            $('#messageInput').on('keypress', function(e) {
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Gửi tin nhắn khi click button
+            $('#sendButton').on('click', sendMessage);
+            
+            // Cập nhật số ký tự
+            $('#messageInput').on('input', function() {
+                updateCharCount();
+                handleTyping();
+            });
+            
+            // Tạo phòng
+            $('#createRoomBtn').on('click', createRoom);
+            
+            // Gửi tin nhắn hệ thống
+            $('#sendSystemBtn').on('click', sendSystemMessage);
+            
+            // Cập nhật số ký tự tin nhắn hệ thống
+            $('#systemMessageContent').on('input', function() {
+                const count = $(this).val().length;
+                $('#systemCharCount').text(count);
+            });
+            
+            // Hiển thị/ẩn select theo loại phòng
+            $('#roomType').on('change', function() {
+                const type = $(this).val();
+                if (type === 'support') {
+                    $('#customerSelect').show();
+                    $('#staffSelect').hide();
+                } else if (type === 'private') {
+                    $('#customerSelect').hide();
+                    $('#staffSelect').show();
+                } else {
+                    $('#customerSelect').hide();
+                    $('#staffSelect').hide();
+                }
+            });
+        });
+    </script>
+} 

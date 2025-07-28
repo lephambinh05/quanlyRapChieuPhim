@@ -23,6 +23,8 @@ namespace CinemaManagement.Data
         public DbSet<HDVoucher> HDVouchers { get; set; }
         public DbSet<DanhGia> DanhGias { get; set; }
         public DbSet<CinemaManagement.Models.TempGioHangItem> TempGioHangItems { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ChatRoom> ChatRooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,18 +48,20 @@ namespace CinemaManagement.Data
             modelBuilder.Entity<CTHD>().ToTable("CTHD");
             modelBuilder.Entity<HDVoucher>().ToTable("HD_voucher");
             modelBuilder.Entity<DanhGia>().ToTable("DanhGia");
+            modelBuilder.Entity<ChatMessage>().ToTable("ChatMessage");
+            modelBuilder.Entity<ChatRoom>().ToTable("ChatRoom");
 
             // Configure TaiKhoan relationships with explicit foreign keys
             modelBuilder.Entity<TaiKhoan>()
                 .HasOne(t => t.NhanVien)
                 .WithMany(n => n.TaiKhoans)
-                .HasForeignKey(t => t.MaNhanVien)
+                .HasForeignKey(t => t.maNhanVien)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<TaiKhoan>()
                 .HasOne(t => t.KhachHang)
                 .WithMany(k => k.TaiKhoans)
-                .HasForeignKey(t => t.MaKhachHang)
+                .HasForeignKey(t => t.maKhachHang)
                 .OnDelete(DeleteBehavior.SetNull);
 
             // Configure relationships to prevent cascading deletes where appropriate
@@ -72,6 +76,24 @@ namespace CinemaManagement.Data
                 .WithMany(p => p.Ves)
                 .HasForeignKey(v => v.MaPhim)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Configure ChatMessage relationship with ChatRoom
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne<ChatRoom>()
+                .WithMany(cr => cr.Messages)
+                .HasForeignKey(cm => cm.RoomId)
+                .HasPrincipalKey(cr => cr.RoomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure ChatMessage relationship with ChatRoom
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne<ChatRoom>()
+                .WithMany(cr => cr.Messages)
+                .HasForeignKey(cm => cm.RoomId)
+                .HasPrincipalKey(cr => cr.RoomId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Không cần ignore vì đã xóa navigation properties trong model
         }
     }
 }

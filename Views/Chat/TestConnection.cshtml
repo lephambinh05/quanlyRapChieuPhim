@@ -1,0 +1,227 @@
+@{
+    ViewData["Title"] = "Test Chat Connection";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4>🔧 Test Chat Connection</h4>
+                </div>
+                <div class="card-body">
+                    <div id="connectionStatus" class="alert alert-info">
+                        <strong>Status:</strong> <span id="status">Checking connection...</span>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>📊 Connection Info</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <strong>SignalR Hub:</strong> <span id="hubStatus">Checking...</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Session Data:</strong> <span id="sessionStatus">Checking...</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Database:</strong> <span id="dbStatus">Checking...</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>🧪 Test Functions</h5>
+                            <div class="d-grid gap-2">
+                                <button id="testConnection" class="btn btn-primary">Test SignalR Connection</button>
+                                <button id="testSession" class="btn btn-info">Test Session Data</button>
+                                <button id="testDatabase" class="btn btn-success">Test Database</button>
+                                <button id="testChatTables" class="btn btn-secondary">Test Chat Tables</button>
+                                <button id="createTestRoom" class="btn btn-warning">Create Test Room</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <h5>📝 Log Output</h5>
+                        <div id="logOutput" class="border p-3" style="height: 200px; overflow-y: auto; background-color: #f8f9fa; font-family: monospace;">
+                            <div>Waiting for logs...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+    <script>
+        let connection;
+        let logOutput = document.getElementById('logOutput');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        async function testSignalRConnection() {
+            try {
+                log("🔌 Testing SignalR connection...");
+                
+                // Tạo connection
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/chatHub")
+                    .withAutomaticReconnect()
+                    .build();
+                
+                // Xử lý events
+                connection.on("ReceiveMessage", (message) => {
+                    log(`📨 Received message: ${JSON.stringify(message)}`);
+                });
+                
+                connection.on("ReceiveError", (error) => {
+                    log(`❌ Error: ${error}`);
+                });
+                
+                connection.on("JoinedRoom", (roomId) => {
+                    log(`✅ Joined room: ${roomId}`);
+                });
+                
+                connection.on("RoomCreated", (room) => {
+                    log(`🏠 Room created: ${JSON.stringify(room)}`);
+                });
+                
+                // Kết nối
+                await connection.start();
+                log("✅ SignalR connection established successfully!");
+                document.getElementById('hubStatus').textContent = "Connected";
+                document.getElementById('hubStatus').className = "text-success";
+                
+                return true;
+            } catch (error) {
+                log(`❌ SignalR connection failed: ${error.message}`);
+                document.getElementById('hubStatus').textContent = "Failed";
+                document.getElementById('hubStatus').className = "text-danger";
+                return false;
+            }
+        }
+        
+        async function testSessionData() {
+            try {
+                log("🔍 Testing session data...");
+                
+                const response = await fetch('/Chat/GetSessionInfo');
+                const data = await response.json();
+                
+                log(`📋 Session data: ${JSON.stringify(data)}`);
+                
+                if (data.userId) {
+                    document.getElementById('sessionStatus').textContent = "Logged in";
+                    document.getElementById('sessionStatus').className = "text-success";
+                } else {
+                    document.getElementById('sessionStatus').textContent = "Not logged in";
+                    document.getElementById('sessionStatus').className = "text-warning";
+                }
+                
+                return data;
+            } catch (error) {
+                log(`❌ Session test failed: ${error.message}`);
+                document.getElementById('sessionStatus').textContent = "Error";
+                document.getElementById('sessionStatus').className = "text-danger";
+                return null;
+            }
+        }
+        
+        async function testDatabase() {
+            try {
+                log("🗄️ Testing database connection...");
+                
+                const response = await fetch('/Chat/TestDatabase');
+                const data = await response.json();
+                
+                log(`💾 Database test result: ${JSON.stringify(data)}`);
+                
+                if (data.success) {
+                    document.getElementById('dbStatus').textContent = "Connected";
+                    document.getElementById('dbStatus').className = "text-success";
+                } else {
+                    document.getElementById('dbStatus').textContent = "Failed";
+                    document.getElementById('dbStatus').className = "text-danger";
+                }
+                
+                return data;
+            } catch (error) {
+                log(`❌ Database test failed: ${error.message}`);
+                document.getElementById('dbStatus').textContent = "Error";
+                document.getElementById('dbStatus').className = "text-danger";
+                return null;
+            }
+        }
+        
+        async function testChatTables() {
+            try {
+                log("📋 Testing chat tables...");
+                
+                const response = await fetch('/Chat/EnsureChatTables');
+                const data = await response.json();
+                
+                log(`📋 Chat tables test result: ${JSON.stringify(data)}`);
+                
+                if (data.success && data.tablesExist) {
+                    log(`✅ Chat tables exist - Rooms: ${data.roomCount}, Messages: ${data.messageCount}`);
+                } else {
+                    log(`❌ Chat tables missing or error: ${data.message}`);
+                }
+                
+                return data;
+            } catch (error) {
+                log(`❌ Chat tables test failed: ${error.message}`);
+                return null;
+            }
+        }
+        
+        async function createTestRoom() {
+            try {
+                log("🏠 Creating test room...");
+                
+                if (!connection) {
+                    log("❌ No SignalR connection available");
+                    return;
+                }
+                
+                await connection.invoke("CreateRoom", "Test Room", "test", null, null);
+                log("✅ Test room creation requested");
+                
+            } catch (error) {
+                log(`❌ Create room failed: ${error.message}`);
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('testConnection').addEventListener('click', testSignalRConnection);
+        document.getElementById('testSession').addEventListener('click', testSessionData);
+        document.getElementById('testDatabase').addEventListener('click', testDatabase);
+        document.getElementById('testChatTables').addEventListener('click', testChatTables);
+        document.getElementById('createTestRoom').addEventListener('click', createTestRoom);
+        
+        // Auto-run tests on page load
+        window.addEventListener('load', async () => {
+            log("🚀 Starting connection tests...");
+            
+            const dbResult = await testDatabase();
+            const chatTablesResult = await testChatTables();
+            const sessionResult = await testSessionData();
+            const signalRResult = await testSignalRConnection();
+            
+            if (signalRResult && sessionResult && dbResult && chatTablesResult?.success) {
+                document.getElementById('status').textContent = "All systems operational";
+                document.getElementById('connectionStatus').className = "alert alert-success";
+            } else {
+                document.getElementById('status').textContent = "Some systems failed";
+                document.getElementById('connectionStatus').className = "alert alert-warning";
+            }
+        });
+    </script>
+} 

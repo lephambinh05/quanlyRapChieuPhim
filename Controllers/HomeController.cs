@@ -30,10 +30,13 @@ public class HomeController : Controller
         {
             return RedirectToAction("Index", "KhachHang");
         }
-        else if (!string.IsNullOrEmpty(maNhanVien))
+        else if (role == "Nhân viên" && !string.IsNullOrEmpty(maNhanVien))
         {
-            // Nếu đã đăng nhập, chuyển đến trang bán vé
             return RedirectToAction("Index", "BanVe");
+        }
+        else if (role == "Quản lý" && !string.IsNullOrEmpty(maNhanVien))
+        {
+            return RedirectToAction("Index", "QuanLy");
         }
         else
         {

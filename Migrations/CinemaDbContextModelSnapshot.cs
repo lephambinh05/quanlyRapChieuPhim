@@ -433,7 +433,7 @@ namespace CinemaManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempGioHangItems");
+                    b.ToTable("TempGioHangItems", (string)null);
                 });
 
             modelBuilder.Entity("CinemaManagement.Models.Ve", b =>

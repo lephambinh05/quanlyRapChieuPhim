@@ -255,7 +255,7 @@
                                                                     </p>
                                                                 </div>
                                                                 <div class="card-footer p-2">
-                                                                    <a href="@Url.Action("ChiTietPhim", new { id = phim.MaPhim })" 
+                                                                    <a href="@Url.Action("ChiTietPhim", new { maPhim = phim.MaPhim.Trim() })" 
                                                                        class="btn btn-primary btn-sm w-100">
                                                                         <i class="fas fa-info-circle me-1"></i>Xem chi tiết
                                                                     </a>
@@ -735,7 +735,7 @@
                 
                 if (suggestion.type === 'phim') {
                     // Navigate to movie detail
-                    window.location.href = '/KhachHang/ChiTietPhim/' + suggestion.id;
+                    window.location.href = '/KhachHang/ChiTietPhim/' + encodeURIComponent(suggestion.id.trim());
                 } else if (suggestion.type === 'genre') {
                     // Filter by genre
                     window.location.href = '/KhachHang/Index?theLoai=' + encodeURIComponent(suggestion.genre);
@@ -931,7 +931,7 @@
                                     </p>
                                 </div>
                                 <div class="card-footer">
-                                    <a href="/KhachHang/ChiTietPhim/${movie.id}" class="btn btn-primary btn-sm w-100">
+                                    <a href="/KhachHang/ChiTietPhim/${encodeURIComponent(movie.id.trim())}" class="btn btn-primary btn-sm w-100">
                                         <i class="fas fa-info-circle me-1"></i>Xem chi tiết
                                     </a>
                                 </div>

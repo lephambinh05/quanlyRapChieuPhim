@@ -4,11 +4,33 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using CinemaManagement.Services;
+using CinemaManagement.Hubs;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cấu hình Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.SignalR", LogEventLevel.Debug)
+    .MinimumLevel.Override("CinemaManagement.Hubs", LogEventLevel.Debug)
+    .MinimumLevel.Override("CinemaManagement.Controllers", LogEventLevel.Debug)
+    .WriteTo.Console()
+    .WriteTo.File(Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt"), 
+        fileSizeLimitBytes: 10485760,
+        retainedFileCountLimit: 5,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 // Add Memory Cache
 builder.Services.AddMemoryCache();
@@ -44,6 +66,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<ITwoFactorService, TwoFactorService>();
+builder.Services.AddScoped<IChatLogService, ChatLogService>();
 
 // Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -121,7 +144,7 @@ using (var scope = app.Services.CreateScope())
         {
             context.NhanViens.Add(new CinemaManagement.Models.NhanVien
             {
-                MaNhanVien = "GUEST",
+                maNhanVien = "GUEST",
                 TenNhanVien = "Hệ thống",
                 ChucVu = "Tự động",
                 SDT = "0000000000",
@@ -137,7 +160,7 @@ using (var scope = app.Services.CreateScope())
         {
             context.KhachHangs.Add(new CinemaManagement.Models.KhachHang
             {
-                MaKhachHang = "GUEST",
+                maKhachHang = "GUEST",
                 HoTen = "Khách lẻ",
                 SDT = "0000000000",
                 DiemTichLuy = 0
@@ -168,6 +191,9 @@ app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
 
+// Map SignalR Hub
+app.MapHub<ChatHub>("/chatHub");
+
 // XÓA hoặc comment dòng: app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -196,4 +222,24 @@ app.MapGet("/signin-google", async (HttpContext context) =>
     }
 });
 
-app.Run();
+// Đảm bảo thư mục logs tồn tại
+var logsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "logs");
+if (!Directory.Exists(logsDirectory))
+{
+    Directory.CreateDirectory(logsDirectory);
+}
+
+try
+{
+    Log.Information("Starting Cinema Management Application");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+

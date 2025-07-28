@@ -22,10 +22,10 @@ namespace CinemaManagement.Models
         public string? TrangThai { get; set; }
 
         [StringLength(10)]
-        public string? MaNhanVien { get; set; }
+        public string? maNhanVien { get; set; }
 
         [StringLength(10)]
-        public string? MaKhachHang { get; set; }
+        public string? maKhachHang { get; set; }
 
         // 2FA Properties
         [StringLength(32)]

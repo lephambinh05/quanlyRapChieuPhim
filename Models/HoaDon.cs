@@ -18,17 +18,17 @@ namespace CinemaManagement.Models
 
         public int SoLuong { get; set; }
 
-        public string? MaKhachHang { get; set; }
+        public string? maKhachHang { get; set; }
 
-        public string? MaNhanVien { get; set; }
+        public string? maNhanVien { get; set; }
 
         public string? TrangThai { get; set; } = "Chờ chuyển khoản";
 
         // Navigation properties
-        [ForeignKey("MaKhachHang")]
+        [ForeignKey("maKhachHang")]
         public virtual KhachHang? KhachHang { get; set; }
 
-        [ForeignKey("MaNhanVien")]
+        [ForeignKey("maNhanVien")]
         public virtual NhanVien NhanVien { get; set; } = null!;
 
         public virtual ICollection<CTHD> CTHDs { get; set; } = new List<CTHD>();

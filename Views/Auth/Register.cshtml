@@ -11,144 +11,49 @@
     <title>@ViewData["Title"] - Hệ thống Quản lý Rạp Chiếu Phim</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <style>
-        body {
-            background: linear-gradient(135deg, #0077BE 0%, #003366 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 0;
-        }
-        .register-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            max-width: 1000px;
-            width: 100%;
-        }
-        .register-left {
-            background: linear-gradient(135deg, #0077BE 0%, #4A90E2 100%);
-            padding: 40px;
-            text-align: center;
-            color: white;
-        }
-        .register-right {
-            padding: 40px;
-        }
-        .cinema-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        .form-control {
-            border-radius: 10px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            border-color: #0077BE;
-            box-shadow: 0 0 0 0.2rem rgba(0, 119, 190, 0.25);
-        }
-        .btn-register {
-            background: linear-gradient(135deg, #0077BE 0%, #4A90E2 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 15px;
-            font-weight: bold;
-            color: white;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        .btn-register:hover {
-            background: linear-gradient(135deg, #003366 0%, #0077BE 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.4);
-        }
-        .btn-back {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-weight: bold;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .btn-back:hover {
-            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-            transform: translateY(-2px);
-        }
-        .password-strength {
-            font-size: 0.875rem;
-            margin-top: 5px;
-        }
-        .strength-weak { color: #dc3545; }
-        .strength-medium { color: #ffc107; }
-        .strength-strong { color: #0077BE; }
-        .form-control.is-invalid {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-        }
-        .form-control.is-valid {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        .invalid-feedback {
-            display: block;
-            font-size: 0.875rem;
-            color: #dc3545;
-            margin-top: 5px;
-        }
-        .valid-feedback {
-            display: block;
-            font-size: 0.875rem;
-            color: #28a745;
-            margin-top: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-11">
-                <div class="register-container">
+                <div class="auth-container">
                     <div class="row g-0">
-                        <div class="col-lg-5 register-left">
+                        <div class="col-lg-5 auth-left">
                             <div class="h-100 d-flex flex-column justify-content-center">
-                                <i class="fas fa-user-plus cinema-icon"></i>
+                                <i class="fas fa-user-plus auth-icon register"></i>
                                 <h2 class="mb-3">Tạo Tài Khoản</h2>
                                 <h3 class="mb-4">Rạp Chiếu Phim</h3>
                                 <p class="lead">Đăng ký tài khoản để trải nghiệm dịch vụ xem phim tuyệt vời cùng chúng tôi.</p>
-                                <div class="mt-4">
-                                    <div class="d-flex justify-content-start align-items-center mb-3">
-                                        <i class="fas fa-ticket-alt me-3 fs-4"></i>
+                                <div class="features-list">
+                                    <div class="feature-item">
+                                        <i class="fas fa-ticket-alt"></i>
                                         <span>Đặt vé online</span>
                                     </div>
-                                    <div class="d-flex justify-content-start align-items-center mb-3">
-                                        <i class="fas fa-star me-3 fs-4"></i>
+                                    <div class="feature-item">
+                                        <i class="fas fa-star"></i>
                                         <span>Tích lũy điểm thưởng</span>
                                     </div>
-                                    <div class="d-flex justify-content-start align-items-center mb-3">
-                                        <i class="fas fa-gift me-3 fs-4"></i>
+                                    <div class="feature-item">
+                                        <i class="fas fa-gift"></i>
                                         <span>Ưu đãi đặc biệt</span>
                                     </div>
-                                    <div class="d-flex justify-content-start align-items-center">
-                                        <i class="fas fa-history me-3 fs-4"></i>
+                                    <div class="feature-item">
+                                        <i class="fas fa-history"></i>
                                         <span>Lịch sử đặt vé</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-7 register-right">
+                        <div class="col-lg-7 auth-right">
                             <div class="h-100 d-flex flex-column justify-content-center">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <h4>
                                         <i class="fas fa-user-plus me-2 text-primary"></i>
                                         Đăng Ký Tài Khoản
                                     </h4>
-                                    <a href="@Url.Action("Login", "Auth")" class="btn btn-back">
+                                    <a href="@Url.Action("Login", "Auth")" class="btn btn-secondary">
                                         <i class="fas fa-arrow-left me-2"></i>Quay lại
                                     </a>
                                 </div>
@@ -234,7 +139,7 @@
                                         </div>
                                     </div>
                                     
-                                    <button type="submit" class="btn btn-register" id="submitBtn">
+                                    <button type="submit" class="btn btn-auth" id="submitBtn">
                                         <i class="fas fa-user-plus me-2"></i>Đăng Ký
                                     </button>
                                 </form>
@@ -257,170 +162,6 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Kiểm tra độ mạnh mật khẩu
-            $('#password').on('input', function() {
-                var password = $(this).val();
-                var strength = checkPasswordStrength(password);
-                var strengthDiv = $('#passwordStrength');
-                
-                if (password.length > 0) {
-                    strengthDiv.removeClass('strength-weak strength-medium strength-strong');
-                    strengthDiv.addClass(strength.class);
-                    strengthDiv.html('<i class="fas fa-shield-alt me-1"></i>' + strength.text);
-                } else {
-                    strengthDiv.empty();
-                }
-            });
-
-            // Kiểm tra mật khẩu khớp
-            $('#confirmPassword').on('input', function() {
-                var password = $('#password').val();
-                var confirmPassword = $(this).val();
-                var matchDiv = $('#passwordMatch');
-                
-                if (confirmPassword.length > 0) {
-                    if (password === confirmPassword) {
-                        matchDiv.removeClass('strength-weak');
-                        matchDiv.addClass('strength-strong');
-                        matchDiv.html('<i class="fas fa-check me-1"></i>Mật khẩu khớp');
-                    } else {
-                        matchDiv.removeClass('strength-strong');
-                        matchDiv.addClass('strength-weak');
-                        matchDiv.html('<i class="fas fa-times me-1"></i>Mật khẩu không khớp');
-                    }
-                } else {
-                    matchDiv.empty();
-                }
-            });
-
-            // Xử lý form submit
-            $('#registerForm').on('submit', function(e) {
-                var password = $('#password').val();
-                var confirmPassword = $('#confirmPassword').val();
-                var email = $('#email').val();
-                var hoTen = $('#hoTen').val();
-                var sdt = $('#sdt').val();
-                
-                // Validate email
-                if (!validateEmail(email)) {
-                    e.preventDefault();
-                    alert('Vui lòng nhập email hợp lệ!');
-                    $('#email').focus();
-                    return false;
-                }
-                
-                // Validate họ tên
-                if (!/^[a-zA-ZÀ-ỹ\s]+$/.test(hoTen)) {
-                    e.preventDefault();
-                    alert('Họ tên chỉ được chứa chữ cái và khoảng trắng!');
-                    $('#hoTen').focus();
-                    return false;
-                }
-                
-                // Validate số điện thoại
-                if (!/^[0-9]{10,11}$/.test(sdt)) {
-                    e.preventDefault();
-                    alert('Số điện thoại phải có 10-11 chữ số!');
-                    $('#sdt').focus();
-                    return false;
-                }
-                
-                // Validate mật khẩu
-                if (password !== confirmPassword) {
-                    e.preventDefault();
-                    alert('Mật khẩu xác nhận không khớp!');
-                    $('#confirmPassword').focus();
-                    return false;
-                }
-                
-                // Hiệu ứng loading
-                $('#submitBtn').prop('disabled', true);
-                $('#submitBtn').html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
-            });
-
-            // Validation số điện thoại
-            $('#sdt').on('input', function() {
-                var sdt = $(this).val();
-                var regex = /^[0-9]{10,11}$/;
-                
-                if (sdt.length > 0 && !regex.test(sdt)) {
-                    $(this).addClass('is-invalid');
-                    $('#sdtFeedback').show();
-                } else {
-                    $(this).removeClass('is-invalid');
-                    $('#sdtFeedback').hide();
-                }
-            });
-
-            // Validation email
-            $('#email').on('input', function() {
-                var email = $(this).val();
-                var isValid = validateEmail(email);
-                
-                if (email.length > 0 && !isValid) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                    $('#emailFeedback').show();
-                    $('#emailValid').hide();
-                } else if (email.length > 0 && isValid) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                    $('#emailFeedback').hide();
-                    $('#emailValid').show();
-                } else {
-                    $(this).removeClass('is-invalid is-valid');
-                    $('#emailFeedback').hide();
-                    $('#emailValid').hide();
-                }
-            });
-
-            // Validation tên (chỉ chứa chữ cái và khoảng trắng)
-            $('#hoTen').on('input', function() {
-                var hoTen = $(this).val();
-                var regex = /^[a-zA-ZÀ-ỹ\s]+$/;
-                
-                if (hoTen.length > 0 && !regex.test(hoTen)) {
-                    $(this).addClass('is-invalid');
-                    $('#hoTenFeedback').show();
-                } else {
-                    $(this).removeClass('is-invalid');
-                    $('#hoTenFeedback').hide();
-                }
-            });
-        });
-
-        function checkPasswordStrength(password) {
-            var strength = 0;
-            var regex = [
-                /.{6,}/, // At least 6 characters
-                /[a-z]/, // Lowercase
-                /[A-Z]/, // Uppercase
-                /[0-9]/, // Numbers
-                /[^A-Za-z0-9]/ // Special characters
-            ];
-            
-            regex.forEach(function(pattern) {
-                if (pattern.test(password)) {
-                    strength++;
-                }
-            });
-            
-            if (strength < 2) {
-                return { class: 'strength-weak', text: 'Mật khẩu yếu' };
-            } else if (strength < 4) {
-                return { class: 'strength-medium', text: 'Mật khẩu trung bình' };
-            } else {
-                return { class: 'strength-strong', text: 'Mật khẩu mạnh' };
-            }
-        }
-
-        function validateEmail(email) {
-            // Sử dụng HTML5 built-in validation
-            var input = document.createElement('input');
-            input.type = 'email';
-            input.value = email;
-            return input.validity.valid && email.length > 0;
-        }
-    </script>
+    <script src="~/js/auth.js" asp-append-version="true"></script>
 </body>
 </html>

@@ -96,11 +96,11 @@
                                     <div class="rating-summary">
                                         <div class="d-flex align-items-center mb-3">
                                             <div class="average-rating me-3">
-                                                <span class="rating-score">@Model.DiemTrungBinh.ToString("F1")</span>
+                                                <span class="rating-score">@ViewBag.DiemTrungBinh.ToString("F1")</span>
                                                 <div class="stars-display">
                                                     @for (int i = 1; i <= 5; i++)
                                                     {
-                                                        if (i <= Math.Round(Model.DiemTrungBinh))
+                                                        if (i <= Math.Round(ViewBag.DiemTrungBinh))
                                                         {
                                                             <i class="fas fa-star text-warning"></i>
                                                         }
@@ -112,7 +112,7 @@
                                                 </div>
                                             </div>
                                             <div class="rating-info">
-                                                <div class="total-reviews">@Model.TongSoDanhGia đánh giá</div>
+                                                <div class="total-reviews">@ViewBag.SoDanhGia đánh giá</div>
                                                 <div class="rating-actions">
                                                     <a asp-controller="DanhGia" asp-action="List" asp-route-maPhim="@Model.MaPhim" 
                                                        class="btn btn-outline-primary btn-sm me-2">
@@ -207,7 +207,7 @@
                                             }
                                             <div class="movie-overlay">
                                                 <div class="overlay-content">
-                                                    <a href="@Url.Action("ChiTietPhim", new { id = phimLienQuan.MaPhim })" 
+                                                    <a href="@Url.Action("ChiTietPhim", new { maPhim = phimLienQuan.MaPhim.Trim() })" 
                                                        class="btn btn-primary btn-sm">
                                                         <i class="fas fa-eye me-1"></i>Xem chi tiết
                                                     </a>

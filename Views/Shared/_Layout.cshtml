@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/chi-tiet-phim.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CinemaManagement.styles.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -15,10 +16,32 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="QuanLy" asp-action="Index">
-                    <i class="fas fa-film me-2"></i>
-                    CinemaManagement
-                </a>
+                @{
+                    var maNhanVien = Context.Session.GetString("MaNhanVien");
+                    var maKhachHang = Context.Session.GetString("MaKhachHang");
+                }
+                
+                @if (maNhanVien != null)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="QuanLy" asp-action="Index">
+                        <i class="fas fa-film me-2"></i>
+                        CinemaManagement
+                    </a>
+                }
+                else if (maKhachHang != null)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="KhachHang" asp-action="Index">
+                        <i class="fas fa-film me-2"></i>
+                        CinemaManagement
+                    </a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Auth" asp-action="Home">
+                        <i class="fas fa-film me-2"></i>
+                        CinemaManagement
+                    </a>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

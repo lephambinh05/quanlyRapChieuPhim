@@ -7,8 +7,8 @@ namespace CinemaManagement.ViewModels
         public DateTime ThoiGianKetThuc { get; set; }
         public decimal Gia { get; set; }
         public string MaPhim { get; set; } = string.Empty;
-        public PhimDto Phim { get; set; } = new PhimDto();
-        public PhongChieuDto PhongChieu { get; set; } = new PhongChieuDto();
+        public PhimDto? Phim { get; set; }
+        public PhongChieuDto? PhongChieu { get; set; }
     }
 
     public class PhimDto

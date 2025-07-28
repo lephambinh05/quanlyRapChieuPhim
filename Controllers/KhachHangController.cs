@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace CinemaManagement.Controllers
 {
@@ -15,10 +16,12 @@ namespace CinemaManagement.Controllers
     {
         private static readonly object _logLock = new object();
         private readonly CinemaDbContext _context;
+        private readonly ILogger<KhachHangController> _logger;
 
-        public KhachHangController(CinemaDbContext context)
+        public KhachHangController(CinemaDbContext context, ILogger<KhachHangController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // Middleware kiểm tra đăng nhập
@@ -32,78 +35,91 @@ namespace CinemaManagement.Controllers
         // Trang chủ khách hàng - Hiển thị danh sách phim
         public async Task<IActionResult> Index(string? theLoai, string? searchTerm, string? sortBy, string? sortOrder)
         {
-            WriteErrorLog($"[ACTION] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [Index] Email: {HttpContext.Session.GetString("Email")}, theLoai: {theLoai}, searchTerm: {searchTerm}, sortBy: {sortBy}, sortOrder: {sortOrder}, SessionKeys: {string.Join(",", HttpContext.Session.Keys)}");
-            if (!IsCustomerLoggedIn())
+            try
             {
+                _logger.LogInformation("[ACTION] [Index] Email: {Email}, theLoai: {TheLoai}, searchTerm: {SearchTerm}, sortBy: {SortBy}, sortOrder: {SortOrder}, SessionKeys: {SessionKeys}", 
+                    HttpContext.Session.GetString("Email"), theLoai, searchTerm, sortBy, sortOrder, string.Join(",", HttpContext.Session.Keys));
+                if (!IsCustomerLoggedIn())
+                {
+                    return RedirectToAction("Login", "Auth");
+                }
+
+                var phims = _context.Phims
+                    .Include(p => p.LichChieus)
+                    .Include(p => p.Ves)
+                    .AsQueryable();
+
+                // Lọc theo thể loại
+                if (!string.IsNullOrEmpty(theLoai))
+                {
+                    phims = phims.Where(p => p.TheLoai.Contains(theLoai));
+                }
+
+                // Tìm kiếm theo tên phim
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    phims = phims.Where(p => p.TenPhim.Contains(searchTerm));
+                }
+
+                // Sắp xếp phim
+                phims = ApplySorting(phims, sortBy, sortOrder);
+
+                var phimList = await phims.ToListAsync();
+
+                // Lấy danh sách thể loại để hiển thị filter
+                ViewBag.TheLoais = await _context.Phims
+                    .Select(p => p.TheLoai)
+                    .Distinct()
+                    .ToListAsync();
+
+                // Lấy lịch chiếu trong 7 ngày tới
+                var lichChieuSapToi = await _context.LichChieus
+                    .Include(lc => lc.Phim)
+                    .Include(lc => lc.PhongChieu)
+                    .Where(lc => lc.ThoiGianBatDau >= DateTime.Now && 
+                                lc.ThoiGianBatDau <= DateTime.Now.AddDays(7))
+                    .OrderBy(lc => lc.ThoiGianBatDau)
+                    .ToListAsync();
+
+                // Chuyển đổi sang DTO để tránh vòng lặp serialization
+                var lichChieuDto = lichChieuSapToi.Select(lc => new ScheduleDto
+                {
+                    MaLichChieu = lc.MaLichChieu,
+                    ThoiGianBatDau = lc.ThoiGianBatDau,
+                    ThoiGianKetThuc = lc.ThoiGianKetThuc,
+                    Gia = lc.Gia,
+                    MaPhim = lc.MaPhim,
+                    Phim = lc.Phim != null ? new PhimDto
+                    {
+                        MaPhim = lc.Phim.MaPhim,
+                        TenPhim = lc.Phim.TenPhim,
+                        TheLoai = lc.Phim.TheLoai,
+                        ThoiLuong = lc.Phim.ThoiLuong,
+                        DoTuoiPhanAnh = lc.Phim.DoTuoiPhanAnh
+                    } : null,
+                    PhongChieu = lc.PhongChieu != null ? new PhongChieuDto
+                    {
+                        MaPhong = lc.PhongChieu.MaPhong,
+                        TenPhong = lc.PhongChieu.TenPhong,
+                        SoChoNgoi = lc.PhongChieu.SoChoNgoi
+                    } : null
+                }).ToList();
+
+                ViewBag.LichChieuSapToi = lichChieuSapToi; // Cho server-side rendering
+                ViewBag.LichChieuDto = lichChieuDto; // Cho JavaScript serialization
+                ViewBag.CurrentTheLoai = theLoai;
+                ViewBag.CurrentSearch = searchTerm;
+                ViewBag.CurrentSortBy = sortBy ?? "name";
+                ViewBag.CurrentSortOrder = sortOrder ?? "asc";
+
+                return View(phimList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[ERROR] Exception in Index action: {Message}", ex.Message);
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tải trang. Vui lòng thử lại.";
                 return RedirectToAction("Login", "Auth");
             }
-
-            var phims = _context.Phims.AsQueryable();
-
-            // Lọc theo thể loại
-            if (!string.IsNullOrEmpty(theLoai))
-            {
-                phims = phims.Where(p => p.TheLoai.Contains(theLoai));
-            }
-
-            // Tìm kiếm theo tên phim
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                phims = phims.Where(p => p.TenPhim.Contains(searchTerm));
-            }
-
-            // Sắp xếp phim
-            phims = ApplySorting(phims, sortBy, sortOrder);
-
-            var phimList = await phims.ToListAsync();
-
-            // Lấy danh sách thể loại để hiển thị filter
-            ViewBag.TheLoais = await _context.Phims
-                .Select(p => p.TheLoai)
-                .Distinct()
-                .ToListAsync();
-
-            // Lấy lịch chiếu trong 7 ngày tới
-            var lichChieuSapToi = await _context.LichChieus
-                .Include(lc => lc.Phim)
-                .Include(lc => lc.PhongChieu)
-                .Where(lc => lc.ThoiGianBatDau >= DateTime.Now && 
-                            lc.ThoiGianBatDau <= DateTime.Now.AddDays(7))
-                .OrderBy(lc => lc.ThoiGianBatDau)
-                .ToListAsync();
-
-            // Chuyển đổi sang DTO để tránh vòng lặp serialization
-            var lichChieuDto = lichChieuSapToi.Select(lc => new ScheduleDto
-            {
-                MaLichChieu = lc.MaLichChieu,
-                ThoiGianBatDau = lc.ThoiGianBatDau,
-                ThoiGianKetThuc = lc.ThoiGianKetThuc,
-                Gia = lc.Gia,
-                MaPhim = lc.MaPhim,
-                Phim = new PhimDto
-                {
-                    MaPhim = lc.Phim.MaPhim,
-                    TenPhim = lc.Phim.TenPhim,
-                    TheLoai = lc.Phim.TheLoai,
-                    ThoiLuong = lc.Phim.ThoiLuong,
-                    DoTuoiPhanAnh = lc.Phim.DoTuoiPhanAnh
-                },
-                PhongChieu = new PhongChieuDto
-                {
-                    MaPhong = lc.PhongChieu.MaPhong,
-                    TenPhong = lc.PhongChieu.TenPhong,
-                    SoChoNgoi = lc.PhongChieu.SoChoNgoi
-                }
-            }).ToList();
-
-            ViewBag.LichChieuSapToi = lichChieuSapToi; // Cho server-side rendering
-            ViewBag.LichChieuDto = lichChieuDto; // Cho JavaScript serialization
-            ViewBag.CurrentTheLoai = theLoai;
-            ViewBag.CurrentSearch = searchTerm;
-            ViewBag.CurrentSortBy = sortBy ?? "name";
-            ViewBag.CurrentSortOrder = sortOrder ?? "asc";
-
-            return View(phimList);
         }
 
         // Chi tiết phim
@@ -176,8 +192,22 @@ namespace CinemaManagement.Controllers
                 phimLienQuan.AddRange(phimKhac);
             }
 
+            // Lấy dữ liệu đánh giá cho phim này
+            var danhGias = await _context.DanhGias
+                .Include(dg => dg.KhachHang)
+                .Where(dg => dg.MaPhim.Trim() == maPhim.Trim())
+                .OrderByDescending(dg => dg.NgayDanhGia)
+                .ToListAsync();
+
+            // Tính điểm trung bình
+            var diemTrungBinh = danhGias.Any() ? danhGias.Average(dg => dg.SoSao) : 0;
+            var soDanhGia = danhGias.Count;
+
             ViewBag.LichChieus = lichChieuSimple;
             ViewBag.PhimLienQuan = phimLienQuan;
+            ViewBag.DanhGias = danhGias;
+            ViewBag.DiemTrungBinh = diemTrungBinh;
+            ViewBag.SoDanhGia = soDanhGia;
 
             return View(phim);
         }
@@ -514,14 +544,14 @@ namespace CinemaManagement.Controllers
                     TongTien = tongTienSauGiam,
                     ThoiGianTao = DateTime.Now,
                     SoLuong = gioHang.Count,
-                    MaKhachHang = khachHangEntity ?? string.Empty,
-                    MaNhanVien = "GUEST",
+                    maKhachHang = khachHangEntity ?? string.Empty,
+                    maNhanVien = "GUEST",
                     TrangThai = paymentMethod == "banking" ? "Chờ chuyển khoản" : "Đã thanh toán"
                 };
-                WriteErrorLog($"[DEBUG] Tạo HoaDon: MaHoaDon={tempMaHoaDon}, TongTien={tongTienSauGiam}, ThoiGianTao={DateTime.Now}, SoLuong={gioHang.Count}, MaKhachHang={khachHangEntity}, TrangThai={paymentMethod}");
+                WriteErrorLog($"[DEBUG] Tạo HoaDon: MaHoaDon={tempMaHoaDon}, TongTien={tongTienSauGiam}, ThoiGianTao={DateTime.Now}, SoLuong={gioHang.Count}, maKhachHang={khachHangEntity}, TrangThai={paymentMethod}");
                 _context.HoaDons.Add(hoaDon);
                 await _context.SaveChangesAsync(); // SQL Server sẽ tự động sinh Id
-                WriteErrorLog($"[DEBUG] Sau SaveChanges HoaDon: Id={hoaDon.Id}, MaHoaDon={hoaDon.MaHoaDon}, TongTien={hoaDon.TongTien}, SoLuong={hoaDon.SoLuong}, MaKhachHang={hoaDon.MaKhachHang}, TrangThai={hoaDon.TrangThai}");
+                WriteErrorLog($"[DEBUG] Sau SaveChanges HoaDon: Id={hoaDon.Id}, MaHoaDon={hoaDon.MaHoaDon}, TongTien={hoaDon.TongTien}, SoLuong={hoaDon.SoLuong}, maKhachHang={hoaDon.maKhachHang}, TrangThai={hoaDon.TrangThai}");
                 // Gán lại MaHoaDon dựa trên Id (HD + 7 số, tối đa 9 ký tự)
                 hoaDon.MaHoaDon = $"HD{hoaDon.Id:D7}";
                 _context.HoaDons.Update(hoaDon);
@@ -759,7 +789,7 @@ namespace CinemaManagement.Controllers
                     {
                         var khachHangCheck = khachHangEntity;
                         var tongTienGioHang = gioHang.Sum(x => x.Gia);
-                        var hoaDonCho = await _context.HoaDons.FirstOrDefaultAsync(hd => hd.MaKhachHang == khachHangCheck && hd.TrangThai == "Chờ chuyển khoản" && hd.TongTien == tongTienGioHang);
+                        var hoaDonCho = await _context.HoaDons.FirstOrDefaultAsync(hd => hd.maKhachHang == khachHangCheck && hd.TrangThai == "Chờ chuyển khoản" && hd.TongTien == tongTienGioHang);
                         if (hoaDonCho != null)
                         {
                             // Nếu đã có hóa đơn chờ chuyển khoản, redirect sang GET hướng dẫn chuyển khoản
@@ -897,35 +927,33 @@ namespace CinemaManagement.Controllers
 
             var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
             
-            // Lấy danh sách hóa đơn
+            // Cập nhật trạng thái hết hạn cho các đơn hàng trước khi lấy dữ liệu
+            var now = DateTime.Now;
+            var expiredOrders = await _context.HoaDons
+                .Where(hd => hd.maKhachHang == maKhachHang && 
+                             hd.TrangThai == "Chờ chuyển khoản" && 
+                             EF.Functions.DateDiffMinute(hd.ThoiGianTao, now) >= 2)
+                .ToListAsync();
+
+            foreach (var hoaDon in expiredOrders)
+            {
+                hoaDon.TrangThai = "Đã hủy";
+            }
+
+            if (expiredOrders.Any())
+            {
+                await _context.SaveChangesAsync();
+            }
+            
+            // Lấy danh sách hóa đơn đã cập nhật
             var lichSu = await _context.HoaDons
                 .Include(hd => hd.CTHDs)
                     .ThenInclude(ct => ct.Ve)
                         .ThenInclude(v => v.LichChieu)
                             .ThenInclude(lc => lc.Phim)
-                .Where(hd => hd.MaKhachHang == maKhachHang)
+                .Where(hd => hd.maKhachHang == maKhachHang)
                 .OrderByDescending(hd => hd.ThoiGianTao)
                 .ToListAsync();
-
-            // Cập nhật trạng thái hết hạn cho các đơn hàng
-            var now = DateTime.Now;
-            var updatedCount = 0;
-            foreach (var hoaDon in lichSu)
-            {
-                // Kiểm tra đơn hàng "Chờ chuyển khoản" đã quá 2 phút
-                if (hoaDon.TrangThai == "Chờ chuyển khoản" && 
-                    EF.Functions.DateDiffMinute(hoaDon.ThoiGianTao, now) >= 2)
-                {
-                    hoaDon.TrangThai = "Đã hủy";
-                    updatedCount++;
-                }
-            }
-
-            // Lưu thay đổi nếu có
-            if (updatedCount > 0)
-            {
-                await _context.SaveChangesAsync();
-            }
 
             return View(lichSu);
         }
@@ -943,47 +971,45 @@ namespace CinemaManagement.Controllers
             
             // Cập nhật trạng thái hết hạn trước khi trả về
             var now = DateTime.Now;
+            
+            // Cập nhật các đơn hàng hết hạn
+            var expiredOrders = await _context.HoaDons
+                .Where(hd => hd.maKhachHang == maKhachHang && 
+                             hd.TrangThai == "Chờ chuyển khoản" && 
+                             EF.Functions.DateDiffMinute(hd.ThoiGianTao, now) >= 2)
+                .ToListAsync();
+
+            foreach (var hoaDon in expiredOrders)
+            {
+                hoaDon.TrangThai = "Đã hủy";
+            }
+
+            if (expiredOrders.Any())
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            // Lấy tất cả hóa đơn đã cập nhật
             var hoaDons = await _context.HoaDons
-                .Where(hd => hd.MaKhachHang == maKhachHang)
+                .Where(hd => hd.maKhachHang == maKhachHang)
                 .ToListAsync();
 
             var updatedOrders = new List<OrderStatusDto>();
             foreach (var hoaDon in hoaDons)
             {
-                // Kiểm tra đơn hàng "Chờ chuyển khoản" đã quá 2 phút
-                if (hoaDon.TrangThai == "Chờ chuyển khoản" && 
-                    EF.Functions.DateDiffMinute(hoaDon.ThoiGianTao, now) >= 2)
+                var trangThaiClass = hoaDon.TrangThai switch
                 {
-                    hoaDon.TrangThai = "Đã hủy";
-                    updatedOrders.Add(new OrderStatusDto
-                    { 
-                        MaHoaDon = hoaDon.MaHoaDon, 
-                        TrangThai = "Đã hủy",
-                        TrangThaiClass = "bg-danger"
-                    });
-                }
-                else
-                {
-                    var trangThaiClass = hoaDon.TrangThai switch
-                    {
-                        "Đã thanh toán" => "bg-success",
-                        "Đã hủy" => "bg-danger",
-                        "Chờ chuyển khoản" => "bg-warning",
-                        _ => "bg-secondary"
-                    };
-                    updatedOrders.Add(new OrderStatusDto
-                    { 
-                        MaHoaDon = hoaDon.MaHoaDon, 
-                        TrangThai = hoaDon.TrangThai,
-                        TrangThaiClass = trangThaiClass
-                    });
-                }
-            }
-
-            // Lưu thay đổi nếu có
-            if (updatedOrders.Any(o => o.TrangThai == "Đã hủy"))
-            {
-                await _context.SaveChangesAsync();
+                    "Đã thanh toán" => "bg-success",
+                    "Đã hủy" => "bg-danger",
+                    "Chờ chuyển khoản" => "bg-warning",
+                    _ => "bg-secondary"
+                };
+                updatedOrders.Add(new OrderStatusDto
+                { 
+                    MaHoaDon = hoaDon.MaHoaDon, 
+                    TrangThai = hoaDon.TrangThai,
+                    TrangThaiClass = trangThaiClass
+                });
             }
 
             return Json(new { success = true, orders = updatedOrders });
@@ -1006,7 +1032,7 @@ namespace CinemaManagement.Controllers
 
             var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
             var khachHang = await _context.KhachHangs
-                .FirstOrDefaultAsync(kh => kh.MaKhachHang == maKhachHang);
+                .FirstOrDefaultAsync(kh => kh.maKhachHang == maKhachHang);
 
             if (khachHang == null)
             {
@@ -1027,7 +1053,7 @@ namespace CinemaManagement.Controllers
 
             var maKhachHang = HttpContext.Session.GetString("MaKhachHang");
             var khachHang = await _context.KhachHangs
-                .FirstOrDefaultAsync(kh => kh.MaKhachHang == maKhachHang);
+                .FirstOrDefaultAsync(kh => kh.maKhachHang == maKhachHang);
 
             if (khachHang == null)
             {
@@ -1069,17 +1095,17 @@ namespace CinemaManagement.Controllers
             {
                 // Lấy tổng số vé đã mua thông qua HoaDon -> CTHD -> Ve
                 var tongSoVe = await _context.CTHDs
-                    .Where(cthd => cthd.HoaDon.MaKhachHang == maKhachHang)
+                    .Where(cthd => cthd.HoaDon.maKhachHang == maKhachHang)
                     .CountAsync();
 
                 // Lấy tổng số tiền đã chi tiêu
                 var tongChiTieu = await _context.HoaDons
-                    .Where(hd => hd.MaKhachHang == maKhachHang)
+                    .Where(hd => hd.maKhachHang == maKhachHang)
                     .SumAsync(hd => hd.TongTien);
 
                 // Lấy thể loại phim yêu thích (thể loại được mua nhiều nhất)
                 var theLoaiYeuThich = await _context.CTHDs
-                    .Where(cthd => cthd.HoaDon.MaKhachHang == maKhachHang)
+                    .Where(cthd => cthd.HoaDon.maKhachHang == maKhachHang)
                     .Include(cthd => cthd.Ve)
                     .ThenInclude(v => v.Phim)
                     .GroupBy(cthd => cthd.Ve.Phim.TheLoai)
@@ -1089,7 +1115,7 @@ namespace CinemaManagement.Controllers
 
                 // Lấy thông tin khách hàng để có điểm tích lũy
                 var khachHang = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.MaKhachHang == maKhachHang);
+                    .FirstOrDefaultAsync(kh => kh.maKhachHang == maKhachHang);
 
                 return Json(new
                 {
@@ -1364,7 +1390,7 @@ namespace CinemaManagement.Controllers
                         order.MaHoaDon,
                         order.TongTien,
                         order.ThoiGianTao,
-                        order.MaKhachHang,
+                        order.maKhachHang,
                         MatchedTransaction = matched
                     });
                 }
@@ -1382,12 +1408,7 @@ namespace CinemaManagement.Controllers
 
         private void WriteErrorLog(string message)
         {
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
-            var logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ERROR] [KhachHangController] {message}\n";
-            lock (_logLock)
-            {
-                System.IO.File.AppendAllText(logPath, logLine);
-            }
+            _logger.LogError("[KhachHangController] {Message}", message);
         }
 
         /// <summary>
