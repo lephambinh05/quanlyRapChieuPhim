@@ -9,201 +9,201 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CinemaManagement
 build_property.RootNamespace = CinemaManagement
-build_property.ProjectDir = C:\Users\lephambinh\Downloads\quanlyRapChieuPhim-1\
+build_property.ProjectDir = C:\Users\LEGION\Downloads\quanlyRapChieuPhim\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\lephambinh\Downloads\quanlyRapChieuPhim-1
+build_property.MSBuildProjectDirectory = C:\Users\LEGION\Downloads\quanlyRapChieuPhim
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/ForgotPassword.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/ForgotPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/Login.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/Register.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/ResetPassword.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/ResetPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/TwoFactorDisable.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/TwoFactorDisable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUd29GYWN0b3JEaXNhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/TwoFactorSetup.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/TwoFactorSetup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUd29GYWN0b3JTZXR1cC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/TwoFactorStatus.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/TwoFactorStatus.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUd29GYWN0b3JTdGF0dXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Auth/TwoFactorVerify.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Auth/TwoFactorVerify.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxUd29GYWN0b3JWZXJpZnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/BanVe/ChonGhe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/BanVe/ChonGhe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFuVmVcQ2hvbkdoZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/BanVe/HoaDon.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/BanVe/HoaDon.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFuVmVcSG9hRG9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/BanVe/Index.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/BanVe/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFuVmVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/BanVe/Test.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/BanVe/Test.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFuVmVcVGVzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/BanVe/ThanhToan.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/BanVe/ThanhToan.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFuVmVcVGhhbmhUb2FuLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Chat/Demo.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Chat/Demo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxEZW1vLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Chat/Index.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Chat/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Chat/Manage.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Chat/Manage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxNYW5hZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Chat/TestConnection.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Chat/TestConnection.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxUZXN0Q29ubmVjdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Chat/TestLogging.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Chat/TestLogging.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxUZXN0TG9nZ2luZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/DanhGia/Create.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/DanhGia/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaEdpYVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/DanhGia/Edit.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/DanhGia/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaEdpYVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/DanhGia/List.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/DanhGia/List.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaEdpYVxMaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/ChiTietPhim.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/ChiTietPhim.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXENoaVRpZXRQaGltLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/ChonGhe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/ChonGhe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXENob25HaGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/HuongDanChuyenKhoan.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/HuongDanChuyenKhoan.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXEh1b25nRGFuQ2h1eWVuS2hvYW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/Index.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/LichSuDatVe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/LichSuDatVe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXExpY2hTdURhdFZlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/TaiKhoan.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/TaiKhoan.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXFRhaUtob2FuLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/ThanhToan.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/ThanhToan.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXFRoYW5oVG9hbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/ThanhToanThanhCong.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/ThanhToanThanhCong.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXFRoYW5oVG9hblRoYW5oQ29uZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/KhachHang/_ScheduleForDate.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/KhachHang/_ScheduleForDate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2hhY2hIYW5nXF9TY2hlZHVsZUZvckRhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/ChiTietVe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/ChiTietVe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxDaGlUaWV0VmUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/DanhSachVe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/DanhSachVe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxEYW5oU2FjaFZlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/Index.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/PhatHanhHangLoat.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/PhatHanhHangLoat.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxQaGF0SGFuaEhhbmdMb2F0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/SoDoGhe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/SoDoGhe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxTb0RvR2hlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/PhatHanhVe/ThongKe.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/PhatHanhVe/ThongKe.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGhhdEhhbmhWZVxUaG9uZ0tlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/BaoCao.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/BaoCao.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XEJhb0Nhby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/Index.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/QuanLyLichChieu.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/QuanLyLichChieu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XFF1YW5MeUxpY2hDaGlldS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/QuanLyNhanVien.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/QuanLyNhanVien.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XFF1YW5MeU5oYW5WaWVuLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/QuanLyPhim.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/QuanLyPhim.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XFF1YW5MeVBoaW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/QuanLy/ThongKeChiTiet.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/QuanLy/ThongKeChiTiet.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVhbkx5XFRob25nS2VDaGlUaWV0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Shared/Error.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/_ViewImports.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/_ViewStart.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lephambinh/Downloads/quanlyRapChieuPhim-1/Views/Shared/_Layout.cshtml]
+[C:/Users/LEGION/Downloads/quanlyRapChieuPhim/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-q5p2hss2s4

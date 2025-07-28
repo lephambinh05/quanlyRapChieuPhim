@@ -273,10 +273,8 @@ namespace CinemaManagement.Controllers
             var email = HttpContext.Session.GetString("Email") ?? "Unknown";
             var sessionKeys = string.Join(",", HttpContext.Session.Keys);
             var tempGioHang = HttpContext.Session.GetString("TempGioHang") ?? "null";
-            System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ACTION] [GET ThanhToan] Email: {email}, maHoaDon: {maHoaDon}, SessionKeys: {sessionKeys}, TempGioHang: {tempGioHang}\n");
-            // Log chi tiết TempGioHang khi vào action
-            var gioHangDebug = HttpContext.Session.GetObjectFromJson<List<GioHangItem>>("TempGioHang") ?? new List<GioHangItem>();
-            WriteErrorLog($"[DEBUG] Dữ liệu TempGioHang khi vào ThanhToan: {System.Text.Json.JsonSerializer.Serialize(gioHangDebug)}");
+            // Đã xóa ghi log vào error_log.txt ở đây
+            // ... existing code ...
             if (!IsCustomerLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
@@ -355,10 +353,12 @@ namespace CinemaManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> ThanhToan(string maLichChieu, List<SelectedSeatViewModel> selectedSeats, decimal tongTien)
         {
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            // Đã xóa ghi log vào error_log.txt ở đây
             var email = HttpContext.Session.GetString("Email") ?? "Unknown";
             var sessionKeys = string.Join(",", HttpContext.Session.Keys);
-            System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ACTION] [POST ThanhToan] Email: {email}, maLichChieu: {maLichChieu}, seatIds: {string.Join(",", selectedSeats?.Select(s => s.MaGhe) ?? new List<string>())}, tongTien: {tongTien}, SessionKeys: {sessionKeys}\n");
+            // ... existing code ...
+            // Đã xóa ghi log vào error_log.txt ở đây
+            // ... existing code ...
             if (!IsCustomerLoggedIn())
             {
                 return RedirectToAction("Login", "Auth");
@@ -408,7 +408,7 @@ namespace CinemaManagement.Controllers
             // Lưu vào session để sử dụng trong trang thanh toán
             HttpContext.Session.SetObjectAsJson("TempGioHang", gioHangItems);
             var tempGioHangAfterSave = HttpContext.Session.GetString("TempGioHang") ?? "null";
-            System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [DEBUG] TempGioHang sau khi lưu: {tempGioHangAfterSave}\n");
+            // Đã xóa ghi log vào error_log.txt ở đây
 
             // Lấy danh sách voucher có thể sử dụng
             var vouchers = await _context.Vouchers
@@ -430,11 +430,13 @@ namespace CinemaManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> XuLyThanhToan(string? maVoucher, string paymentMethod, string? maHoaDonTemp, List<string>? seatIds)
         {
-            var logPath = Path.Combine(Directory.GetCurrentDirectory(), "error_log.txt");
+            // Đã xóa ghi log vào error_log.txt ở đây
             var email = HttpContext.Session.GetString("Email") ?? "Unknown";
             var sessionKeys = string.Join(",", HttpContext.Session.Keys);
             var tempGioHang = HttpContext.Session.GetString("TempGioHang") ?? "null";
-            System.IO.File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ACTION] [XuLyThanhToan] Email: {email}, paymentMethod: {paymentMethod}, maHoaDonTemp: {maHoaDonTemp}, seatIds: {string.Join(",", seatIds ?? new List<string>())}, SessionKeys: {sessionKeys}, TempGioHang: {tempGioHang}\n");
+            // ... existing code ...
+            // Đã xóa các dòng WriteErrorLog liên quan đến error_log.txt ở đây
+            // ... existing code ...
             Console.WriteLine("=== BẮT ĐẦU XỬ LÝ THANH TOÁN ===");
             Console.WriteLine($"Thời gian: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
             Console.WriteLine($"Mã voucher nhận được: '{maVoucher}'");
