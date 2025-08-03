@@ -15,14 +15,14 @@
     <StaticWebAssetEndpoint Include="_content/CinemaManagement/css/auth.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\auth.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-DgfX39ii0/Rxs\u002BK8YybU45U1yDQmVWG3y1aHwMtD79s="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"11651"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022DgfX39ii0/Rxs\u002BK8YybU45U1yDQmVWG3y1aHwMtD79s=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 12:42:44 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-wgBP0jqhSMnEiddsEOJ9PairJgHiBnkjmjhDv8Ex7lw="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"10063"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022wgBP0jqhSMnEiddsEOJ9PairJgHiBnkjmjhDv8Ex7lw=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 16:08:01 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/CinemaManagement/css/auth.m2r0u80up7.css">
+    <StaticWebAssetEndpoint Include="_content/CinemaManagement/css/auth.i7n7inktbd.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\auth.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"m2r0u80up7"},{"Name":"integrity","Value":"sha256-DgfX39ii0/Rxs\u002BK8YybU45U1yDQmVWG3y1aHwMtD79s="},{"Name":"label","Value":"_content/CinemaManagement/css/auth.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"11651"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022DgfX39ii0/Rxs\u002BK8YybU45U1yDQmVWG3y1aHwMtD79s=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 12:42:44 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"i7n7inktbd"},{"Name":"integrity","Value":"sha256-wgBP0jqhSMnEiddsEOJ9PairJgHiBnkjmjhDv8Ex7lw="},{"Name":"label","Value":"_content/CinemaManagement/css/auth.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"10063"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022wgBP0jqhSMnEiddsEOJ9PairJgHiBnkjmjhDv8Ex7lw=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 16:08:01 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/CinemaManagement/css/chi-tiet-phim.7gky9djs2q.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\chi-tiet-phim.css'))</AssetFile>
@@ -84,17 +84,17 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-47DEQpj8HBSa\u002B/TImW\u002B5JCeuQeRkm5NMpJWZG3hSuFU="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"0"},{"Name":"Content-Type","Value":"image/svg\u002Bxml"},{"Name":"ETag","Value":"\u002247DEQpj8HBSa\u002B/TImW\u002B5JCeuQeRkm5NMpJWZG3hSuFU=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 12:42:44 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/CinemaManagement/js/auth.7ulzf8l5yu.js">
+    <StaticWebAssetEndpoint Include="_content/CinemaManagement/js/auth.evfpabp10v.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\auth.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"7ulzf8l5yu"},{"Name":"integrity","Value":"sha256-T3j8ZsA5Uz9zAWXYLi2U0ULZeJ1VGE5\u002B5IdcxOqmlhM="},{"Name":"label","Value":"_content/CinemaManagement/js/auth.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"16950"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022T3j8ZsA5Uz9zAWXYLi2U0ULZeJ1VGE5\u002B5IdcxOqmlhM=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 12:42:44 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"evfpabp10v"},{"Name":"integrity","Value":"sha256-mkIKe3hYhnA\u002BOKnD7IBWwXQ31BegVz844tdoalxiNxA="},{"Name":"label","Value":"_content/CinemaManagement/js/auth.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"15406"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022mkIKe3hYhnA\u002BOKnD7IBWwXQ31BegVz844tdoalxiNxA=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 16:08:10 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/CinemaManagement/js/auth.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\auth.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-T3j8ZsA5Uz9zAWXYLi2U0ULZeJ1VGE5\u002B5IdcxOqmlhM="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"16950"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022T3j8ZsA5Uz9zAWXYLi2U0ULZeJ1VGE5\u002B5IdcxOqmlhM=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 12:42:44 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-mkIKe3hYhnA\u002BOKnD7IBWwXQ31BegVz844tdoalxiNxA="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"15406"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022mkIKe3hYhnA\u002BOKnD7IBWwXQ31BegVz844tdoalxiNxA=\u0022"},{"Name":"Last-Modified","Value":"Mon, 28 Jul 2025 16:08:10 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/CinemaManagement/js/site.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))</AssetFile>

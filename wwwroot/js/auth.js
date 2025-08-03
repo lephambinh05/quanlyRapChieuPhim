@@ -4,7 +4,6 @@ class AuthManager {
     constructor() {
         this.initializeEventListeners();
         this.setupFormValidation();
-        this.setupQuickLogin();
         this.setupPasswordStrength();
         this.setupAnimations();
     }
@@ -249,51 +248,7 @@ class AuthManager {
         }
     }
 
-    // ===== QUICK LOGIN =====
-    setupQuickLogin() {
-        const quickLoginButtons = document.querySelectorAll('.quick-login-btn');
-        
-        quickLoginButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.handleQuickLogin(e);
-            });
-        });
-    }
 
-    handleQuickLogin(event) {
-        const button = event.currentTarget;
-        const email = button.dataset.email;
-        const password = button.dataset.password;
-        
-        if (!email || !password) {
-            this.showAlert('Thông tin đăng nhập không hợp lệ', 'danger');
-            return;
-        }
-        
-        // Fill form
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        
-        if (emailInput && passwordInput) {
-            emailInput.value = email;
-            passwordInput.value = password;
-            
-            // Trigger validation
-            this.validateEmail(emailInput);
-            this.validatePassword(passwordInput);
-            
-            // Show loading state
-            this.setButtonLoadingState(button, true);
-            
-            // Submit form after delay
-            setTimeout(() => {
-                const form = document.getElementById('loginForm');
-                if (form) {
-                    form.submit();
-                }
-            }, 800);
-        }
-    }
 
     // ===== FORM SUBMISSION =====
     handleLoginSubmit(event) {
@@ -438,7 +393,7 @@ class AuthManager {
     // ===== ANIMATIONS =====
     setupAnimations() {
         // Add hover effects
-        const buttons = document.querySelectorAll('.btn, .quick-login-btn');
+        const buttons = document.querySelectorAll('.btn');
         buttons.forEach(button => {
             button.addEventListener('mouseenter', (e) => {
                 e.target.style.transform = 'translateY(-2px)';

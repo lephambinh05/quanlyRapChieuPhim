@@ -85,8 +85,15 @@
                                                 <span class="fw-bold text-success">@ve.Gia.ToString("C0")</span>
                                             </td>
                                             <td>
-                                                <small class="text-muted">@ve.HanSuDung.ToString("dd/MM/yyyy")</small><br>
-                                                <strong>@ve.HanSuDung.ToString("HH:mm")</strong>
+                                                @if (ve.HanSuDung.HasValue)
+                                                {
+                                                    <small class="text-muted">@ve.HanSuDung.Value.ToString("dd/MM/yyyy")</small><br>
+                                                    <strong>@ve.HanSuDung.Value.ToString("HH:mm")</strong>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted text-danger">Chưa có</small>
+                                                }
                                             </td>
                                             <td>
                                                 @if (ve.TrangThai == "Còn hạn")

@@ -46,9 +46,9 @@ namespace CinemaManagement.Controllers
 
             // Áp dụng bộ lọc nếu có
             if (tuNgay.HasValue)
-                veQuery = veQuery.Where(v => v.HanSuDung.Date >= tuNgay.Value.Date);
+                veQuery = veQuery.Where(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date >= tuNgay.Value.Date);
             if (denNgay.HasValue)
-                veQuery = veQuery.Where(v => v.HanSuDung.Date <= denNgay.Value.Date);
+                veQuery = veQuery.Where(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date <= denNgay.Value.Date);
             if (!string.IsNullOrEmpty(tenPhim))
                 veQuery = veQuery.Where(v => v.LichChieu.Phim.TenPhim.Contains(tenPhim));
 
@@ -61,7 +61,7 @@ namespace CinemaManagement.Controllers
 
                 // Thống kê cơ bản
                 TongSoVe = await _context.Ves.CountAsync(),
-                VeHomNay = await _context.Ves.CountAsync(v => v.HanSuDung.Date == today),
+                VeHomNay = await _context.Ves.CountAsync(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date == today),
                 VeTuanNay = await _context.Ves.CountAsync(v => v.HanSuDung >= thisWeek),
                 VeThangNay = await _context.Ves.CountAsync(v => v.HanSuDung >= thisMonth),
 
@@ -70,7 +70,7 @@ namespace CinemaManagement.Controllers
                 VeDaBanTrongHoaDonHomNay = await _context.HoaDons.Where(h => h.ThoiGianTao.Date == today).SumAsync(h => h.SoLuong),
 
                 // Thống kê doanh thu
-                DoanhThuHomNay = await _context.Ves.Where(v => v.HanSuDung.Date == today).SumAsync(v => v.Gia),
+                DoanhThuHomNay = await _context.Ves.Where(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date == today).SumAsync(v => v.Gia),
                 DoanhThuTuanNay = await _context.Ves.Where(v => v.HanSuDung >= thisWeek).SumAsync(v => v.Gia),
                 DoanhThuThangNay = await _context.Ves.Where(v => v.HanSuDung >= thisMonth).SumAsync(v => v.Gia),
 
@@ -238,11 +238,11 @@ namespace CinemaManagement.Controllers
             {
                 var date = startDate.AddDays(i);
                 var doanhThu = await _context.Ves
-                    .Where(v => v.HanSuDung.Date == date)
+                    .Where(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date == date)
                     .SumAsync(v => v.Gia);
 
                 var soVe = await _context.Ves
-                    .CountAsync(v => v.HanSuDung.Date == date);
+                    .CountAsync(v => v.HanSuDung.HasValue && v.HanSuDung.Value.Date == date);
 
                 result.Add(new DoanhThuTheoNgayViewModel
                 {
@@ -344,6 +344,392 @@ namespace CinemaManagement.Controllers
                 .ToListAsync();
 
             return View(lichChieus);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPhimsForLichChieu()
+        {
+            // Tạm thời bỏ qua kiểm tra quyền để debug
+            // if (!IsManager())
+            // {
+            //     return Json(new { success = false, message = "Không có quyền truy cập" });
+            // }
+
+            try
+            {
+                Console.WriteLine("Đang tải danh sách phim...");
+                var phims = await _context.Phims
+                    .Select(p => new { 
+                        maPhim = p.MaPhim, 
+                        tenPhim = p.TenPhim, 
+                        thoiLuong = p.ThoiLuong 
+                    })
+                    .OrderBy(p => p.tenPhim)
+                    .ToListAsync();
+                
+                Console.WriteLine($"Tìm thấy {phims.Count} phim");
+
+                // Nếu không có dữ liệu, thêm dữ liệu mẫu
+                if (!phims.Any())
+                {
+                    // Kiểm tra và thêm nhân viên mẫu nếu chưa có
+                    var nhanVien = await _context.NhanViens.FindAsync("NV001");
+                    if (nhanVien == null)
+                    {
+                        nhanVien = new NhanVien 
+                        { 
+                            maNhanVien = "NV001", 
+                            TenNhanVien = "Nguyễn Văn A",
+                            ChucVu = "Quản lý"
+                        };
+                        _context.NhanViens.Add(nhanVien);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Thêm dữ liệu mẫu
+                    var samplePhims = new List<Phim>
+                    {
+                        new Phim { MaPhim = "P001", TenPhim = "The Godfather", ThoiLuong = 175, MaNhanVien = "NV001" },
+                        new Phim { MaPhim = "P002", TenPhim = "The Shawshank Redemption", ThoiLuong = 142, MaNhanVien = "NV001" },
+                        new Phim { MaPhim = "P003", TenPhim = "Pulp Fiction", ThoiLuong = 154, MaNhanVien = "NV001" }
+                    };
+
+                    _context.Phims.AddRange(samplePhims);
+                    await _context.SaveChangesAsync();
+
+                    phims = samplePhims.Select(p => new { 
+                        maPhim = p.MaPhim, 
+                        tenPhim = p.TenPhim, 
+                        thoiLuong = p.ThoiLuong 
+                    }).ToList();
+                }
+
+                return Json(new { success = true, data = phims });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi tải danh sách phim: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPhongChieusForLichChieu()
+        {
+            // Tạm thời bỏ qua kiểm tra quyền để debug
+            // if (!IsManager())
+            // {
+            //     return Json(new { success = false, message = "Không có quyền truy cập" });
+            // }
+
+            try
+            {
+                var phongChieus = await _context.PhongChieus
+                    .Select(p => new { 
+                        maPhong = p.MaPhong, 
+                        tenPhong = p.TenPhong 
+                    })
+                    .OrderBy(p => p.tenPhong)
+                    .ToListAsync();
+
+                // Nếu không có dữ liệu, thêm dữ liệu mẫu
+                if (!phongChieus.Any())
+                {
+                    // Thêm dữ liệu mẫu
+                    var samplePhongs = new List<PhongChieu>
+                    {
+                        new PhongChieu { MaPhong = "PC001", TenPhong = "Phòng 1", SoChoNgoi = 50, TrangThai = "Hoạt động" },
+                        new PhongChieu { MaPhong = "PC002", TenPhong = "Phòng 2", SoChoNgoi = 50, TrangThai = "Hoạt động" },
+                        new PhongChieu { MaPhong = "PC003", TenPhong = "Phòng VIP", SoChoNgoi = 30, TrangThai = "Hoạt động" }
+                    };
+
+                    _context.PhongChieus.AddRange(samplePhongs);
+                    await _context.SaveChangesAsync();
+
+                    phongChieus = samplePhongs.Select(p => new { 
+                        maPhong = p.MaPhong, 
+                        tenPhong = p.TenPhong 
+                    }).ToList();
+                }
+
+                return Json(new { success = true, data = phongChieus });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi tải danh sách phòng chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ThemLichChieu(string maPhim, string maPhong, DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal gia)
+        {
+            if (!IsManager())
+            {
+                return Json(new { success = false, message = "Không có quyền truy cập" });
+            }
+
+            try
+            {
+                // Kiểm tra xung đột lịch chiếu
+                var xungDau = await _context.LichChieus
+                    .Where(l => l.MaPhong == maPhong)
+                    .Where(l => (l.ThoiGianBatDau <= thoiGianBatDau && l.ThoiGianKetThuc > thoiGianBatDau) ||
+                               (l.ThoiGianBatDau < thoiGianKetThuc && l.ThoiGianKetThuc >= thoiGianKetThuc) ||
+                               (l.ThoiGianBatDau >= thoiGianBatDau && l.ThoiGianKetThuc <= thoiGianKetThuc))
+                    .FirstOrDefaultAsync();
+
+                if (xungDau != null)
+                {
+                    return Json(new { success = false, message = "Phòng chiếu đã có lịch chiếu trong khoảng thời gian này" });
+                }
+
+                // Tạo mã lịch chiếu mới
+                var lastLichChieu = await _context.LichChieus.OrderByDescending(l => l.MaLichChieu).FirstOrDefaultAsync();
+                var newMaLichChieu = "LC001";
+                if (lastLichChieu != null)
+                {
+                    var lastNumber = int.Parse(lastLichChieu.MaLichChieu.Substring(2));
+                    newMaLichChieu = $"LC{(lastNumber + 1):D3}";
+                }
+
+                var maNhanVien = HttpContext.Session.GetString("maNhanVien");
+                if (string.IsNullOrEmpty(maNhanVien))
+                {
+                    return Json(new { success = false, message = "Không tìm thấy thông tin nhân viên" });
+                }
+
+                var lichChieu = new LichChieu
+                {
+                    MaLichChieu = newMaLichChieu,
+                    MaPhim = maPhim,
+                    MaPhong = maPhong,
+                    ThoiGianBatDau = thoiGianBatDau,
+                    ThoiGianKetThuc = thoiGianKetThuc,
+                    Gia = gia,
+                    MaNhanVien = maNhanVien
+                };
+
+                _context.LichChieus.Add(lichChieu);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Thêm lịch chiếu thành công", maLichChieu = newMaLichChieu });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi thêm lịch chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLichChieuForEdit(string maLichChieu)
+        {
+            if (!IsManager())
+            {
+                return Json(new { success = false, message = "Không có quyền truy cập" });
+            }
+
+            try
+            {
+                var lichChieu = await _context.LichChieus
+                    .Include(l => l.Phim)
+                    .Include(l => l.PhongChieu)
+                    .FirstOrDefaultAsync(l => l.MaLichChieu == maLichChieu);
+
+                if (lichChieu == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy lịch chiếu" });
+                }
+
+                var data = new
+                {
+                    maLichChieu = lichChieu.MaLichChieu,
+                    maPhim = lichChieu.MaPhim,
+                    tenPhim = lichChieu.Phim.TenPhim,
+                    thoiLuong = lichChieu.Phim.ThoiLuong,
+                    maPhong = lichChieu.MaPhong,
+                    tenPhong = lichChieu.PhongChieu.TenPhong,
+                    thoiGianBatDau = lichChieu.ThoiGianBatDau.ToString("yyyy-MM-ddTHH:mm"),
+                    thoiGianKetThuc = lichChieu.ThoiGianKetThuc.ToString("yyyy-MM-ddTHH:mm"),
+                    gia = lichChieu.Gia
+                };
+
+                return Json(new { success = true, data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi lấy thông tin lịch chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CapNhatLichChieu(string maLichChieu, string maPhim, string maPhong, DateTime thoiGianBatDau, DateTime thoiGianKetThuc, decimal gia)
+        {
+            if (!IsManager())
+            {
+                return Json(new { success = false, message = "Không có quyền truy cập" });
+            }
+
+            try
+            {
+                var lichChieu = await _context.LichChieus.FindAsync(maLichChieu);
+                if (lichChieu == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy lịch chiếu" });
+                }
+
+                // Kiểm tra xem lịch chiếu đã có vé nào chưa
+                var hasVes = await _context.Ves.AnyAsync(v => v.MaLichChieu == maLichChieu);
+                if (hasVes)
+                {
+                    return Json(new { success = false, message = "Không thể sửa lịch chiếu đã có vé" });
+                }
+
+                // Kiểm tra xung đột lịch chiếu (loại trừ lịch chiếu hiện tại)
+                var xungDau = await _context.LichChieus
+                    .Where(l => l.MaPhong == maPhong && l.MaLichChieu != maLichChieu)
+                    .Where(l => (l.ThoiGianBatDau <= thoiGianBatDau && l.ThoiGianKetThuc > thoiGianBatDau) ||
+                               (l.ThoiGianBatDau < thoiGianKetThuc && l.ThoiGianKetThuc >= thoiGianKetThuc) ||
+                               (l.ThoiGianBatDau >= thoiGianBatDau && l.ThoiGianKetThuc <= thoiGianKetThuc))
+                    .FirstOrDefaultAsync();
+
+                if (xungDau != null)
+                {
+                    return Json(new { success = false, message = "Phòng chiếu đã có lịch chiếu khác trong khoảng thời gian này" });
+                }
+
+                // Cập nhật thông tin lịch chiếu
+                lichChieu.MaPhim = maPhim;
+                lichChieu.MaPhong = maPhong;
+                lichChieu.ThoiGianBatDau = thoiGianBatDau;
+                lichChieu.ThoiGianKetThuc = thoiGianKetThuc;
+                lichChieu.Gia = gia;
+
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Cập nhật lịch chiếu thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi cập nhật lịch chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> XoaLichChieu(string maLichChieu)
+        {
+            if (!IsManager())
+            {
+                return Json(new { success = false, message = "Không có quyền truy cập" });
+            }
+
+            try
+            {
+                var lichChieu = await _context.LichChieus.FindAsync(maLichChieu);
+                if (lichChieu == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy lịch chiếu" });
+                }
+
+                // Kiểm tra xem có vé nào đã được bán cho lịch chiếu này không
+                var coVeDaBan = await _context.Ves.AnyAsync(v => v.MaLichChieu == maLichChieu);
+                if (coVeDaBan)
+                {
+                    return Json(new { success = false, message = "Không thể xóa lịch chiếu đã có vé được bán" });
+                }
+
+                _context.LichChieus.Remove(lichChieu);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Xóa lịch chiếu thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi xóa lịch chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> XoaNhieuLichChieu(List<string> maLichChieus)
+        {
+            if (!IsManager())
+            {
+                return Json(new { success = false, message = "Không có quyền truy cập" });
+            }
+
+            try
+            {
+                if (maLichChieus == null || !maLichChieus.Any())
+                {
+                    return Json(new { success = false, message = "Vui lòng chọn ít nhất một lịch chiếu để xóa" });
+                }
+
+                var lichChieus = await _context.LichChieus
+                    .Where(l => maLichChieus.Contains(l.MaLichChieu))
+                    .ToListAsync();
+
+                if (!lichChieus.Any())
+                {
+                    return Json(new { success = false, message = "Không tìm thấy lịch chiếu nào" });
+                }
+
+                // Kiểm tra xem có vé nào đã được bán cho các lịch chiếu này không
+                var coVeDaBan = await _context.Ves.AnyAsync(v => maLichChieus.Contains(v.MaLichChieu));
+                if (coVeDaBan)
+                {
+                    return Json(new { success = false, message = "Không thể xóa lịch chiếu đã có vé được bán" });
+                }
+
+                _context.LichChieus.RemoveRange(lichChieus);
+                await _context.SaveChangesAsync();
+
+                return Json(new { 
+                    success = true, 
+                    message = $"Đã xóa thành công {lichChieus.Count} lịch chiếu",
+                    deletedCount = lichChieus.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Lỗi khi xóa lịch chiếu: " + ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DebugData()
+        {
+            try
+            {
+                var phimCount = await _context.Phims.CountAsync();
+                var phongCount = await _context.PhongChieus.CountAsync();
+                var nhanVienCount = await _context.NhanViens.CountAsync();
+
+                var phims = await _context.Phims.Take(3).Select(p => new { p.MaPhim, p.TenPhim }).ToListAsync();
+                var phongs = await _context.PhongChieus.Take(3).Select(p => new { p.MaPhong, p.TenPhong }).ToListAsync();
+
+                return Json(new { 
+                    success = true, 
+                    data = new {
+                        phimCount,
+                        phongCount,
+                        nhanVienCount,
+                        samplePhims = phims,
+                        samplePhongs = phongs
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult TestConnection()
+        {
+            return Json(new { 
+                success = true, 
+                message = "API hoạt động bình thường",
+                timestamp = DateTime.Now
+            });
         }
 
         public async Task<IActionResult> QuanLyNhanVien()

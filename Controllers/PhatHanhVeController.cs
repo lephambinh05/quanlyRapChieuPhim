@@ -104,7 +104,7 @@ namespace CinemaManagement.Controllers
                 .Include(v => v.PhongChieu)
                 .Include(v => v.GheNgoi)
                 .Include(v => v.LichChieu)
-                .OrderByDescending(v => v.HanSuDung)
+                .OrderByDescending(v => v.HanSuDung ?? DateTime.MinValue)
                 .ToListAsync();
 
             return View(ves);

@@ -4,23 +4,179 @@
     ViewData["Title"] = "Quản lý lịch chiếu";
 }
 
+<style>
+    .form-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .btn:disabled {
+        opacity: 0.65;
+    }
+    
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+    }
+    
+    .table th {
+        background-color: #343a40;
+        color: white;
+        border-color: #454d55;
+    }
+    
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+    
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+
+    /* Styles cho bulk delete */
+    .form-check-input {
+        cursor: pointer;
+    }
+    
+    .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,.075);
+    }
+    
+    .table-hover tbody tr:hover .form-check-input:not(:checked) {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+    }
+    
+    /* Animation cho nút xóa */
+    #btnDeleteSelected {
+        transition: all 0.3s ease;
+    }
+    
+    #btnDeleteSelected:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Highlight cho hàng được chọn */
+    .table tbody tr.selected {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+    
+    .table tbody tr.selected:hover {
+        background-color: rgba(220, 53, 69, 0.15) !important;
+    }
+</style>
+
 <div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Tổng lịch chiếu</h6>
+                            <h3 class="mb-0">@Model.Count()</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Lịch chiếu hôm nay</h6>
+                            <h3 class="mb-0">@Model.Count(l => l.ThoiGianBatDau.Date == DateTime.Today)</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-day fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Lịch chiếu sắp tới</h6>
+                            <h3 class="mb-0">@Model.Count(l => l.ThoiGianBatDau > DateTime.Now)</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-week fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Đã chiếu</h6>
+                            <h3 class="mb-0">@Model.Count(l => l.ThoiGianBatDau < DateTime.Now)</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Thông báo hướng dẫn -->
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Hướng dẫn:</strong> Sử dụng checkbox để chọn nhiều lịch chiếu và nhấn "Xóa đã chọn" để xóa hàng loạt.
+        <span class="badge bg-primary ms-2">@Model.Count() lịch chiếu</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">
-                        <i class="fas fa-calendar-alt me-2"></i>Quản lý lịch chiếu
-                    </h3>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
-                        <i class="fas fa-plus me-1"></i>Thêm lịch chiếu
-                    </button>
-                </div>
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">
+                                <i class="fas fa-calendar-alt me-2"></i>Quản lý lịch chiếu
+                                <span class="badge bg-secondary ms-2">@Model.Count() lịch chiếu</span>
+                            </h3>
+                            <div>
+                                <button class="btn btn-warning me-2" onclick="testConnection()">
+                                    <i class="fas fa-wifi me-1"></i>Test
+                                </button>
+                                <button class="btn btn-info me-2" onclick="debugData()">
+                                    <i class="fas fa-bug me-1"></i>Debug
+                                </button>
+                                <button class="btn btn-secondary me-2" onclick="testCheckboxes()">
+                                    <i class="fas fa-check-square me-1"></i>Test Checkbox
+                                </button>
+                                <button class="btn btn-danger me-2" onclick="deleteSelectedLichChieu()" id="btnDeleteSelected" style="display: none;">
+                                    <i class="fas fa-trash me-1"></i>Xóa đã chọn
+                                </button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+                                    <i class="fas fa-plus me-1"></i>Thêm lịch chiếu
+                                </button>
+                            </div>
+                        </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="table-dark">
                                 <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll" class="form-check-input">
+                                    </th>
                                     <th>Mã lịch chiếu</th>
                                     <th>Phim</th>
                                     <th>Phòng chiếu</th>
@@ -32,27 +188,70 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @if (!Model.Any())
                                 {
                                     <tr>
-                                        <td>@item.MaLichChieu</td>
-                                        <td>@item.Phim.TenPhim</td>
-                                        <td>@item.PhongChieu.TenPhong</td>
-                                        <td>@item.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>@item.ThoiGianKetThuc.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>@item.Gia.ToString("C0")</td>
-                                        <td>@item.NhanVien.TenNhanVien</td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" onclick="editLichChieu('@item.MaLichChieu')">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteLichChieu('@item.MaLichChieu')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                        <td colspan="9" class="text-center py-4">
+                                            <div class="text-muted">
+                                                <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                                                <h5>Chưa có lịch chiếu nào</h5>
+                                                <p>Hãy thêm lịch chiếu đầu tiên bằng cách nhấn nút "Thêm lịch chiếu" ở trên</p>
                                             </div>
                                         </td>
                                     </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        var isPast = item.ThoiGianBatDau < DateTime.Now;
+                                        var rowClass = isPast ? "table-secondary" : "";
+                                        
+                                        <tr class="@rowClass">
+                                            <td>
+                                                <input type="checkbox" class="form-check-input lichChieu-checkbox" value="@item.MaLichChieu.Trim()">
+                                            </td>
+                                            <td><strong>@item.MaLichChieu</strong></td>
+                                            <td>
+                                                <div>
+                                                    <strong>@item.Phim.TenPhim</strong>
+                                                    <br>
+                                                    <small class="text-muted">@item.Phim.ThoiLuong phút</small>
+                                                </div>
+                                            </td>
+                                            <td>@item.PhongChieu.TenPhong</td>
+                                            <td>
+                                                <div>
+                                                    <strong>@item.ThoiGianBatDau.ToString("dd/MM/yyyy")</strong>
+                                                    <br>
+                                                    <small class="text-muted">@item.ThoiGianBatDau.ToString("HH:mm")</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@item.ThoiGianKetThuc.ToString("dd/MM/yyyy")</strong>
+                                                    <br>
+                                                    <small class="text-muted">@item.ThoiGianKetThuc.ToString("HH:mm")</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success fs-6">
+                                                    @item.Gia.ToString("N0") ₫
+                                                </span>
+                                            </td>
+                                            <td>@item.NhanVien.TenNhanVien</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="editLichChieu('@item.MaLichChieu')" title="Sửa lịch chiếu">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteLichChieu('@item.MaLichChieu')" title="Xóa lịch chiếu">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>
@@ -74,52 +273,746 @@
             <div class="modal-body">
                 <form id="createForm">
                     <div class="mb-3">
-                        <label for="phimId" class="form-label">Phim</label>
+                        <label for="phimId" class="form-label">Phim <span class="text-danger">*</span></label>
                         <select class="form-select" id="phimId" required>
                             <option value="">Chọn phim</option>
-                            <!-- Phim sẽ được load bằng JavaScript -->
                         </select>
+                        <div class="form-text">Thời lượng phim sẽ được tự động tính toán</div>
                     </div>
                     <div class="mb-3">
-                        <label for="phongId" class="form-label">Phòng chiếu</label>
+                        <label for="phongId" class="form-label">Phòng chiếu <span class="text-danger">*</span></label>
                         <select class="form-select" id="phongId" required>
                             <option value="">Chọn phòng chiếu</option>
-                            <!-- Phòng chiếu sẽ được load bằng JavaScript -->
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="thoiGianBatDau" class="form-label">Thời gian bắt đầu</label>
+                        <label for="thoiGianBatDau" class="form-label">Thời gian bắt đầu <span class="text-danger">*</span></label>
                         <input type="datetime-local" class="form-control" id="thoiGianBatDau" required>
                     </div>
                     <div class="mb-3">
-                        <label for="thoiGianKetThuc" class="form-label">Thời gian kết thúc</label>
+                        <label for="thoiGianKetThuc" class="form-label">Thời gian kết thúc <span class="text-danger">*</span></label>
                         <input type="datetime-local" class="form-control" id="thoiGianKetThuc" required>
+                        <div class="form-text">Thời gian kết thúc sẽ được tự động tính toán dựa trên thời lượng phim</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gia" class="form-label">Giá vé <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="gia" min="0" step="1000" required>
+                        <div class="form-text">Nhập giá vé bằng VNĐ</div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="createLichChieu()">Thêm</button>
+                <button type="button" class="btn btn-primary" onclick="createLichChieu()" id="btnCreate">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal sửa lịch chiếu -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Sửa lịch chiếu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editMaLichChieu">
+                    <div class="mb-3">
+                        <label for="editPhimId" class="form-label">Phim <span class="text-danger">*</span></label>
+                        <select class="form-select" id="editPhimId" required>
+                            <option value="">Chọn phim</option>
+                        </select>
+                        <div class="form-text">Thời lượng phim sẽ được tự động tính toán</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhongId" class="form-label">Phòng chiếu <span class="text-danger">*</span></label>
+                        <select class="form-select" id="editPhongId" required>
+                            <option value="">Chọn phòng chiếu</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editThoiGianBatDau" class="form-label">Thời gian bắt đầu <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="form-control" id="editThoiGianBatDau" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editThoiGianKetThuc" class="form-label">Thời gian kết thúc <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="form-control" id="editThoiGianKetThuc" required>
+                        <div class="form-text">Thời gian kết thúc sẽ được tự động tính toán dựa trên thời lượng phim</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editGia" class="form-label">Giá vé <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="editGia" min="0" step="1000" required>
+                        <div class="form-text">Nhập giá vé bằng VNĐ</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="updateLichChieu()" id="btnUpdate">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Cập nhật
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function editLichChieu(maLichChieu) {
-        // TODO: Implement edit functionality
-        alert('Chức năng sửa lịch chiếu đang được phát triển');
-    }
+    // Biến lưu trữ dữ liệu phim và phòng chiếu
+    let phims = [];
+    let phongChieus = [];
 
-    function deleteLichChieu(maLichChieu) {
-        if (confirm('Bạn có chắc chắn muốn xóa lịch chiếu này?')) {
-            // TODO: Implement delete functionality
-            alert('Chức năng xóa lịch chiếu đang được phát triển');
+    // Load dữ liệu khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Debug - DOMContentLoaded được gọi');
+        loadPhims();
+        loadPhongChieus();
+        setupFormValidation();
+        setupBulkDelete();
+        
+        // Test đơn giản
+        setTimeout(() => {
+            console.log('Debug - Test sau 1 giây:');
+            console.log('Checkbox selectAll:', document.getElementById('selectAll'));
+            console.log('Tất cả checkbox:', document.querySelectorAll('.lichChieu-checkbox').length);
+            console.log('Checkbox đã chọn:', document.querySelectorAll('.lichChieu-checkbox:checked').length);
+        }, 1000);
+    });
+
+    // Load danh sách phim
+    async function loadPhims() {
+        try {
+            console.log('Đang tải danh sách phim...');
+            const response = await fetch('/QuanLy/GetPhimsForLichChieu');
+            console.log('Response status:', response.status);
+            
+            const result = await response.json();
+            console.log('Phim result:', result);
+            
+            if (result.success) {
+                phims = result.data;
+                console.log('Số lượng phim:', phims.length);
+                const phimSelect = document.getElementById('phimId');
+                phimSelect.innerHTML = '<option value="">Chọn phim</option>';
+                
+                phims.forEach(phim => {
+                    const option = document.createElement('option');
+                    option.value = phim.maPhim;
+                    option.textContent = `${phim.tenPhim} (${phim.thoiLuong} phút)`;
+                    option.dataset.thoiLuong = phim.thoiLuong;
+                    phimSelect.appendChild(option);
+                });
+
+                // Cũng load cho form edit
+                const editPhimSelect = document.getElementById('editPhimId');
+                if (editPhimSelect) {
+                    editPhimSelect.innerHTML = '<option value="">Chọn phim</option>';
+                    phims.forEach(phim => {
+                        const option = document.createElement('option');
+                        option.value = phim.maPhim;
+                        option.textContent = `${phim.tenPhim} (${phim.thoiLuong} phút)`;
+                        option.dataset.thoiLuong = phim.thoiLuong;
+                        editPhimSelect.appendChild(option);
+                    });
+                }
+                console.log('Đã load xong danh sách phim');
+            } else {
+                console.error('Lỗi khi tải danh sách phim:', result.message);
+                showAlert('Lỗi khi tải danh sách phim: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách phim:', error);
+            showAlert('Lỗi khi tải danh sách phim', 'danger');
         }
     }
 
-    function createLichChieu() {
-        // TODO: Implement create functionality
-        alert('Chức năng thêm lịch chiếu đang được phát triển');
+    // Load danh sách phòng chiếu
+    async function loadPhongChieus() {
+        try {
+            console.log('Đang tải danh sách phòng chiếu...');
+            const response = await fetch('/QuanLy/GetPhongChieusForLichChieu');
+            console.log('Response status:', response.status);
+            
+            const result = await response.json();
+            console.log('Phòng chiếu result:', result);
+            
+            if (result.success) {
+                phongChieus = result.data;
+                console.log('Số lượng phòng chiếu:', phongChieus.length);
+                const phongSelect = document.getElementById('phongId');
+                phongSelect.innerHTML = '<option value="">Chọn phòng chiếu</option>';
+                
+                phongChieus.forEach(phong => {
+                    const option = document.createElement('option');
+                    option.value = phong.maPhong;
+                    option.textContent = phong.tenPhong;
+                    phongSelect.appendChild(option);
+                });
+
+                // Cũng load cho form edit
+                const editPhongSelect = document.getElementById('editPhongId');
+                if (editPhongSelect) {
+                    editPhongSelect.innerHTML = '<option value="">Chọn phòng chiếu</option>';
+                    phongChieus.forEach(phong => {
+                        const option = document.createElement('option');
+                        option.value = phong.maPhong;
+                        option.textContent = phong.tenPhong;
+                        editPhongSelect.appendChild(option);
+                    });
+                }
+                console.log('Đã load xong danh sách phòng chiếu');
+            } else {
+                console.error('Lỗi khi tải danh sách phòng chiếu:', result.message);
+                showAlert('Lỗi khi tải danh sách phòng chiếu: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách phòng chiếu:', error);
+            showAlert('Lỗi khi tải danh sách phòng chiếu', 'danger');
+        }
+    }
+
+    // Thiết lập validation cho form
+    function setupFormValidation() {
+        const phimSelect = document.getElementById('phimId');
+        const thoiGianBatDauInput = document.getElementById('thoiGianBatDau');
+        const thoiGianKetThucInput = document.getElementById('thoiGianKetThuc');
+
+        // Tự động tính thời gian kết thúc khi chọn phim và thời gian bắt đầu
+        phimSelect.addEventListener('change', updateThoiGianKetThuc);
+        thoiGianBatDauInput.addEventListener('change', updateThoiGianKetThuc);
+
+        // Đặt thời gian bắt đầu mặc định là hiện tại
+        const now = new Date();
+        const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+        thoiGianBatDauInput.value = localDateTime;
+
+        // Reset form khi đóng modal
+        const modal = document.getElementById('createModal');
+        modal.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('createForm').reset();
+            // Đặt lại thời gian bắt đầu
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            thoiGianBatDauInput.value = localDateTime;
+            thoiGianKetThucInput.value = '';
+        });
+
+        // Thiết lập validation cho form edit
+        const editPhimSelect = document.getElementById('editPhimId');
+        const editThoiGianBatDauInput = document.getElementById('editThoiGianBatDau');
+        const editThoiGianKetThucInput = document.getElementById('editThoiGianKetThuc');
+
+        // Tự động tính thời gian kết thúc cho form edit
+        editPhimSelect.addEventListener('change', updateEditThoiGianKetThuc);
+        editThoiGianBatDauInput.addEventListener('change', updateEditThoiGianKetThuc);
+
+        // Reset form edit khi đóng modal
+        const editModal = document.getElementById('editModal');
+        editModal.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('editForm').reset();
+        });
+    }
+
+    // Cập nhật thời gian kết thúc dựa trên thời lượng phim
+    function updateThoiGianKetThuc() {
+        const phimSelect = document.getElementById('phimId');
+        const thoiGianBatDauInput = document.getElementById('thoiGianBatDau');
+        const thoiGianKetThucInput = document.getElementById('thoiGianKetThuc');
+
+        if (phimSelect.value && thoiGianBatDauInput.value) {
+            const selectedPhim = phims.find(p => p.maPhim === phimSelect.value);
+            if (selectedPhim) {
+                const batDau = new Date(thoiGianBatDauInput.value);
+                const ketThuc = new Date(batDau.getTime() + selectedPhim.thoiLuong * 60000);
+                const localDateTime = new Date(ketThuc.getTime() - ketThuc.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                thoiGianKetThucInput.value = localDateTime;
+            }
+        }
+    }
+
+    // Cập nhật thời gian kết thúc cho form edit
+    function updateEditThoiGianKetThuc() {
+        const phimSelect = document.getElementById('editPhimId');
+        const thoiGianBatDauInput = document.getElementById('editThoiGianBatDau');
+        const thoiGianKetThucInput = document.getElementById('editThoiGianKetThuc');
+
+        if (phimSelect.value && thoiGianBatDauInput.value) {
+            const selectedPhim = phims.find(p => p.maPhim === phimSelect.value);
+            if (selectedPhim) {
+                const batDau = new Date(thoiGianBatDauInput.value);
+                const ketThuc = new Date(batDau.getTime() + selectedPhim.thoiLuong * 60000);
+                const localDateTime = new Date(ketThuc.getTime() - ketThuc.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                thoiGianKetThucInput.value = localDateTime;
+            }
+        }
+    }
+
+    // Thêm lịch chiếu
+    async function createLichChieu() {
+        const form = document.getElementById('createForm');
+        const btnCreate = document.getElementById('btnCreate');
+        const spinner = btnCreate.querySelector('.spinner-border');
+
+        // Kiểm tra validation
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Lấy dữ liệu từ form
+        const maPhim = document.getElementById('phimId').value;
+        const maPhong = document.getElementById('phongId').value;
+        const thoiGianBatDau = document.getElementById('thoiGianBatDau').value;
+        const thoiGianKetThuc = document.getElementById('thoiGianKetThuc').value;
+        const gia = parseFloat(document.getElementById('gia').value);
+
+        // Kiểm tra dữ liệu
+        if (!maPhim || !maPhong || !thoiGianBatDau || !thoiGianKetThuc || !gia) {
+            showAlert('Vui lòng điền đầy đủ thông tin', 'warning');
+            return;
+        }
+
+        // Kiểm tra thời gian
+        const batDau = new Date(thoiGianBatDau);
+        const ketThuc = new Date(thoiGianKetThuc);
+        const now = new Date();
+
+        if (batDau <= now) {
+            showAlert('Thời gian bắt đầu phải lớn hơn thời gian hiện tại', 'warning');
+            return;
+        }
+
+        if (ketThuc <= batDau) {
+            showAlert('Thời gian kết thúc phải lớn hơn thời gian bắt đầu', 'warning');
+            return;
+        }
+
+        // Hiển thị loading
+        btnCreate.disabled = true;
+        spinner.classList.remove('d-none');
+
+        try {
+            const response = await fetch('/QuanLy/ThemLichChieu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    maPhim: maPhim,
+                    maPhong: maPhong,
+                    thoiGianBatDau: thoiGianBatDau,
+                    thoiGianKetThuc: thoiGianKetThuc,
+                    gia: gia
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert(result.message, 'success');
+                // Đóng modal và reload trang
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+                modal.hide();
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                showAlert('Lỗi: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi khi thêm lịch chiếu:', error);
+            showAlert('Có lỗi xảy ra khi thêm lịch chiếu', 'danger');
+        } finally {
+            // Ẩn loading
+            btnCreate.disabled = false;
+            spinner.classList.add('d-none');
+        }
+    }
+
+    // Cập nhật lịch chiếu
+    async function updateLichChieu() {
+        const form = document.getElementById('editForm');
+        const btnUpdate = document.getElementById('btnUpdate');
+        const spinner = btnUpdate.querySelector('.spinner-border');
+
+        // Kiểm tra validation
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // Lấy dữ liệu từ form
+        const maLichChieu = document.getElementById('editMaLichChieu').value;
+        const maPhim = document.getElementById('editPhimId').value;
+        const maPhong = document.getElementById('editPhongId').value;
+        const thoiGianBatDau = document.getElementById('editThoiGianBatDau').value;
+        const thoiGianKetThuc = document.getElementById('editThoiGianKetThuc').value;
+        const gia = parseFloat(document.getElementById('editGia').value);
+
+        // Kiểm tra dữ liệu
+        if (!maLichChieu || !maPhim || !maPhong || !thoiGianBatDau || !thoiGianKetThuc || !gia) {
+            showAlert('Vui lòng điền đầy đủ thông tin', 'warning');
+            return;
+        }
+
+        // Kiểm tra thời gian
+        const batDau = new Date(thoiGianBatDau);
+        const ketThuc = new Date(thoiGianKetThuc);
+
+        if (ketThuc <= batDau) {
+            showAlert('Thời gian kết thúc phải lớn hơn thời gian bắt đầu', 'warning');
+            return;
+        }
+
+        // Hiển thị loading
+        btnUpdate.disabled = true;
+        spinner.classList.remove('d-none');
+
+        try {
+            const response = await fetch('/QuanLy/CapNhatLichChieu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    maLichChieu: maLichChieu,
+                    maPhim: maPhim,
+                    maPhong: maPhong,
+                    thoiGianBatDau: thoiGianBatDau,
+                    thoiGianKetThuc: thoiGianKetThuc,
+                    gia: gia
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert(result.message, 'success');
+                // Đóng modal và reload trang
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                modal.hide();
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                showAlert('Lỗi: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi khi cập nhật lịch chiếu:', error);
+            showAlert('Có lỗi xảy ra khi cập nhật lịch chiếu', 'danger');
+        } finally {
+            // Ẩn loading
+            btnUpdate.disabled = false;
+            spinner.classList.add('d-none');
+        }
+    }
+
+    // Hiển thị thông báo
+    function showAlert(message, type = 'info') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        // Tự động ẩn sau 5 giây
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 5000);
+    }
+
+    // Sửa lịch chiếu
+    async function editLichChieu(maLichChieu) {
+        try {
+            console.log('Đang tải thông tin lịch chiếu:', maLichChieu);
+            const response = await fetch(`/QuanLy/GetLichChieuForEdit?maLichChieu=${maLichChieu}`);
+            const result = await response.json();
+            
+            if (result.success) {
+                const data = result.data;
+                console.log('Thông tin lịch chiếu:', data);
+                
+                // Điền dữ liệu vào form edit
+                document.getElementById('editMaLichChieu').value = data.maLichChieu;
+                document.getElementById('editPhimId').value = data.maPhim;
+                document.getElementById('editPhongId').value = data.maPhong;
+                document.getElementById('editThoiGianBatDau').value = data.thoiGianBatDau;
+                document.getElementById('editThoiGianKetThuc').value = data.thoiGianKetThuc;
+                document.getElementById('editGia').value = data.gia;
+                
+                // Hiển thị modal edit
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            } else {
+                showAlert('Lỗi: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải thông tin lịch chiếu:', error);
+            showAlert('Có lỗi xảy ra khi tải thông tin lịch chiếu', 'danger');
+        }
+    }
+
+    // Xóa lịch chiếu
+    async function deleteLichChieu(maLichChieu) {
+        if (confirm('Bạn có chắc chắn muốn xóa lịch chiếu này?')) {
+            try {
+                const response = await fetch('/QuanLy/XoaLichChieu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        maLichChieu: maLichChieu
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showAlert('Lỗi: ' + result.message, 'danger');
+                }
+            } catch (error) {
+                console.error('Lỗi khi xóa lịch chiếu:', error);
+                showAlert('Có lỗi xảy ra khi xóa lịch chiếu', 'danger');
+            }
+        }
+    }
+
+    // Thiết lập chức năng xóa nhiều lịch chiếu
+    function setupBulkDelete() {
+        console.log('Debug - setupBulkDelete được gọi');
+        
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.lichChieu-checkbox');
+        const btnDeleteSelected = document.getElementById('btnDeleteSelected');
+        
+        console.log('Debug - Số checkbox tìm thấy:', checkboxes.length);
+        console.log('Debug - SelectAll checkbox:', selectAllCheckbox);
+        console.log('Debug - Delete button:', btnDeleteSelected);
+
+        // Xử lý checkbox "Chọn tất cả"
+        selectAllCheckbox.addEventListener('change', function() {
+            console.log('Debug - SelectAll changed:', this.checked);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+                updateRowHighlight(checkbox);
+            });
+            updateDeleteButton();
+        });
+
+        // Xử lý từng checkbox riêng lẻ
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                console.log('Debug - Individual checkbox changed:', this.value, this.checked);
+                updateSelectAllCheckbox();
+                updateDeleteButton();
+                updateRowHighlight(this);
+            });
+        });
+
+        // Cập nhật trạng thái checkbox "Chọn tất cả"
+        function updateSelectAllCheckbox() {
+            const checkedCount = document.querySelectorAll('.lichChieu-checkbox:checked').length;
+            const totalCount = checkboxes.length;
+            
+            if (checkedCount === 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === totalCount) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // Cập nhật hiển thị nút "Xóa đã chọn"
+        function updateDeleteButton() {
+            const checkedCount = document.querySelectorAll('.lichChieu-checkbox:checked').length;
+            console.log('Debug - updateDeleteButton - Số checkbox được chọn:', checkedCount);
+            
+            if (checkedCount > 0) {
+                btnDeleteSelected.style.display = 'inline-block';
+                btnDeleteSelected.innerHTML = `<i class="fas fa-trash me-1"></i>Xóa đã chọn (${checkedCount})`;
+                console.log('Debug - Nút xóa hiển thị');
+            } else {
+                btnDeleteSelected.style.display = 'none';
+                console.log('Debug - Nút xóa ẩn');
+            }
+        }
+
+        // Cập nhật highlight cho hàng được chọn
+        function updateRowHighlight(checkbox) {
+            const row = checkbox.closest('tr');
+            if (checkbox.checked) {
+                row.classList.add('selected');
+            } else {
+                row.classList.remove('selected');
+            }
+        }
+    }
+
+    // Xóa nhiều lịch chiếu đã chọn
+    async function deleteSelectedLichChieu() {
+        const selectedCheckboxes = document.querySelectorAll('.lichChieu-checkbox:checked');
+        
+        console.log('Debug - Số checkbox được chọn:', selectedCheckboxes.length);
+        console.log('Debug - Tất cả checkbox:', document.querySelectorAll('.lichChieu-checkbox').length);
+        
+        if (selectedCheckboxes.length === 0) {
+            showAlert('Vui lòng chọn ít nhất một lịch chiếu để xóa', 'warning');
+            return;
+        }
+
+        // Clean và validate IDs
+        const selectedIds = Array.from(selectedCheckboxes)
+            .map(cb => cb.value.trim()) // Loại bỏ khoảng trắng
+            .filter(id => id.length > 0); // Loại bỏ ID rỗng
+        
+        console.log('Debug - IDs được chọn (đã clean):', selectedIds);
+        
+        if (selectedIds.length === 0) {
+            showAlert('Không có ID hợp lệ để xóa', 'warning');
+            return;
+        }
+        
+        // Hiển thị thông báo xác nhận chi tiết hơn
+        const confirmMessage = `Bạn có chắc chắn muốn xóa ${selectedIds.length} lịch chiếu đã chọn?\n\n` +
+                             `Các lịch chiếu này sẽ bị xóa vĩnh viễn và không thể khôi phục.`;
+        
+        if (confirm(confirmMessage)) {
+            try {
+                // Disable nút để tránh click nhiều lần
+                const btnDeleteSelected = document.getElementById('btnDeleteSelected');
+                const originalText = btnDeleteSelected.innerHTML;
+                btnDeleteSelected.disabled = true;
+                btnDeleteSelected.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang xóa...';
+
+                const response = await fetch('/QuanLy/XoaNhieuLichChieu', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(selectedIds)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showAlert('Lỗi: ' + result.message, 'danger');
+                    // Restore nút
+                    btnDeleteSelected.disabled = false;
+                    btnDeleteSelected.innerHTML = originalText;
+                }
+            } catch (error) {
+                console.error('Lỗi khi xóa nhiều lịch chiếu:', error);
+                showAlert('Có lỗi xảy ra khi xóa lịch chiếu', 'danger');
+                // Restore nút
+                const btnDeleteSelected = document.getElementById('btnDeleteSelected');
+                btnDeleteSelected.disabled = false;
+                btnDeleteSelected.innerHTML = originalText;
+            }
+        }
+    }
+
+    // Test connection
+    async function testConnection() {
+        try {
+            console.log('Đang test connection...');
+            const response = await fetch('/QuanLy/TestConnection');
+            const result = await response.json();
+            
+            console.log('Test result:', result);
+            showAlert('Test connection: ' + result.message, 'info');
+        } catch (error) {
+            console.error('Lỗi test connection:', error);
+            showAlert('Lỗi khi test connection', 'danger');
+        }
+    }
+
+    // Test checkboxes
+    function testCheckboxes() {
+        console.log('=== TEST CHECKBOXES ===');
+        console.log('SelectAll checkbox:', document.getElementById('selectAll'));
+        console.log('Tất cả checkbox:', document.querySelectorAll('.lichChieu-checkbox').length);
+        console.log('Checkbox đã chọn:', document.querySelectorAll('.lichChieu-checkbox:checked').length);
+        
+        const checkboxes = document.querySelectorAll('.lichChieu-checkbox');
+        
+        // Chỉ hiển thị 10 checkbox đầu tiên để tránh spam console
+        const sampleCheckboxes = Array.from(checkboxes).slice(0, 10);
+        sampleCheckboxes.forEach((cb, index) => {
+            console.log(`Checkbox ${index}:`, {
+                value: cb.value,
+                valueTrimmed: cb.value.trim(),
+                checked: cb.checked,
+                visible: cb.offsetParent !== null
+            });
+        });
+        
+        if (checkboxes.length > 10) {
+            console.log(`... và ${checkboxes.length - 10} checkbox khác`);
+        }
+        
+        // Kiểm tra có ID trống không
+        const emptyIds = Array.from(checkboxes).filter(cb => cb.value.trim() === '');
+        if (emptyIds.length > 0) {
+            console.warn(`Có ${emptyIds.length} checkbox có ID trống!`);
+        }
+        
+        showAlert(`Tìm thấy ${checkboxes.length} checkbox, ${document.querySelectorAll('.lichChieu-checkbox:checked').length} đã chọn`, 'info');
+    }
+
+    // Debug dữ liệu
+    async function debugData() {
+        try {
+            console.log('Đang debug dữ liệu...');
+            const response = await fetch('/QuanLy/DebugData');
+            const result = await response.json();
+            
+            console.log('Debug result:', result);
+            
+            if (result.success) {
+                const data = result.data;
+                const message = `
+                    Số lượng phim: ${data.phimCount}
+                    Số lượng phòng chiếu: ${data.phongCount}
+                    Số lượng nhân viên: ${data.nhanVienCount}
+                    
+                    Mẫu phim: ${JSON.stringify(data.samplePhims)}
+                    Mẫu phòng: ${JSON.stringify(data.samplePhongs)}
+                `;
+                
+                showAlert(message, 'info');
+            } else {
+                showAlert('Lỗi debug: ' + result.message, 'danger');
+            }
+        } catch (error) {
+            console.error('Lỗi debug:', error);
+            showAlert('Lỗi khi debug dữ liệu', 'danger');
+        }
     }
 </script>

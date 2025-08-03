@@ -120,8 +120,16 @@
                                         <p class="mb-1"><strong>🏢 Phòng:</strong> @firstTicket.TenPhong</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p class="mb-1"><strong>📅 Ngày chiếu:</strong> @firstTicket.HanSuDung.ToString("dd/MM/yyyy")</p>
-                                        <p class="mb-1"><strong>🕒 Giờ chiếu:</strong> @firstTicket.HanSuDung.ToString("HH:mm")</p>
+                                        @if (firstTicket.HanSuDung.HasValue)
+                                        {
+                                            <p class="mb-1"><strong>📅 Ngày chiếu:</strong> @firstTicket.HanSuDung.Value.ToString("dd/MM/yyyy")</p>
+                                            <p class="mb-1"><strong>🕒 Giờ chiếu:</strong> @firstTicket.HanSuDung.Value.ToString("HH:mm")</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="mb-1"><strong>📅 Ngày chiếu:</strong> <span class="text-danger">Chưa có</span></p>
+                                            <p class="mb-1"><strong>🕒 Giờ chiếu:</strong> <span class="text-danger">Chưa có</span></p>
+                                        }
                                     </div>
                                 </div>
                                 <hr class="my-2">

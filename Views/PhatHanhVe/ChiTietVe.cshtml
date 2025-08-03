@@ -64,14 +64,21 @@
                                         <tr>
                                             <td><strong>Hạn sử dụng:</strong></td>
                                             <td>
-                                                @Model.HanSuDung.ToString("dd/MM/yyyy HH:mm")
-                                                @if (Model.HanSuDung < DateTime.Now)
+                                                @if (Model.HanSuDung.HasValue)
                                                 {
-                                                    <small class="text-danger">(Đã hết hạn)</small>
+                                                    @Model.HanSuDung.Value.ToString("dd/MM/yyyy HH:mm")
+                                                    @if (Model.HanSuDung.Value < DateTime.Now)
+                                                    {
+                                                        <small class="text-danger">(Đã hết hạn)</small>
+                                                    }
+                                                    else
+                                                    {
+                                                        <small class="text-success">(Còn hạn)</small>
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    <small class="text-success">(Còn hạn)</small>
+                                                    <span class="text-danger">Chưa có hạn sử dụng</span>
                                                 }
                                             </td>
                                         </tr>

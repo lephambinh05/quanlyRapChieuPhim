@@ -891,7 +891,7 @@ namespace CinemaManagement.Controllers
                         TenPhong = ve.TenPhong,
                         SoGhe = ve.SoGhe,
                         ThoiGianChieu = lichChieu?.ThoiGianBatDau ?? DateTime.Now,
-                        HanSuDung = ve.HanSuDung,
+                        HanSuDung = ve.HanSuDung ?? DateTime.Now,
                         Gia = ve.Gia,
                         TrangThai = ve.TrangThai
                     });

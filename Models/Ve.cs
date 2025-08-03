@@ -18,7 +18,7 @@ namespace CinemaManagement.Models
         [StringLength(255)]
         public string? TenPhim { get; set; }
 
-        public DateTime HanSuDung { get; set; }
+        public DateTime? HanSuDung { get; set; }
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Gia { get; set; }
